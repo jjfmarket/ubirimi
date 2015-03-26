@@ -10,6 +10,10 @@ if ($session->has('client/products')) {
 } else {
     $productsArray = UbirimiContainer::get()['repository']->get(UbirimiClient::class)->getProducts(UbirimiContainer::get()['repository']->get(UbirimiClient::class)->getClientIdAnonymous(), 'array');
 }
+
+if (null == $productsArray) {
+    $productsArray = array();
+}
 ?>
 <input type="hidden" value="<?php echo $session->get('selected_product_id') ?>" id="product_id" />
 <table cellpadding="0" cellspacing="0" border="0" style="height: 44px">
