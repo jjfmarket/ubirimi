@@ -10,6 +10,10 @@
         {
             "name": "Francisc Nopcea",
             "email": "francisc.nopcea@ubirimi.com"
+        },
+        {
+            "name": "Shannon Warren",
+            "email": "scoutman57@gmail.com"
         }
     ],
     "autoload": {
@@ -35,7 +39,7 @@
         "cogpowered/finediff": "0.0.*",
         "saltybeagle/savant3": "dev-master",
         "sabre/vobject": "3.1.2",
-        "swiftmailer/swiftmailer": "v5.0.2",
+        "swiftmailer/swiftmailer": "5.4.*",
         "tecnick.com/tcpdf": "dev-master",
         "nyholm/zebra-image": "1.0.1",
         "robmorgan/phinx": "*",

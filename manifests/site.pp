@@ -66,7 +66,16 @@ service { "mysql":
   require => Package["mysql-server"],
 }
 
-package { ["php5-common", "libapache2-mod-php5", "php5-cli", "php-apc", "php5-mysql", "php5-gd", "php5-mysqlnd", "php5-curl"]:
+package { ["php5-common",
+          "libapache2-mod-php5",
+          "php5-cli",
+          "php-apc",
+          "php5-mysql",
+          "php5-gd",
+          "php5-mysqlnd",
+          "php5-curl",
+          "php5-xdebug"
+          ]:
   ensure => installed,
   notify => Service["apache2"],
   require => [Exec["apt-get update ppa:ondrej/apache2"], Package["mysql-client"], Package["apache2"]],
@@ -167,6 +176,15 @@ exec { "Reload apache" :
   require => [Exec['Disable apache 000-default']]
 }
 
+
+# Setup xdebug
+file { '/etc/php5/mods-available/xdebug.ini':
+  ensure => file,
+  source => '/vagrant/manifests/assets/xdebug.ini',
+  require => Package["apache2"],
+  notify  => Service["apache2"],
+}
+
 # Set Apache to run as the Vagrant user
 
 exec { "ApacheUserChange" :
@@ -189,7 +207,7 @@ exec { "apache_lockfile_permissions" :
   notify  => Service["apache2"],
 }
 
-# Setup the intial database
+# Setup the initial database
 
 exec { "drop existing ubirimi database" :
   command => "/usr/bin/mysql -uroot -e \"drop database if exists ubirimi;\"",

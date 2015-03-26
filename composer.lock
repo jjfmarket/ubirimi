@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "45b0e7e63ec2f4f2c38f3c20dcd8d675",
+    "hash": "6374f8c94faa3408af85b93f2a58f1c3",
     "packages": [
         {
             "name": "cogpowered/finediff",
@@ -658,25 +658,28 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.0.2",
+            "version": "v5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "f3917ecef35a4e4d98b303eb9fee463bc983f379"
+                "reference": "31454f258f10329ae7c48763eb898a75c39e0a9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/f3917ecef35a4e4d98b303eb9fee463bc983f379",
-                "reference": "f3917ecef35a4e4d98b303eb9fee463bc983f379",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/31454f258f10329ae7c48763eb898a75c39e0a9f",
+                "reference": "31454f258f10329ae7c48763eb898a75c39e0a9f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2.4"
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.1-dev"
+                    "dev-master": "5.4-dev"
                 }
             },
             "autoload": {
@@ -690,13 +693,11 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
+                    "name": "Chris Corbyn"
                 },
                 {
-                    "name": "Chris Corbyn"
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "Swiftmailer, free feature-rich PHP mailer",
@@ -705,7 +706,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2013-08-30 12:35:21"
+            "time": "2015-03-14 06:06:39"
         },
         {
             "name": "symfony/class-loader",
@@ -1278,12 +1279,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "aaa4996f0289392e4086a4d1bd6dacd49a214b6f"
+                "reference": "21a98d29acc223e2f0bc5b5b000d8483d7d80ce1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/aaa4996f0289392e4086a4d1bd6dacd49a214b6f",
-                "reference": "aaa4996f0289392e4086a4d1bd6dacd49a214b6f",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/21a98d29acc223e2f0bc5b5b000d8483d7d80ce1",
+                "reference": "21a98d29acc223e2f0bc5b5b000d8483d7d80ce1",
                 "shasum": ""
             },
             "require": {
@@ -1329,7 +1330,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2015-03-07 07:44:26"
+            "time": "2015-03-24 17:09:17"
         },
         {
             "name": "symfony/yaml",

@@ -16,6 +16,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     node.hostmanager.aliases = %w(ubirimi.dev)
   end
 
+  # Distributor ID:	Ubuntu
+  # Description:	Ubuntu 12.04 LTS
+  # Release:	    12.04
+  # Codename:	    precise
   config.vm.box = "hashicorp/precise64"
 
   # Create a forwarded port mapping which allows access to a specific port
