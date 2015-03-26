@@ -161,12 +161,6 @@ exec { "Disable apache 000-default" :
   notify  => Service["apache2"],
 }
 
-exec { "Reload apache" :
-  command => "/usr/sbin/service apache2 reload",
-  notify  => Service["apache2"],
-  require => [Exec['Disable apache 000-default']]
-}
-
 # Set Apache to run as the Vagrant user
 
 exec { "ApacheUserChange" :
@@ -221,3 +215,9 @@ exec { "allow external mysql connections":
 }
 
 # composer install
+
+exec { 'run install composer':
+  command => '/usr/local/bin/composer -d /var/www install',
+  require => Package["apache2"],
+  require => Exec['install composer']
+}
