@@ -68,7 +68,9 @@ class UbirimiSubscriber implements EventSubscriberInterface
                     $event->getFirstName(),
                     $event->getLastName(),
                     $event->getUsername(),
-                    $event->getEmail()
+                    $event->getEmail(),
+                    $event->getExtra()['baseURL']
+
                 );
                 break;
         }

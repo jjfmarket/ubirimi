@@ -15,14 +15,24 @@ exec { "add-apt-repository ppa:ondrej/php5":
   require => Package["python-software-properties"]
 }
 
-exec { "apt-get update 2":
+exec { "apt-get update ppa:ondrej/php5":
   command => "/usr/bin/apt-get update",
   require => Exec["add-apt-repository ppa:ondrej/php5"],
 }
 
+exec { "add-apt-repository ppa:ondrej/apache2":
+  command => "/usr/bin/add-apt-repository ppa:ondrej/apache2",
+  require => Exec["add-apt-repository ppa:ondrej/php5"]
+}
+
+exec { "apt-get update ppa:ondrej/apache2":
+  command => "/usr/bin/apt-get update",
+  require => [Exec["add-apt-repository ppa:ondrej/apache2"], Exec["add-apt-repository ppa:ondrej/php5"]],
+}
+
 package { "curl":
   ensure => present,
-  require => Exec["apt-get update"],
+  require => Exec["apt-get update ppa:ondrej/apache2"],
 }
 
 exec { 'install composer':
@@ -32,7 +42,7 @@ exec { 'install composer':
 
 package {"apache2":
   ensure => present,
-  require => Exec["apt-get update 2"],
+  require => [Exec["apt-get update ppa:ondrej/php5"], Exec["apt-get update ppa:ondrej/apache2"]]
 }
 
 service { "apache2":
@@ -40,9 +50,15 @@ service { "apache2":
   require => Package["apache2"]
 }
 
+package { "libapache2-svn":
+  ensure => present,
+  require => [Exec["apt-get update ppa:ondrej/apache2"],Package["apache2"]]
+}
+
+# mysql packages
 package {["mysql-server", "mysql-client"]:
   ensure => installed,
-  require => Exec["apt-get update 2"]
+  require => Exec["apt-get update ppa:ondrej/apache2"]
 }
 
 service { "mysql":
@@ -53,10 +69,22 @@ service { "mysql":
 package { ["php5-common", "libapache2-mod-php5", "php5-cli", "php-apc", "php5-mysql", "php5-gd", "php5-mysqlnd", "php5-curl"]:
   ensure => installed,
   notify => Service["apache2"],
-  require => [Exec["apt-get update 2"], Package["mysql-client"], Package["apache2"]],
+  require => [Exec["apt-get update ppa:ondrej/apache2"], Package["mysql-client"], Package["apache2"]],
 }
 
 exec { "/usr/sbin/a2enmod rewrite" :
+  unless => "/bin/readlink -e /etc/apache2/mods-enabled/rewrite.load",
+  notify => Service[apache2],
+  require => Package["apache2"]
+}
+
+exec { "/usr/sbin/a2enmod dav" :
+  unless => "/bin/readlink -e /etc/apache2/mods-enabled/rewrite.load",
+  notify => Service[apache2],
+  require => Package["apache2"]
+}
+
+exec { "/usr/sbin/a2enmod dav_svn" :
   unless => "/bin/readlink -e /etc/apache2/mods-enabled/rewrite.load",
   notify => Service[apache2],
   require => Package["apache2"]
@@ -73,6 +101,10 @@ package { ["git"]:
 }
 
 package { ["mc"]:
+  ensure => installed
+}
+
+package { ["subversion"]:
   ensure => installed
 }
 
@@ -96,7 +128,7 @@ file { "/etc/apache2/sites-available/ubirimi":
   force => true,
 }
 
-file { "/etc/apache2/sites-enabled/000-default.conf":
+file { "/etc/apache2/sites-enabled/ubirimi.conf":
   ensure  => "link",
   target  => "/vagrant/manifests/assets/ubirimi.conf",
   require => Package["apache2"],
@@ -105,13 +137,34 @@ file { "/etc/apache2/sites-enabled/000-default.conf":
   force   => true,
 }
 
-file { "/etc/apache2/sites-enabled/ubirimi.conf":
+file { "/etc/apache2/conf-enabled/svn.conf":
   ensure  => "link",
-  target  => "/vagrant/manifests/assets/ubirimi.conf",
+  target  => "/vagrant/manifests/assets/svn.conf",
   require => Package["apache2"],
   notify  => Service["apache2"],
   replace => yes,
   force   => true,
+}
+
+file { "/etc/apache2/conf-enabled/svn_repos.conf":
+  ensure  => "link",
+  target  => "/vagrant/manifests/assets/svn_repos.conf",
+  require => Package["apache2"],
+  notify  => Service["apache2"],
+  replace => yes,
+  force   => true,
+}
+
+exec { "Disable apache 000-default" :
+  command => "/usr/sbin/a2dissite 000-default",
+  require => Package["apache2"],
+  notify  => Service["apache2"],
+}
+
+exec { "Reload apache" :
+  command => "/usr/sbin/service apache2 reload",
+  notify  => Service["apache2"],
+  require => [Exec['Disable apache 000-default']]
 }
 
 # Set Apache to run as the Vagrant user
@@ -166,3 +219,5 @@ exec { "allow external mysql connections":
   require => Package["mysql-server"],
   notify => Service["mysql"],
 }
+
+# composer install

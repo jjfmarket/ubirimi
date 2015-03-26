@@ -97,7 +97,7 @@ class Email {
                         Util::getServerCurrentDateTime());
     }
 
-    public function sendNewUserRepositoryNotificationEmail($clientId, $firstName, $lastName, $username, $password, $email, $repositoryName) {
+    public function sendNewUserRepositoryNotificationEmail($clientId, $firstName, $lastName, $username, $password, $email, $repositoryName, $baseURL) {
         UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
                         Email::$smtpSettings['from_address'],
                         $email,
@@ -108,6 +108,7 @@ class Email {
                                                                                   'username' => $username,
                                                                                   'password' => $password,
                                                                                   'repoName' => $repositoryName,
+                                                                                  'baseURL' => $baseURL,
                                                                                   'clientData' => UbirimiContainer::get()['session']->get('client'))),
                         Util::getServerCurrentDateTime());
     }

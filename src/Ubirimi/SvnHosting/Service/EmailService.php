@@ -25,12 +25,12 @@ use Ubirimi\Service\UbirimiService;
 
 class EmailService extends UbirimiService
 {
-    public function newUser($repositoryName, $firstName, $lastName, $username, $mail)
+    public function newUser($repositoryName, $firstName, $lastName, $username, $mail, $baseURL)
     {
         if ($this->session->get('client/settings/smtp')) {
 
             Email::$smtpSettings = $this->session->get('client/settings/smtp');
-            UbirimiContainer::get()['repository']->get(Email::class)->sendNewUserRepositoryNotificationEmail($this->session->get('client/id'), $firstName, $lastName, $username, null, $mail, $repositoryName);
+            UbirimiContainer::get()['repository']->get(Email::class)->sendNewUserRepositoryNotificationEmail($this->session->get('client/id'), $firstName, $lastName, $username, null, $mail, $repositoryName, $baseURL);
         }
     }
 

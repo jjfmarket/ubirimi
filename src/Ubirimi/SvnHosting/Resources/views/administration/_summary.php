@@ -12,7 +12,7 @@ use Ubirimi\Util;
             <table>
                 <tr>
                     <td><span class="textLabel">Checkout URL:</span></td>
-                    <td><?php echo UbirimiContainer::get()['subversion.url'] . $session->get('client/id') . '/' . Util::slugify($svnRepo['name']) . '/trunk' ?></td>
+                    <td><?php echo $session->get('client/base_url') . '/svn/' . $session->get('client/id') . '/' . Util::slugify($svnRepo['name']) . '/trunk' ?></td>
                 </tr>
                 <tr>
                     <td><span class="textLabel">Created by:</span></td>

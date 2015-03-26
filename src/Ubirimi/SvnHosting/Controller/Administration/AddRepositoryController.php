@@ -96,7 +96,7 @@ class AddRepositoryController extends UbirimiController
                     $session->get('user/username'),
                     null,
                     $session->get('user/email'),
-                    array('svnRepoId' => $repoId, 'repositoryName' => $name)
+                    array('svnRepoId' => $repoId, 'repositoryName' => $name, 'baseURL' => $session->get('client/base_url'))
                 );
 
                 UbirimiContainer::get()['dispatcher']->dispatch(UbirimiEvents::USER, $userEvent);
