@@ -19,7 +19,6 @@
 
 namespace Ubirimi\Repository\Email;
 
-use Exception;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_SendmailTransport;

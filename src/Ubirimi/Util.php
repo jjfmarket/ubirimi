@@ -21,9 +21,7 @@ namespace Ubirimi;
 
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\HelpDesk\Repository\Sla\Sla;
-use Ubirimi\Repository\Email\Email;
 use Ubirimi\Repository\General\ServerSettings;
-use Ubirimi\Repository\SMTPServer;
 use Ubirimi\Yongo\Repository\Field\Field;
 use Ubirimi\Yongo\Repository\Issue\Issue;
 use Ubirimi\Yongo\Repository\Issue\IssueAttachment;

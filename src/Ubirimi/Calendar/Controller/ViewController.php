@@ -19,7 +19,6 @@
 
 namespace Ubirimi\Calendar\Controller;
 
-use Sabre\VObject\Property\ICalendar\DateTime;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

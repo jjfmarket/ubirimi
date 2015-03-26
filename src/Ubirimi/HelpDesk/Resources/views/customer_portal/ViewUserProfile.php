@@ -1,7 +1,7 @@
 <?php
 
-use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\Container\UbirimiContainer;
+use Ubirimi\Repository\User\UbirimiUser;
 
 require __DIR__ . '/_header.php';
 ?>

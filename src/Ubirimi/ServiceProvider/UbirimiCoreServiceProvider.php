@@ -23,6 +23,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Processor\WebProcessor;
+use Savant3\Savant3;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
 use Symfony\Component\HttpFoundation\Session\Flash\AutoExpireFlashBag;
@@ -40,7 +41,6 @@ use Ubirimi\Service\PasswordService;
 use Ubirimi\Service\RepositoryService;
 use Ubirimi\Service\UserService;
 use Ubirimi\Service\WarmUpService;
-use Savant3\Savant3;
 
 class UbirimiCoreServiceProvider implements ServiceProviderInterface
 {

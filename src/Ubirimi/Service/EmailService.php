@@ -21,8 +21,6 @@ namespace Ubirimi\Service;
 
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\Email\Email as EmailRepository;
-use Ubirimi\Repository\SMTPServer;
-use Ubirimi\Util;
 
 class EmailService extends UbirimiService
 {
