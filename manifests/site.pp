@@ -239,3 +239,8 @@ exec { "allow external mysql connections":
 }
 
 # composer install
+
+exec { 'run install composer':
+  command => '/usr/local/bin/composer -d /var/www install',
+  require => [Package["apache2"],Exec['install composer']]
+}

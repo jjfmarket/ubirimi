@@ -22,7 +22,6 @@ if (!isset($menuSelectedCategory)) {
 Util::renderMaintenanceMessage();
 $spacesInMenu = UbirimiContainer::get()['repository']->get(Space::class)->getByClientId($clientId);
 ?>
-
 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#003466">
     <tr>
 

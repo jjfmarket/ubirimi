@@ -1,3 +1,5 @@
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/4e3d9b1a-d023-4894-a7bf-48cde810b132/mini.png)](https://insight.sensiolabs.com/projects/4e3d9b1a-d023-4894-a7bf-48cde810b132)
+
 What is Ubirimi?
 -----------------
 
