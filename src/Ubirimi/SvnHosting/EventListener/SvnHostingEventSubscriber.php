@@ -41,7 +41,7 @@ class SvnHostingEventSubscriber implements EventSubscriberInterface
 
     public function onPasswordUpdate(SvnHostingEvent $event)
     {
-        UbirimiContainer::get()['svn.email']->passwordUpdate($event->getName(), $event->getUser(), $event->getExtra()['password']);
+        UbirimiContainer::get()['svn.email']->passwordUpdate($event->getName(), $event->getUser(), $event->getExtra()['password'], $event->getExtra()['baseURL']);
     }
 
     public function onImportUsers(SvnHostingEvent $event)

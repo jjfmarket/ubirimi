@@ -34,7 +34,7 @@ class EmailService extends UbirimiService
         }
     }
 
-    public function passwordUpdate($repositoryName, $user, $password)
+    public function passwordUpdate($repositoryName, $user, $password, $baseURL)
     {
         if ($this->session->get('client/settings/smtp')) {
             Email::$smtpSettings = $this->session->get('client/settings/smtp');
@@ -46,7 +46,8 @@ class EmailService extends UbirimiService
                 $user['username'],
                 $password,
                 $user['email'],
-                $repositoryName
+                $repositoryName,
+                $baseURL
             );
         }
     }
