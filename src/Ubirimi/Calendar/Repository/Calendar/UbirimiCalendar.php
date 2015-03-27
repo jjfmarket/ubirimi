@@ -198,7 +198,7 @@ class UbirimiCalendar
         // if calendar is shared delete the shares
         UbirimiContainer::get()['repository']->get(UbirimiCalendar::class)->deleteSharesByCalendarId($calendarId);
 
-        $events = UbirimiContainer::get()['repository']->get(CalendarEvent::class)->getByCalendarId($calendarId);
+        $events = UbirimiContainer::get()['repository']->get(CalendarEvent::class)->getByCalendarIdSimple($calendarId);
         if ($events) {
             while ($event = $events->fetch_array(MYSQLI_ASSOC)) {
                 $calEventRepeatId = $event['cal_event_repeat_id'];
