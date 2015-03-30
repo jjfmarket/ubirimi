@@ -119,7 +119,7 @@ class CustomField
     }
 
     public function getCustomFieldsDataByFieldId($issueId, $fieldId) {
-        $query = 'SELECT yongo_issue_custom_field_data.value, yongo_field.name, field.sys_field_type_id ' .
+        $query = 'SELECT yongo_issue_custom_field_data.value, yongo_field.name, yongo_field.sys_field_type_id ' .
             'FROM yongo_issue_custom_field_data ' .
             'LEFT join yongo_field on yongo_field.id = yongo_issue_custom_field_data.field_id ' .
             'WHERE issue_id = ? and field_id = ?';
