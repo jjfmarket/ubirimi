@@ -1353,46 +1353,44 @@ class Issue
                 $oldIssueCustomFieldsData[$key] = null;
             }
 
-            if (is_array($value)) {
-                switch ($fieldTypeId) {
-                    case Field::CUSTOM_FIELD_TYPE_USER_PICKER_MULTIPLE_USER_CODE_ID:
-                        $oldUsers = $oldIssueCustomFieldsData[$key];
-                        $newUsers = $newIssueCustomFieldsData[$key];
+            switch ($fieldTypeId) {
+                case Field::CUSTOM_FIELD_TYPE_USER_PICKER_MULTIPLE_USER_CODE_ID:
+                    $oldUsers = $oldIssueCustomFieldsData[$key];
+                    $newUsers = $newIssueCustomFieldsData[$key];
 
-                        if ($oldUsers == null) {
-                            $oldUsers = array();
-                        }
+                    if ($oldUsers == null) {
+                        $oldUsers = array();
+                    }
 
-                        $oldUsersDeleted = array_diff($oldUsers, $newUsers);
-                        $newUsersAdded = array_diff($newUsers, $oldUsers);
+                    if ($newUsers == null) {
+                        $newUsers = array();
+                    }
 
-                        // push only if $oldUsersDeleted != $newUsersAdded
-                        if (array_diff($oldUsersDeleted, $newUsersAdded) !== array_diff($newUsersAdded, $oldUsersDeleted)) {
+                    $oldUsersDeleted = array_diff($oldUsers, $newUsers);
+                    $newUsersAdded = array_diff($newUsers, $oldUsers);
+
+                    // push only if $oldUsersDeleted != $newUsersAdded
+                    if (array_diff($oldUsersDeleted, $newUsersAdded) !== array_diff($newUsersAdded, $oldUsersDeleted)) {
+                        $oldUsersArray = array();
+                        if (count($oldUsersDeleted)) {
+                            $oldUsersData = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getByIds($oldUsersDeleted, 'array');
                             $oldUsersArray = array();
-                            if (count($oldUsersDeleted)) {
-                                $oldUsersData = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getByIds($oldUsersDeleted, 'array');
-                                $oldUsersArray = array();
-                                for ($i = 0; $i < count($oldUsersData); $i++) {
-                                    $oldUsersArray[] = $oldUsersData[$i]['first_name'] . ' ' . $oldUsersData[$i]['last_name'];
-                                }
+                            for ($i = 0; $i < count($oldUsersData); $i++) {
+                                $oldUsersArray[] = $oldUsersData[$i]['first_name'] . ' ' . $oldUsersData[$i]['last_name'];
                             }
-                            $newUsersArray = array();
-                            if (count($newUsersAdded)) {
-                                $newUsersData = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getByIds($newUsersAdded, 'array');
-                                for ($i = 0; $i < count($newUsersData); $i++) {
-                                    $newUsersArray[] = $newUsersData[$i]['first_name'] . ' ' . $newUsersData[$i]['last_name'];
-                                }
-                            }
-
-                            $fieldChanges[] = array($fieldName, implode(', ', $oldUsersArray), implode(', ', $newUsersArray), null, null, $fieldTypeId);
                         }
+                        $newUsersArray = array();
+                        if (count($newUsersAdded)) {
+                            $newUsersData = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getByIds($newUsersAdded, 'array');
+                            for ($i = 0; $i < count($newUsersData); $i++) {
+                                $newUsersArray[] = $newUsersData[$i]['first_name'] . ' ' . $newUsersData[$i]['last_name'];
+                            }
+                        }
+                    }
 
-                        break;
-                }
-            } else {
-                if ($newIssueCustomFieldsData[$key] != $oldIssueCustomFieldsData[$key]) {
-                    $fieldChanges[] = array($fieldName, $oldIssueCustomFieldsData[$key], $newIssueCustomFieldsData[$key], null, null, $fieldTypeId);
-                }
+                    $fieldChanges[] = array($fieldName, implode(', ', $oldUsersArray), implode(', ', $newUsersArray), null, null, $fieldTypeId);
+
+                    break;
             }
         }
 

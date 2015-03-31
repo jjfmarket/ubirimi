@@ -331,15 +331,15 @@ class Util {
         // issue created events
         $query = '(select ' .
             "'event_created' as event, " .
-            'yongo_issue.date_created as date_created, ' .
-            'null as field, ' .
-            'null as new_value, ' .
-            'general_user.id as user_id, general_user.first_name, general_user.last_name, ' .
-            'yongo_issue.nr as nr, ' .
-            'yongo_project.code as code, ' .
-            'yongo_issue.id as issue_id, ' .
-            'null as comment_content, ' .
-            'general_user.avatar_picture ' .
+                'yongo_issue.date_created as date_created, ' .
+                'null as field, ' .
+                'null as new_value, ' .
+                'general_user.id as user_id, general_user.first_name, general_user.last_name, ' .
+                'yongo_issue.nr as nr, ' .
+                'yongo_project.code as code, ' .
+                'yongo_issue.id as issue_id, ' .
+                'null as comment_content, ' .
+                'general_user.avatar_picture ' .
             'from yongo_issue ' .
             'left join general_user on general_user.id = yongo_issue.user_reported_id ' .
             'left join yongo_project on yongo_project.id = yongo_issue.project_id ' .
@@ -352,16 +352,16 @@ class Util {
         $query .= 'UNION ' .
 
             '(select ' .
-            "'event_commented' as event, " .
-            'yongo_issue_comment.date_created as date_created, ' .
-            'null as field, ' .
-            'null as new_value, ' .
-            'general_user.id as user_id, general_user.first_name, general_user.last_name, ' .
-            'yongo_issue.nr as nr, ' .
-            'yongo_project.code as code, ' .
-            'yongo_issue.id as issue_id, ' .
-            'yongo_issue_comment.content as comment_content, ' .
-            'general_user.avatar_picture ' .
+                "'event_commented' as event, " .
+                'yongo_issue_comment.date_created as date_created, ' .
+                'null as field, ' .
+                'null as new_value, ' .
+                'general_user.id as user_id, general_user.first_name, general_user.last_name, ' .
+                'yongo_issue.nr as nr, ' .
+                'yongo_project.code as code, ' .
+                'yongo_issue.id as issue_id, ' .
+                'yongo_issue_comment.content as comment_content, ' .
+                'general_user.avatar_picture ' .
             'from yongo_issue ' .
             'left join yongo_issue_comment on yongo_issue.id = yongo_issue_comment.issue_id ' .
             'left join general_user on general_user.id = yongo_issue_comment.user_id ' .
@@ -376,16 +376,16 @@ class Util {
         $query .= 'UNION ' .
 
             '(select ' .
-            "'event_history' as event, " .
-            'yongo_issue_history.date_created as date_created, ' .
-            'yongo_issue_history.field as field, ' .
-            'yongo_issue_history.new_value, ' .
-            'general_user.id as user_id, general_user.first_name as first_name, general_user.last_name as last_name, ' .
-            'yongo_issue.nr as nr, ' .
-            'yongo_project.code as code, ' .
-            'yongo_issue.id as issue_id, ' .
-            'null as comment_content, ' .
-            'general_user.avatar_picture ' .
+                "'event_history' as event, " .
+                'yongo_issue_history.date_created as date_created, ' .
+                'yongo_issue_history.field as field, ' .
+                'yongo_issue_history.new_value, ' .
+                'general_user.id as user_id, general_user.first_name as first_name, general_user.last_name as last_name, ' .
+                'yongo_issue.nr as nr, ' .
+                'yongo_project.code as code, ' .
+                'yongo_issue.id as issue_id, ' .
+                'null as comment_content, ' .
+                'general_user.avatar_picture ' .
             'from yongo_issue ' .
             'left join yongo_issue_history on yongo_issue_history.issue_id = yongo_issue.id ' .
             'left join general_user on general_user.id = yongo_issue_history.by_user_id ' .

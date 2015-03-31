@@ -277,16 +277,16 @@ $screenData = UbirimiContainer::get()['repository']->get(YongoProject::class)->g
                 echo '<tr>';
                     echo '<td>';
                     if (!$defaultLevel) {
-                        echo '<input type="hidden" description="' . Field::$fieldTranslation[$fieldData[$i]['field_code']] . '" required="1" id="field_type_' . $fieldData[$i]['field_code'] . '" name="' . $fieldData[$i]['field_code'] . '" />';
+                        echo '<input type="hidden" description="' . $fieldData[$i]['field_name'] . '" required="1" id="field_type_' . $fieldData[$i]['field_code'] . '" name="' . $fieldData[$i]['field_code'] . '" />';
                     } else {
-                        echo '<input type="hidden" description="' . Field::$fieldTranslation[$fieldData[$i]['field_code']] . '" required="1" value="' . $defaultLevel['id'] . '" id="field_type_' . $fieldData[$i]['field_code'] . '" name="' . $fieldData[$i]['field_code'] . '" />';
+                        echo '<input type="hidden" description="' . $fieldData[$i]['field_name'] . '" required="1" value="' . $defaultLevel['id'] . '" id="field_type_' . $fieldData[$i]['field_code'] . '" name="' . $fieldData[$i]['field_code'] . '" />';
                     }
                     echo '</td>';
                 echo '</tr>';
             } elseif ($fieldData[$i]['field_code'] != Field::FIELD_ISSUE_TIME_TRACKING_CODE) {
                 echo '<tr>';
                     echo '<td>';
-                        echo '<input type="hidden" description="' . Field::$fieldTranslation[$fieldData[$i]['field_code']] . '" required="1" id="field_type_' . $fieldData[$i]['field_code'] . '" name="' . $fieldData[$i]['field_code'] . '" />';
+                        echo '<input type="hidden" description="' . $fieldData[$i]['field_name'] . '" required="1" id="field_type_' . $fieldData[$i]['field_code'] . '" name="' . $fieldData[$i]['field_code'] . '" />';
                     echo '</td>';
                 echo '</tr>';
             }

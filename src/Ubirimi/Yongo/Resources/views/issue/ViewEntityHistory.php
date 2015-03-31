@@ -38,7 +38,7 @@ if ($historyList): ?>
         <?php if ($row['source'] == 'history_event') : ?>
             <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td width="280px"><?php echo Field::$fieldTranslation[$row['field']] ?></td>
+                    <td width="280px"><?php echo $row['field_name'] ?></td>
                     <td valign="top">
                         <?php if ($row['field'] == 'time_spent' || $row['field'] == 'remaining_estimate' || $row['field'] == 'worklog_time_spent'): ?>
                             <?php echo ($row['old_value'] != 'NULL') ? Util::transformTimeToString(Util::transformLogTimeToMinutes($row['old_value'], $hoursPerDay, $daysPerWeek), $hoursPerDay, $daysPerWeek) : 'None'; ?>
