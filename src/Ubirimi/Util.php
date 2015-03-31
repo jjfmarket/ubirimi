@@ -339,7 +339,8 @@ class Util {
                 'yongo_project.code as code, ' .
                 'yongo_issue.id as issue_id, ' .
                 'null as comment_content, ' .
-                'general_user.avatar_picture ' .
+                'general_user.avatar_picture, ' .
+                'null as field_name ' .
             'from yongo_issue ' .
             'left join general_user on general_user.id = yongo_issue.user_reported_id ' .
             'left join yongo_project on yongo_project.id = yongo_issue.project_id ' .
@@ -361,7 +362,8 @@ class Util {
                 'yongo_project.code as code, ' .
                 'yongo_issue.id as issue_id, ' .
                 'yongo_issue_comment.content as comment_content, ' .
-                'general_user.avatar_picture ' .
+                'general_user.avatar_picture, ' .
+                'null as field_name ' .
             'from yongo_issue ' .
             'left join yongo_issue_comment on yongo_issue.id = yongo_issue_comment.issue_id ' .
             'left join general_user on general_user.id = yongo_issue_comment.user_id ' .
@@ -385,11 +387,14 @@ class Util {
                 'yongo_project.code as code, ' .
                 'yongo_issue.id as issue_id, ' .
                 'null as comment_content, ' .
-                'general_user.avatar_picture ' .
+                'general_user.avatar_picture, ' .
+                'yongo_field.name as field_name ' .
             'from yongo_issue ' .
             'left join yongo_issue_history on yongo_issue_history.issue_id = yongo_issue.id ' .
             'left join general_user on general_user.id = yongo_issue_history.by_user_id ' .
             'left join yongo_project on yongo_project.id = yongo_issue.project_id ' .
+            'left join yongo_field on (yongo_project.client_id = yongo_field.client_id AND
+                    (yongo_field.code = yongo_issue_history.field OR yongo_field.name = yongo_issue_history.field)) ' .
             'where yongo_project.id  IN (' . implode(', ', $projectIds) . ') ' .
             $queryWherePart .
             $queryWherePartDateIssueHistory .

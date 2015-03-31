@@ -29,9 +29,9 @@ use Ubirimi\Yongo\Repository\Field\Field;
                                         <?php foreach ($eventDatas as $event): ?>
                                             <li>
                                                 <?php if ($event['new_value'] == 'NULL' || $event['new_value'] == null): ?>
-                                                    cleared <?php echo Field::$fieldTranslation[$event['field']] ?>
+                                                    cleared <?php echo $event['field_name'] ?>
                                                 <?php else: ?>
-                                                    updated the <?php if (isset(Field::$fieldTranslation[$event['field']])) echo Field::$fieldTranslation[$event['field']]; else echo $event['field'] ?>
+                                                    updated the <?php if ($event['field_name']) echo $event['field_name']; else echo $event['field'] ?>
                                                     to <?php echo $event['new_value'] ?>
                                                 <?php endif ?>
                                             </li>
