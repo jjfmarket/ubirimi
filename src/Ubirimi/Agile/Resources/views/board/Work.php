@@ -65,33 +65,33 @@ require_once __DIR__ . '/../../../../Yongo/Resources/views/_header.php';
             </tr>
         </table>
 
-        <table width="100%" border="0" cellspacing="0" align="center">
-            <tr>
-                <td valign="top" width="70%">
-                    <div id="agile_wrapper_work" style="height: 500px; overflow-y: auto;">
-                        <table width="100%" cellpadding="0" cellspacing="0px" border="0">
-                            <?php require_once __DIR__ . '/work/_header.php' ?>
-                        </table>
-                        <?php
-                            $index = 1;
-                            if ($swimlaneStrategy == 'story' && $sprint) {
-                                require_once __DIR__ . '/work/_swimlaneStory.php';
-                            } else if ($swimlaneStrategy == 'assignee' && $sprint) {
-                                require_once __DIR__ . '/work/_swimlaneAssignee.php';
-                            } else if ($swimlaneStrategy == 'no_swimlane' && $sprint) {
-                                require_once __DIR__ . '/work/_swimlaneDefault.php';
-                            }
-                        ?>
-                    </div>
-                </td>
+        <?php if ($sprint !== null): ?>
+            <table width="100%" border="0" cellspacing="0" align="center">
+                <tr>
+                    <td valign="top" width="70%">
+                        <div id="agile_wrapper_work" style="height: 500px; overflow-y: auto;">
+                            <table width="100%" cellpadding="0" cellspacing="0px" border="0">
+                                <?php require_once __DIR__ . '/work/_header.php' ?>
+                            </table>
+                            <?php
+                                $index = 1;
+                                if ($swimlaneStrategy == 'story' && $sprint) {
+                                    require_once __DIR__ . '/work/_swimlaneStory.php';
+                                } else if ($swimlaneStrategy == 'assignee' && $sprint) {
+                                    require_once __DIR__ . '/work/_swimlaneAssignee.php';
+                                } else if ($swimlaneStrategy == 'no_swimlane' && $sprint) {
+                                    require_once __DIR__ . '/work/_swimlaneDefault.php';
+                                }
+                            ?>
+                        </div>
+                    </td>
 
-                <td valign="top" width="30%" style="display: none" id="wrapper_content_agile_work">
-                    <div id="content_agile_issue"></div>
-                </td>
-            </tr>
-        </table>
-
-        <?php if ($sprint === null): ?>
+                    <td valign="top" width="30%" style="display: none" id="wrapper_content_agile_work">
+                        <div id="content_agile_issue"></div>
+                    </td>
+                </tr>
+            </table>
+        <?php else: ?>
             <br/>
 
             <div class="infoBox">There are no active sprints.</div>
@@ -108,6 +108,8 @@ require_once __DIR__ . '/../../../../Yongo/Resources/views/_header.php';
     <div class="ubirimiModalDialog" id="modalEditIssueAssign"></div>
 
     <input type="hidden" value="<?php echo $boardId ?>" id="board_id"/> <input type="hidden" value="<?php echo $sprintId ?>" id="sprint_id"/> <input type="hidden" value="<?php echo count($columns); ?>" id="count_columns"/>
+    <?php if ($sprint !== null): ?>
     <input type="hidden" value="<?php echo $index; ?>" id="max_index_section"/> <input type="hidden" value="<?php echo $swimlaneStrategy; ?>" id="agile_swimlane_strategy"/>
+    <?php endif ?>
     <input type="hidden" value="<?php echo implode('_', $lastColumnStatuses); ?>" id="last_column_statuses"/>
 </body>
