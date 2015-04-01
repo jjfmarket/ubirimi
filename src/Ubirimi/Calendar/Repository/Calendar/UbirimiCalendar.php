@@ -236,7 +236,8 @@ class UbirimiCalendar
     }
 
     public function shareWithUsers($calendarId, $userIds, $date) {
-        for ($i = 0; $i < count($userIds); $i++) {
+        $userIdsCount = count($userIds);
+        for ($i = 0; $i < $userIdsCount; $i++) {
             $query = "INSERT INTO cal_calendar_share(cal_calendar_id, user_id, date_created) VALUES (?, ?, ?)";
             $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
             $userId = $userIds[$i];

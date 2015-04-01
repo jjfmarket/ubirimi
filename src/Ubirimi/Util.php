@@ -89,7 +89,8 @@ class Util {
         while ($result = $mysqliResult->fetch_array(MYSQLI_ASSOC)) {
             if (count($fieldArray) > 1) {
                 $tempArray = array();
-                for ($i = 0; $i < count($fieldArray); $i++) {
+                $fieldArrayCount = count($fieldArray);
+                for ($i = 0; $i < $fieldArrayCount; $i++) {
                     $tempArray[$fieldArray[$i]] = $result[$fieldArray[$i]];
                 }
                 $resultArray[] = $tempArray;
@@ -237,8 +238,9 @@ class Util {
         if (null != UbirimiContainer::get()['session']->has('added_attachments_in_screen')) {
             $attIdsSession = UbirimiContainer::get()['session']->get('added_attachments_in_screen');
             $uploadDirectory = Util::getAssetsFolder(SystemProduct::SYS_PRODUCT_YONGO) . $issueId;
+            $attIdsSessionCount = count($attIdsSession);
 
-            for ($i = 0; $i < count($attIdsSession); $i++) {
+            for ($i = 0; $i < $attIdsSessionCount; $i++) {
                 $attachmentId = $attIdsSession[$i];
                 $attachment = UbirimiContainer::get()['repository']->get(IssueAttachment::class)->getById($attachmentId);
 
@@ -699,7 +701,8 @@ class Util {
                     $htmlOutput .= '</td>';
                 }
 
-                for ($indexColumn = 0; $indexColumn < count($columns); $indexColumn++) {
+                $columnsCount = count($columns);
+                for ($indexColumn = 0; $indexColumn < $columnsCount; $indexColumn++) {
                     if ($columns[$indexColumn] == 'code') {
                         $htmlOutput .= '<td class="issuePC">';
                         $htmlOutput .= '<img title="' . $issue['type'] . ' - ' . $issue['issue_type_description'] . '" height="16px" src="/yongo/img/issue_type/' . $issue['issue_type_icon_name'] . '" /> ';
@@ -842,8 +845,8 @@ class Util {
         $paramsToSearch = array('search_query', 'summary_flag', 'description_flag', 'comments_flag', 'project',
             'assignee', 'reporter', 'type', 'status', 'priority', 'component',
             'fix_version', 'affects_version', 'resolution');
-
-        for ($i = 0; $i < count($paramsToSearch); $i++) {
+        $paramsToSearchCount = count($paramsToSearch);
+        for ($i = 0; $i < $paramsToSearchCount; $i++) {
             if (isset($getSearchParameters[$paramsToSearch[$i]]) && $getSearchParameters[$paramsToSearch[$i]] != null)
                 return true;
         }
@@ -953,7 +956,8 @@ class Util {
         }
 
         if ($format == 'short') {
-            for ($i = 0; $i < count($timeStringData); $i++) {
+            $timeStringDataCount = count($timeStringData);
+            for ($i = 0; $i < $timeStringDataCount; $i++) {
                 $timeStringData[$i] = str_replace(array('weeks', 'week'), 'w', $timeStringData[$i]);
                 $timeStringData[$i] = str_replace(array('days', 'day'), 'd', $timeStringData[$i]);
                 $timeStringData[$i] = str_replace(array('hours', 'hour'), 'h', $timeStringData[$i]);

@@ -45,7 +45,8 @@ class ViewController extends UbirimiController
         $calendarIds = explode('|', $calendarIdsString);
 
         // remove those IDs that are not mine or shared with me
-        for ($i = 0; $i < count($calendarIds); $i++) {
+        $calendarIdsCount = count($calendarIds);
+        for ($i = 0; $i < $calendarIdsCount; $i++) {
             if (!in_array($calendarIds[$i], $myCalendarIds) && (!in_array($calendarIds[$i], $sharedCalendarsIds))) {
                 unset($calendarIds[$i]);
             }
@@ -71,7 +72,8 @@ class ViewController extends UbirimiController
         }
 
         // check to see if each calendar belongs to the client
-        for ($i = 0; $i < count($calendarIds); $i++) {
+        $calendarIdsCount = count($calendarIds);
+        for ($i = 0; $i < $calendarIdsCount; $i++) {
             $calendarFilter = $this->getRepository(UbirimiCalendar::class)->getById($calendarIds[$i]);
 
             if ($calendarFilter['client_id'] != $session->get('client/id')) {

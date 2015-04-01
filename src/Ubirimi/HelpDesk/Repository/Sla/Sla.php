@@ -254,8 +254,8 @@ class Sla
 
         $conditions = explode("#", $slaCondition);
         $conditionFulfilledDate = null;
-
-        for ($i = 0; $i < count($conditions); $i++) {
+        $conditionsCount = count($conditions);
+        for ($i = 0; $i < $conditionsCount; $i++) {
             if ($conditions[$i] == ($type . '_' . Sla::CONDITION_CREATE_ISSUE)) {
                 if ($issue['date_created'] >= $currentSLADate) {
                     $conditionFulfilledDate = $issue['date_created'];
@@ -410,7 +410,8 @@ class Sla
             }
 
             if ($stopConditionSLADate && !in_array($stopConditionSLADate, $stopConditionSLADates)) {
-                for ($i = 0; $i < count($slaCalendarData); $i++) {
+                $slaCalendarDataCount = count($slaCalendarData);
+                for ($i = 0; $i < $slaCalendarDataCount; $i++) {
                     if (date("N", strtotime($stopConditionSLADate)) == $slaCalendarData[$i]['day_number'] && $slaCalendarData[$i]['not_working_flag'] == 0) {
                         $timeFrom = $slaCalendarData[$i]['time_from'] . ':00';
                         $timeTo = $slaCalendarData[$i]['time_to'] . ':00';
@@ -423,7 +424,8 @@ class Sla
             }
         }
 
-        for ($i = 0; $i < count($startConditionSLADates); $i++) {
+        $startConditionSLADatesCount = count($startConditionSLADates);
+        for ($i = 0; $i < $startConditionSLADatesCount; $i++) {
             $startDate = $startConditionSLADates[$i];
 
             if (isset($stopConditionSLADates[$i])) {
@@ -436,8 +438,9 @@ class Sla
             $initialDate = new \DateTime($startDate, new \DateTimeZone($clientSettings['timezone']));
             while (date_format($initialDate, 'Y-m-d') <= substr($stopDate, 0, 10)) {
                 $dayNumber = date_format($initialDate, 'N');
+                $slaCalendarDataCount = count($slaCalendarData);
 
-                for ($j = 0; $j < count($slaCalendarData); $j++) {
+                for ($j = 0; $j < $slaCalendarDataCount; $j++) {
                     if ($slaCalendarData[$j]['day_number'] == $dayNumber && 0 == $slaCalendarData[$j]['not_working_flag']) {
 
                         if (date_format($initialDate, 'Y-m-d') > $startDate) {

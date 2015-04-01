@@ -66,7 +66,8 @@ class AddDataController extends UbirimiController
 
             if ($notificationType) {
 
-                for ($i = 0; $i < count($eventIds); $i++) {
+                $eventIdsCount = count($eventIds);
+                for ($i = 0; $i < $eventIdsCount; $i++) {
                     // check for duplicate information
                     $duplication = false;
 

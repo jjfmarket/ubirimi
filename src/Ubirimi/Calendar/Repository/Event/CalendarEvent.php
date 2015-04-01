@@ -217,8 +217,8 @@ class CalendarEvent
             $separator = '';
 
             $query = $queryMain;
-
-            for ($k = 0; $k < count($repeatDates); $k++) {
+            $repeatDatesCount = count($repeatDates);
+            for ($k = 0; $k < $repeatDatesCount; $k++) {
 
                 if (isset($repeatDates[$k])) {
                     $queryValues = $separator . "(%d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
@@ -404,8 +404,8 @@ class CalendarEvent
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $stmt->bind_param("i", $eventId);
         $stmt->execute();
-
-        for ($i = 0; $i < count($userIds); $i++) {
+        $userIdsCount = count($userIds);
+        for ($i = 0; $i < $userIdsCount; $i++) {
             $query = "INSERT INTO cal_event_share(cal_event_id, user_id, date_created) VALUES (?, ?, ?)";
             $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
             $userId = $userIds[$i];

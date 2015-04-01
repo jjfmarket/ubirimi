@@ -72,7 +72,8 @@ require_once __DIR__ . '/../../../../Yongo/Resources/views/_header.php';
                                 <?php
                                     $definition = $board['filter_definition'];
                                     $definitionData = explode("&", $definition);
-                                    for ($i = 0; $i < count($definitionData); $i++) {
+                                    $definitionDataCount = count($definitionData);
+                                    for ($i = 0; $i < $definitionDataCount; $i++) {
                                         $tempData = explode("=", $definitionData[$i]);
                                         if ($tempData[0] == 'project') {
                                             $projectIds = explode("|", $tempData[1]);

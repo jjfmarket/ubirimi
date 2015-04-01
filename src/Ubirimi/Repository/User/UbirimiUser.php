@@ -324,8 +324,9 @@ class UbirimiUser
 
     public function addGroups($userId, $assigned_user_groups) {
         $query = 'insert into general_group_data(group_id, user_id) values ';
+        $assigned_user_groupsCount = count($assigned_user_groups);
 
-        for ($i = 0; $i < count($assigned_user_groups); $i++)
+        for ($i = 0; $i < $assigned_user_groupsCount; $i++)
             $query .= '(' . $assigned_user_groups[$i] . ' ,' . $userId . '), ';
 
         $query = substr($query, 0, strlen($query) - 2);
@@ -545,7 +546,8 @@ class UbirimiUser
         $values = array();
         $values_ref = array();
         $valuesType = '';
-        for ($i = 0; $i < count($parameters); $i++) {
+        $parametersCount = count($parameters);
+        for ($i = 0; $i < $parametersCount; $i++) {
             $query .= $parameters[$i]['field'] .= ' = ?, ';
             $values[] = $parameters[$i]['value'];
             $valuesType .= $parameters[$i]['type'];

@@ -196,7 +196,8 @@ require_once __DIR__ . '/_header.php';
 
                                                     echo '<div id="content_all_events_' . $date . '" style="display: none; background-color: #DDDDDD; border: 2px solid #EEEEEE">';
                                                     echo '<div class="show-all-events"><b>Monday May 12 [<a id="close_content_all_events_' . $date . '" href="#">close</a>]</b></div>';
-                                                    for ($pos = 0; $pos < count($eventsToDisplay); $pos++) {
+                                                    $eventsToDisplayCount = count($eventsToDisplay);
+                                                    for ($pos = 0; $pos < $eventsToDisplayCount; $pos++) {
                                                         echo '<div>' . $eventsToDisplay[$pos]['name'] . '</div>';
                                                     }
                                                     echo '</div>';
