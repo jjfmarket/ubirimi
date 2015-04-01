@@ -62,7 +62,8 @@ class EditController extends UbirimiController
         if ($activeSnapshots) {
             $textWarningMultipleEdits = 'This page is being edited by ';
             $usersUsing = array();
-            for ($i = 0; $i < count($activeSnapshots); $i++) {
+            $activeSnapshotsCount = count($activeSnapshots);
+            for ($i = 0; $i < $activeSnapshotsCount; $i++) {
                 if ($activeSnapshots[$i]['last_edit_offset'] <= 1) {
                     $usersUsing[] = '<a href="/documentador/user/profile/' . $activeSnapshots[$i]['user_id'] . '">' . $activeSnapshots[$i]['first_name'] . ' ' . $activeSnapshots[$i]['last_name'] . '</a>';
                 }

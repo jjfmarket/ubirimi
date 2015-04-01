@@ -73,15 +73,16 @@ require_once __DIR__ . '/../../../../Yongo/Resources/views/_header.php';
                                 </tr>
                                 <tr>
                                     <td id="column_0" class="droppable" valign="top" style="height: 200px;">
-                                        <?php for ($j = 0; $j < count($unmappedStatuses); $j++): ?>
+                                        <?php $unmappedStatusesCount = count($unmappedStatuses); ?>
+                                        <?php for ($j = 0; $j < $unmappedStatusesCount; $j++): ?>
                                         <div id="status_<?php echo $unmappedStatuses[$j]['id'] ?>" class="statusAgile draggable">&nbsp;<?php echo $unmappedStatuses[$j]['name'] ?></div>
                                         <?php endfor ?>
                                     </td>
                                 </tr>
                             </table>
                         </td>
-
-                        <?php for ($i = 0; $i < count($columns); $i++): ?>
+                        <?php $columnsCount = count($columns); ?>
+                        <?php for ($i = 0; $i < $columnsCount; $i++): ?>
                             <td width="<?php echo $columnWidth . '%'; ?>" valign="top" class="sortable draggableColumn" id="agile_move_column_<?php echo $columns[$i]['id'] ?>">
                                 <table width="100%" cellspacing="0" cellpadding="4px" style="border: 1px solid #DDDDDD; border-collapse: collapse;">
                                     <tr>
@@ -101,7 +102,8 @@ require_once __DIR__ . '/../../../../Yongo/Resources/views/_header.php';
                                     <tr>
                                         <td id="column_<?php echo $columns[$i]['id'] ?>" class="droppable" valign="top" style="height: 200px;">
                                         <?php if ($statuses): ?>
-                                            <?php for ($j = 0; $j < count($statuses); $j++): ?>
+                                            <?php $statusesCount = count($statuses); ?>
+                                            <?php for ($j = 0; $j < $statusesCount; $j++): ?>
                                             <div id="status_<?php echo $statuses[$j]['id'] ?>" class="statusAgile draggable">&nbsp;<?php echo $statuses[$j]['name'] ?></div>
                                             <?php endfor ?>
                                         <?php endif ?>

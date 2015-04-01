@@ -24,7 +24,8 @@
                 <div style="cursor: text; background-color: #ffffff;"><b>Recent Issues</b></div>
             </td>
         </tr>
-        <?php for ($i = 0; $i < count($recentIssues); $i++): ?>
+        <?php $recentIssuesCount = count($recentIssues); ?>
+        <?php for ($i = 0; $i < $recentIssuesCount; $i++): ?>
             <tr>
                 <td>
                     <div>

@@ -22,11 +22,13 @@ use Ubirimi\Container\UbirimiContainer;
 
 ?>
 <tr>
-    <?php for ($i = 0; $i < count($columns); $i++): ?>
+    <?php $columnsCount = count($columns); ?>
+    <?php for ($i = 0; $i < $columnsCount; $i++): ?>
         <?php
             $statuses = UbirimiContainer::get()['repository']->get(Board::class)->getColumnStatuses($columns[$i]['id'], 'array');
             $textStatuses = '';
-            for ($k = 0; $k < count($statuses); $k++) {
+            $statusesCount = count($statuses);
+            for ($k = 0; $k < $statusesCount; $k++) {
                 $textStatuses .= $statuses[$k]['id'] . '_' . $statuses[$k]['name'] . '#';
             }
         ?>

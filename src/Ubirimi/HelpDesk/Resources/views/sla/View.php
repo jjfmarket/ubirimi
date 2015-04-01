@@ -59,13 +59,15 @@ require_once __DIR__ . '/../../../../Yongo/Resources/views/_header.php';
                             </tr>
                             <tr>
                                 <td align="left" valign="top">
-                                    <?php for ($i = 0; $i < count($startConditions); $i++): ?>
+                                    <?php $startConditionsCount = count($startConditions)?>
+                                    <?php for ($i = 0; $i < $startConditionsCount; $i++): ?>
                                         <div class="slaCondition"><?php echo UbirimiContainer::get()['repository']->get(Sla::class)->transformConditionForView($startConditions[$i]) ?></div>
                                     <?php endfor ?>
                                 </td>
                                 <td></td>
                                 <td align="left" valign="top">
-                                    <?php for ($i = 0; $i < count($stopConditions); $i++): ?>
+                                    <?php $stopConditionsCount = count($stopConditions); ?>
+                                    <?php for ($i = 0; $i < $stopConditionsCount; $i++): ?>
                                         <div class="slaCondition"><?php echo UbirimiContainer::get()['repository']->get(Sla::class)->transformConditionForView($stopConditions[$i]) ?></div>
                                     <?php endfor ?>
                                 </td>

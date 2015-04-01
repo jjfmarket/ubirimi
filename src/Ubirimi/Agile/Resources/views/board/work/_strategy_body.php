@@ -33,7 +33,8 @@ use Ubirimi\Yongo\Repository\Workflow\Workflow;
         <?php require '_parent_story_box.php' ?>
     <?php endif ?>
     <tr id="agile_content_columns">
-        <?php for ($i = 0; $i < count($columns); $i++): ?>
+        <?php $columnsCount = count($columns); ?>
+        <?php for ($i = 0; $i < $columnsCount; $i++): ?>
             <?php
                 if ($swimlaneStrategy == 'assignee') {
                     $lastParentId = -1;
@@ -45,7 +46,8 @@ use Ubirimi\Yongo\Repository\Workflow\Workflow;
                     $statuses = UbirimiContainer::get()['repository']->get(Board::class)->getColumnStatuses($columns[$i]['id'], 'array');
                 ?>
                 <div style="display: none; position: absolute; margin: 4px;" id="statuses_for_column_<?php echo $columns[$i]['id'] . '_' . $index ?>">
-                    <?php for ($j = 0; $j < count($statuses); $j++): ?>
+                    <?php $statusesCount = count($statuses); ?>
+                    <?php for ($j = 0; $j < $statusesCount; $j++): ?>
                         <div id="status_for_column_<?php echo $columns[$i]['id'] . '_' . $statuses[$j]['id'] . '_' . $index ?>" class="status_for_column_<?php echo $index . '_' . $columns[$i]['id']; ?>" style="border: 4px dashed #b3b3b3; border-radius: 10px" align="center" class="headerPageText"><?php echo $statuses[$j]['name'] ?></div>
                     <?php endfor ?>
                 </div>

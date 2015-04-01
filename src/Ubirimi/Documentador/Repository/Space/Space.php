@@ -374,7 +374,8 @@ class Space {
         $values = array();
         $values_ref = array();
         $valuesType = '';
-        for ($i = 0; $i < count($parameters); $i++) {
+        $parametersCount = count($parameters);
+        for ($i = 0; $i < $parametersCount; $i++) {
             $query .= $parameters[$i]['field'] .= ' = ?, ';
             $values[] = $parameters[$i]['value'];
             $valuesType .= $parameters[$i]['type'];
@@ -420,6 +421,7 @@ class Space {
 
         // insert the permissions
         $query = 'insert into documentator_space_permission_anonymous(documentator_space_id, ';
+        $parametersCount = count($parameters);
 
         for ($i = 0; $i < count($parameters); $i++) {
             $query .= $parameters[$i]['field'] . ', ';
@@ -431,7 +433,8 @@ class Space {
         $values[] = $spaceId;
         $values_ref = array();
         $valuesType = 'i';
-        for ($i = 0; $i < count($parameters); $i++) {
+        $parametersCount = count($parameters);
+        for ($i = 0; $i < $parametersCount; $i++) {
             $query .= '?, ';
             $values[] = $parameters[$i]['value'];
             $valuesType .= $parameters[$i]['type'];
@@ -675,7 +678,8 @@ class Space {
 
             $query = "INSERT INTO documentator_space_permission(space_id, group_id, " . implode(', ', array_keys($data)) . ') values (' . $spaceId . ', ' . $groupId . ', ';
             $auxValuePlaceholder = array();
-            for ($i = 0; $i < count(array_keys($data)); $i++)
+            $arrayKeysCount = count(array_keys($data));
+            for ($i = 0; $i < $arrayKeysCount; $i++)
                 $auxValuePlaceholder[] = 1;
             $query .= implode(', ', $auxValuePlaceholder);
 
@@ -691,7 +695,8 @@ class Space {
 
             $query = "INSERT INTO documentator_space_permission(space_id, user_id, " . implode(', ', array_keys($data)) . ') values (' . $spaceId . ', ' . $userId . ', ';
             $auxValuePlaceholder = array();
-            for ($i = 0; $i < count(array_keys($data)); $i++)
+            $arrayKeysCount = count(array_keys($data));
+            for ($i = 0; $i < $arrayKeysCount; $i++)
                 $auxValuePlaceholder[] = 1;
             $query .= implode(', ', $auxValuePlaceholder);
 

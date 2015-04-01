@@ -66,7 +66,8 @@ require_once __DIR__ . '/../../../../Yongo/Resources/views/_header.php';
                     <td>
                         <?php
                             if ($boardProjects) {
-                                for ($i = 0; $i < count($boardProjects); $i++) {
+                                $boardProjectsCount = count($boardProjects);
+                                for ($i = 0; $i < $boardProjectsCount; $i++) {
                                     echo '<div><a href="/yongo/project/' . $boardProjects[$i]['id'] . '">' . $boardProjects[$i]['name'] . '</a></div>';
                                 }
                             }

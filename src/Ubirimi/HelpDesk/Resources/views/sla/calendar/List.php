@@ -63,7 +63,8 @@ require_once __DIR__ . '/../../../../../Yongo/Resources/views/_header.php';
                                         <th>Working</th>
                                     </tr>
                                 </thead>
-                                <?php for ($i = 0; $i < count($data); $i++): ?>
+                                <?php $dataCount = count($data); ?>
+                                <?php for ($i = 0; $i < $dataCount; $i++): ?>
                                     <?php if ($data[$i]['not_working_flag']): ?>
                                         <?php continue ?>
                                     <?php endif ?>

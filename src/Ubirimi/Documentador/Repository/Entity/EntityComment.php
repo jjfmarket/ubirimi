@@ -104,7 +104,8 @@ class EntityComment {
 
     public function getCommentsLayoutHTML($comments, &$htmlLayout, $commentParentId, $identationIndex) {
 
-        for ($i = 0; $i < count($comments); $i++) {
+        $commentsCount = count($comments);
+        for ($i = 0; $i < $commentsCount; $i++) {
 
             if ($comments[$i]['parent_comment_id'] == $commentParentId && $comments[$i]['printed'] == 0) {
                 if ($comments[$i]['parent_comment_id'] == null)

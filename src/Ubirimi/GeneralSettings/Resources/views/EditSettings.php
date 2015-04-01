@@ -87,7 +87,8 @@ require_once __DIR__ . '/_header.php';
                                 <select name="zone" class="select2InputSmall" id="general_settings_zone">
                                     <?php
                                         $zones = DateTimeZone::listIdentifiers($timeZoneContinents[$timezoneContinent]);
-                                        for ($i = 0; $i < count($zones); $i++) {
+                                        $zonesCount = count($zones);
+                                        for ($i = 0; $i < $zonesCount; $i++) {
                                             $dateTimeZone0 = new DateTimeZone($zones[$i]);
                                             $dateTime0 = new DateTime("now", $dateTimeZone0);
                                             $timeOffset = $dateTimeZone0->getOffset($dateTime0);

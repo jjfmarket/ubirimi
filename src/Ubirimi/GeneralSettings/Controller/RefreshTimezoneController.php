@@ -34,7 +34,8 @@ class RefreshTimezoneController extends UbirimiController
         $zone = $request->request->get('zone');
 
         $zones = \DateTimeZone::listIdentifiers($zone);
-        for ($i = 0; $i < count($zones); $i++) {
+        $zonesCount = count($zones);
+        for ($i = 0; $i < $zonesCount; $i++) {
             $dateTimeZone0 = new \DateTimeZone($zones[$i]);
             $dateTime0 = new \DateTime("now", $dateTimeZone0);
             $timeOffset = $dateTimeZone0->getOffset($dateTime0);

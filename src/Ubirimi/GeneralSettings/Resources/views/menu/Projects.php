@@ -28,7 +28,8 @@
             $htmlOtherProjects .= '</tr>';
 
             $showProjectsCount = 0;
-            for ($i = 0; $i < count($projectsMenu); $i++) {
+            $projectsMenuCount = count($projectsMenu);
+            for ($i = 0; $i < $projectsMenuCount; $i++) {
                 if ($selectedProjectId != $projectsMenu[$i]['id']) {
 
                     $menuOtherProjectsVisible = true;
