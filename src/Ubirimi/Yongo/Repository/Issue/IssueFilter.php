@@ -143,16 +143,16 @@ class IssueFilter
     }
 
     public function getSubscriptions($filterId) {
-        $query = "SELECT filter_subscription.id, filter_subscription.period, " .
+        $query = "SELECT yongo_filter_subscription.id, yongo_filter_subscription.period, " .
             "general_user.id as user_id, general_user.first_name, general_user.last_name, " .
             "user_created.id as user_created_id, user_created.first_name as created_first_name, user_created.last_name as created_last_name, " .
             "`general_group`.id as group_id, `general_group`.name as group_name " .
-            "FROM filter_subscription " .
-            "left join general_user on general_user.id = filter_subscription.user_id " .
-            "left join general_user as user_created on user_created.id = filter_subscription.user_created_id " .
-            "left join `general_group` on  `general_group`.id = filter_subscription.group_id " .
+            "FROM yongo_filter_subscription " .
+            "left join general_user on general_user.id = yongo_filter_subscription.user_id " .
+            "left join general_user as user_created on user_created.id = yongo_filter_subscription.user_created_id " .
+            "left join `general_group` on  `general_group`.id = yongo_filter_subscription.group_id " .
             "where " .
-            "filter_subscription.filter_id = ?";
+            "yongo_filter_subscription.filter_id = ?";
 
         if ($stmt = UbirimiContainer::get()['db.connection']->prepare($query)) {
             $stmt->bind_param("i", $filterId);
@@ -166,7 +166,7 @@ class IssueFilter
     }
 
     public function addSubscription($filterId, $userCreatedId, $userId, $groupId, $cronExpression, $emailWhenEmptyFlag, $date) {
-        $query = "INSERT INTO filter_subscription(filter_id, user_created_id, user_id, group_id, period, email_when_empty_flag, date_created) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO yongo_filter_subscription(filter_id, user_created_id, user_id, group_id, period, email_when_empty_flag, date_created) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $stmt->bind_param("iiiisis", $filterId, $userCreatedId, $userId, $groupId, $cronExpression, $emailWhenEmptyFlag, $date);
@@ -177,7 +177,7 @@ class IssueFilter
     }
 
     public function deleteSubscriptionById($subscriptionId) {
-        $query = "delete from filter_subscription where id = ?";
+        $query = "delete from yongo_filter_subscription where id = ?";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $stmt->bind_param("i", $subscriptionId);
@@ -187,7 +187,7 @@ class IssueFilter
 
     public function getSubscriptionById($subscriptionId) {
         $query = 'SELECT * ' .
-            'from filter_subscription ' .
+            'from yongo_filter_subscription ' .
             'where id = ? ' .
             "limit 1";
 
@@ -203,7 +203,7 @@ class IssueFilter
 
     public function getAllSubscriptions() {
         $query = 'SELECT * ' .
-            'from filter_subscription';
+            'from yongo_filter_subscription';
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $stmt->execute();

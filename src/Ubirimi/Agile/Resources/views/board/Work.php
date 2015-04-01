@@ -94,7 +94,7 @@ require_once __DIR__ . '/../../../../Yongo/Resources/views/_header.php';
         <?php else: ?>
             <br/>
 
-            <div class="infoBox">There are no active sprints.</div>
+            <div class="infoBox">There are no active sprints.</div>filter_subscription
         <?php endif ?>
     </div>
 
