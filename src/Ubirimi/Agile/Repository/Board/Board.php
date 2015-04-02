@@ -251,10 +251,11 @@ class Board
             $columnsIds[] = $columns[$i]['id'];
         }
 
-        $query = "delete from agile_board_column_status where issue_status_id = ? and agile_board_column_id IN (" . implode(', ', $columnsIds) . ')';
+        $columnIdsList = implode(', ', $columnsIds);
+        $query = "delete from agile_board_column_status where issue_status_id = ? and agile_board_column_id IN (?)";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
-        $stmt->bind_param("i", $StatusId);
+        $stmt->bind_param("is", $StatusId, $columnIdsList);
         $stmt->execute();
     }
 
@@ -362,13 +363,18 @@ class Board
     }
 
     public function deleteIssuesFromSprints($issueIdArray) {
-        $query = "delete from agile_board_sprint_issue where issue_id IN (" . implode(", ", $issueIdArray) . ')';
+        $issueIdList = implode(", ", $issueIdArray);
+
+        $query = "delete from agile_board_sprint_issue where issue_id IN (?)";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
+        $stmt->bind_param("s", $issueIdList);
         $stmt->execute();
     }
 
     public function getIssuesBySprintAndStatusIdAndParentId($sprintId, $parentId = null, $statuses, $onlyMyIssuesFlag, $loggedInUserId) {
+        $statusList = implode(", ", $statuses);
+
         $query = 'select yongo_issue.id, nr, yongo_issue.parent_id, yongo_issue_priority.name as priority_name, yongo_issue_status.name as status_name, yongo_issue_status.id as status, summary, yongo_issue.description, environment, ' .
             'yongo_issue_type.name as type, ' .
             'yongo_project.code as project_code, yongo_project.name as project_name, yongo_issue.project_id as issue_project_id, ' .
@@ -381,7 +387,7 @@ class Board
             'LEFT JOIN yongo_issue_status on yongo_issue.status_id = yongo_issue_status.id ' .
             'LEFT join yongo_project on yongo_issue.project_id = yongo_project.id ' .
             "where agile_board_sprint_issue.agile_board_sprint_id = ? " .
-            "and yongo_issue.status_id IN (" . implode(", ", $statuses) . ") ";
+            "and yongo_issue.status_id IN (?) ";
         if ($onlyMyIssuesFlag)
             $query .= 'and yongo_issue.user_assigned_id = ' . $loggedInUserId . ' ';
         if ($parentId)
@@ -391,7 +397,7 @@ class Board
         $query .= "order by id desc";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
-        $stmt->bind_param("i", $sprintId);
+        $stmt->bind_param("is", $sprintId, $statusList);
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result->num_rows)
@@ -420,15 +426,16 @@ class Board
     public function transferNotDoneIssues($boardId, $sprintId, $completeStatuses) {
         $nextSprint = UbirimiContainer::get()['repository']->get(Sprint::class)->getNextNotStartedByBoardId($boardId, $sprintId);
 
+        $completeStatusesList = implode(', ', $completeStatuses);
         // set as done the completed issues
         $query = "select * " .
             "from agile_board_sprint_issue " .
             "left join yongo_issue on yongo_issue.id = agile_board_sprint_issue.issue_id " .
             "where agile_board_sprint_id = ? " .
-            "and yongo_issue.status_id IN (" . implode(', ', $completeStatuses) . ')';
+            "and yongo_issue.status_id IN (?)";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
-        $stmt->bind_param("i", $sprintId);
+        $stmt->bind_param("is", $sprintId, $completeStatusesList);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -437,10 +444,13 @@ class Board
             while ($issue = $result->fetch_array(MYSQLI_ASSOC)) {
                 $issueIdArray[] = $issue['issue_id'];
             }
-            $queryUpdate = 'update agile_board_sprint_issue set done_flag = 1 where agile_board_sprint_id = ? and issue_id IN (' . implode(', ', $issueIdArray) . ')';
+
+            $issuesIdList = implode(', ', $issueIdArray);
+
+            $queryUpdate = 'update agile_board_sprint_issue set done_flag = 1 where agile_board_sprint_id = ? and  issue_id IN (?)';
 
             $stmtUpdate = UbirimiContainer::get()['db.connection']->prepare($queryUpdate);
-            $stmtUpdate->bind_param("i", $sprintId);
+            $stmtUpdate->bind_param("is", $sprintId, $issuesIdList);
             $stmtUpdate->execute();
         }
 
@@ -486,8 +496,10 @@ class Board
         $boardColumnsArray = UbirimiContainer::get()['repository']->get(Board::class)->getColumns($boardId, 'array');
         if ($boardColumnsArray) {
             $boardColumnsIds = Util::array_column($boardColumnsArray, 'id');
-            $query = "delete from agile_board_column_status where agile_board_column_id IN (" . implode(', ', $boardColumnsIds) . ')';
+            $boardColumnsIdList = implode(', ', $boardColumnsIds);
+            $query = "delete from agile_board_column_status where agile_board_column_id IN (?)";
             $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
+            $stmt->bind_param("s", $boardColumnsIdList);
             $stmt->execute();
         }
 
