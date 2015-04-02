@@ -252,11 +252,11 @@ class Workflow
     public function getInitialStep($workflowId) {
         $query = "select yongo_workflow_step.* " .
             "from yongo_workflow_step " .
-            "where yongo_workflow_step.workflow_id = " . $workflowId . ' ' .
-                "and yongo_workflow_step.initial_step_flag = 1 " .
+            "where yongo_workflow_step.workflow_id = ? and yongo_workflow_step.initial_step_flag = 1 " .
             "limit 1 ";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
+        $stmt->bind_param("i", $workflowId);
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result->num_rows)
@@ -271,11 +271,10 @@ class Workflow
         $query = "select yongo_workflow_data.id, yongo_workflow_step.linked_issue_status_id " .
             "from yongo_workflow_data " .
             "left join yongo_workflow_step on yongo_workflow_step.id = yongo_workflow_data.workflow_step_id_to " .
-            "where yongo_workflow_data.workflow_id = " . $workflowId . ' ' .
-                "and yongo_workflow_data.workflow_step_id_from = " . $initialStep['id'] . " " .
-            "limit 1 ";
+            "where yongo_workflow_data.workflow_id = ? and yongo_workflow_data.workflow_step_id_from = ? limit 1 ";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
+        $stmt->bind_param("ii", $workflowId, $initialStep['id']);
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result->num_rows)
@@ -306,11 +305,11 @@ class Workflow
     public function getTransitions($workflowId) {
         $query = "select yongo_workflow_data.transition_name " .
             "from yongo_workflow_data " .
-            "where yongo_workflow_data.workflow_id = " . $workflowId . ' ' .
-            "group by transition_name " .
+            "where yongo_workflow_data.workflow_id = ? group by transition_name " .
             "order by yongo_workflow_data.id";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
+        $stmt->bind_param("i", $workflowId);
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result->num_rows)
