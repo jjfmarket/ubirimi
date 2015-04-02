@@ -1,7 +1,7 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/4e3d9b1a-d023-4894-a7bf-48cde810b132/mini.png)](https://insight.sensiolabs.com/projects/4e3d9b1a-d023-4894-a7bf-48cde810b132)
 [![Build Status](https://travis-ci.org/ubirimi/ubirimi.png)](https://travis-ci.org/ubirimi/ubirimi) [![Code Climate](https://codeclimate.com/github/ubirimi/ubirimi/badges/gpa.svg)](https://codeclimate.com/github/ubirimi/ubirimi)[![Gittip](http://img.shields.io/gratipay/w2pc.svg)](https://www.gittip.com/w2pc/)
 
-Join our online chat at [![Gitter](https://badges.gitter.im/ubirimi/ubirimi.svg)](https://gitter.im/ubirimi/ubirimi)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ubirimi/ubirimi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
 
 What is Ubirimi?
 -----------------
