@@ -1,5 +1,5 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/4e3d9b1a-d023-4894-a7bf-48cde810b132/mini.png)](https://insight.sensiolabs.com/projects/4e3d9b1a-d023-4894-a7bf-48cde810b132)
-[![Build Status](https://travis-ci.org/ubirimi/ubirimi.png)](https://travis-ci.org/ubirimi/ubirimi) [![Code Climate](https://codeclimate.com/github/ubirimi/ubirimi/badges/gpa.svg)](https://codeclimate.com/github/ubirimi/ubirimi)
+[![Build Status](https://travis-ci.org/ubirimi/ubirimi.png)](https://travis-ci.org/ubirimi/ubirimi) [![Code Climate](https://codeclimate.com/github/ubirimi/ubirimi/badges/gpa.svg)](https://codeclimate.com/github/ubirimi/ubirimi)[![Gittip](http://img.shields.io/gratipay/w2pc.svg)](https://www.gittip.com/w2pc/)
 
 What is Ubirimi?
 -----------------
