@@ -1,5 +1,10 @@
+v 2.21
+  - add a favicon
+  - remove unused imports
+  - move count() out of conditionals
+
 v 2.20
-  - fix delete yongo projeect
+  - fix delete yongo project
   - fix adding custom fields
   - fix image logo in the email sent by Yongo notifications
   - remove some deprecated images
@@ -8,7 +13,7 @@ v 2.20
 v 2.19
   - introduce monolog for logging
   - allow to see filters when there is no project
-  - make ubirimi suite completelly free
+  - make ubirimi suite completely free
   - fix calendar creation of events with repeat weekly cycle
   - show username in add notification/permission scheme data to avoid confusion
   - fixed query for projects that had current assignee/reported in the permission definition
@@ -23,7 +28,7 @@ v 2.18
 
 v 2.17
   - various bug fixes
-  - update jqueryui
+  - update jQueryUI
   - remove static usage
   - fix bug when changing issue type is edit dialog
   - when editing a sub task show only the sub task issue types
