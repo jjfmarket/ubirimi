@@ -73,8 +73,13 @@ Common Errors:
 Error: PHP Fatal error:  Call to undefined method mysqli_stmt::get_result()  
 Cause: mysqlnd not installed  
 
-Contributing using pre-made development server
-----------------------------------------------
+Contribution
+------------
+
+If you have a patch, or stumbled upon an issue with Ubirimi core, you can contribute this back to the code. Please read our [contributor guidelines](https://github.com/ubirimi/ubirimi/blob/master/CONTRIBUTING.md) for more information how you can do this.  
+
+Get started using our pre-made development server
+-------------------------------------------------
 
 Ubirimi is an open source, community-driven project. If you would like to contribute just send pull requests. To get started clone the repository. 
 
@@ -118,7 +123,7 @@ DB Password: (leave blank)
 Port: 3306  
 
 
-Copyright and license
+Copyright and License
 ---------------------
 
 Ubirimi is distributed under the terms of the GNU General Public License version 2.0
