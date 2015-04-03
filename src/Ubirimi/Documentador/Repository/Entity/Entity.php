@@ -693,7 +693,7 @@ class Entity {
         return $html;
     }
 
-    public function getBlogTreeNavigation($pagesInSpace) {
+    public function getBlogTreeNavigation(\mysqli_result $pagesInSpace) {
 
         $blogYearMonthStructure = array();
 
