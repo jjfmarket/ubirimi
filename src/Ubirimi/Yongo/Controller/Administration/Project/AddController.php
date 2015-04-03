@@ -91,8 +91,9 @@ class AddController extends UbirimiController
                     $duplicateCode = true;
             }
             $projectExists = $this->getRepository(YongoProject::class)->getByName(mb_strtolower($name), null, $session->get('client/id'));
-            if ($projectExists)
+            if ($projectExists) {
                 $duplicateName = true;
+            }
 
             if (!$emptyName && !$emptyCode && !$duplicateName && !$duplicateCode) {
 

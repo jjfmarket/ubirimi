@@ -139,10 +139,10 @@ class SlaCalendar
             return false;
     }
 
-    public function addData($calendarId, $data) {
+    public function addData($calendarId, $data, $date) {
         for ($i = 1; $i <= 7; $i++) {
-            $query = "INSERT INTO help_sla_calendar_data(help_sla_calendar_id, day_number, time_from, time_to, not_working_flag) VALUES " .
-                "(?, ?, ?, ?, ?)";
+            $query = "INSERT INTO help_sla_calendar_data(help_sla_calendar_id, day_number, time_from, time_to, not_working_flag, date_created) VALUES " .
+                "(?, ?, ?, ?, ?, ?)";
 
             $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
             if ($data[$i-1]['notWorking']) {
@@ -153,7 +153,7 @@ class SlaCalendar
                 $endTime = $data[$i - 1]['to_hour'] . ':' . $data[$i - 1]['to_minute'];
             }
 
-            $stmt->bind_param("iissi", $calendarId, $i, $startTime, $endTime, $data[$i - 1]['notWorking']);
+            $stmt->bind_param("iissis", $calendarId, $i, $startTime, $endTime, $data[$i - 1]['notWorking'], $date);
             $stmt->execute();
         }
     }
@@ -169,7 +169,7 @@ class SlaCalendar
         $calendarId = UbirimiContainer::get()['db.connection']->insert_id;
 
         // add the data
-        UbirimiContainer::get()['repository']->get(SlaCalendar::class)->addData($calendarId, $data);
+        UbirimiContainer::get()['repository']->get(SlaCalendar::class)->addData($calendarId, $data, $date);
 
         return $calendarId;
     }
