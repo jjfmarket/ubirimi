@@ -423,7 +423,7 @@ class Space {
         $query = 'insert into documentator_space_permission_anonymous(documentator_space_id, ';
         $parametersCount = count($parameters);
 
-        for ($i = 0; $i < count($parameters); $i++) {
+        for ($i = 0; $i < $parametersCount; $i++) {
             $query .= $parameters[$i]['field'] . ', ';
         }
 

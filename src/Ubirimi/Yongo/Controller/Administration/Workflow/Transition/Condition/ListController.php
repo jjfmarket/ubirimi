@@ -57,8 +57,8 @@ class ListController extends UbirimiController
         $conditionString = str_replace("[[OR]]", $text_operator_or, $conditionString);
 
         preg_match_all('/cond_id=[0-9]+/', $conditionString, $conditions);
-
-        for ($i = 0; $i < count($conditions); $i++) {
+        $conditionsCount = count($conditions);
+        for ($i = 0; $i < $conditionsCount; $i++) {
             $conditionId = (int)str_replace('cond_id=', '', $conditions[$i]);
 
             $text = '';
@@ -77,8 +77,8 @@ class ListController extends UbirimiController
 
         preg_match_all('/perm_id=[0-9]+/', $conditionString, $permissions);
         $permissions = $permissions[0];
-
-        for ($i = 0; $i < count($permissions); $i++) {
+        $permissionsCount = count($permissions);
+        for ($i = 0; $i < $permissionsCount; $i++) {
             $permissionId = (int)str_replace('perm_id=', '', $permissions[$i]);
 
             $text = '';
