@@ -25,7 +25,7 @@ class UbirimiContainer
     {
         static $pimple;
 
-        if (null == $pimple) {
+        if (null === $pimple) {
             $pimple = new \Pimple();
         }
 

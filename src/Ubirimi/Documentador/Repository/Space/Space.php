@@ -775,7 +775,7 @@ class Space {
         $treeStructure = array();
         $expandedId = 0;
         while ($pageInSpace = $pagesInSpace->fetch_array(MYSQLI_ASSOC)) {
-            if ($pageInSpace['parent_entity_id'] == null) {
+            if ($pageInSpace['parent_entity_id'] === null) {
                 $treeStructure[0][] = array('id' => $pageInSpace['id'],
                     'title' => $pageInSpace['name'],
                     'expanded' => ($entityId == $pageInSpace['id']));

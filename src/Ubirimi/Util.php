@@ -235,7 +235,7 @@ class Util {
 
     public static function manageModalAttachments($issueId, $loggedInUserId, $attachIdsToBeKept) {
 
-        if (null != UbirimiContainer::get()['session']->has('added_attachments_in_screen')) {
+        if (null !== UbirimiContainer::get()['session']->has('added_attachments_in_screen')) {
             $attIdsSession = UbirimiContainer::get()['session']->get('added_attachments_in_screen');
             $uploadDirectory = Util::getAssetsFolder(SystemProduct::SYS_PRODUCT_YONGO) . $issueId;
             $attIdsSessionCount = count($attIdsSession);
@@ -852,7 +852,7 @@ class Util {
             'fix_version', 'affects_version', 'resolution');
         $paramsToSearchCount = count($paramsToSearch);
         for ($i = 0; $i < $paramsToSearchCount; $i++) {
-            if (isset($getSearchParameters[$paramsToSearch[$i]]) && $getSearchParameters[$paramsToSearch[$i]] != null)
+            if (isset($getSearchParameters[$paramsToSearch[$i]]) && $getSearchParameters[$paramsToSearch[$i]] !== null)
                 return true;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 use Ubirimi\Util;
 
 require_once __DIR__ . '/_header.php';
@@ -19,7 +20,7 @@ require_once __DIR__ . '/_header.php';
     <br />
     username: <?php echo $this->username ?>
     <br />
-    <?php if (null != $this->password): ?>
+    <?php if (null !== $this->password): ?>
     password: <?php echo $this->password ?>
     <?php endif ?>
     <br />

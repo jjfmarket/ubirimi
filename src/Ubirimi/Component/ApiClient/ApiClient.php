@@ -55,7 +55,7 @@ class ApiClient
 
     public function handleResponse(ApiResponse $response)
     {
-        if (null != $this->eventDispatcher) {
+        if (null !== $this->eventDispatcher) {
             $event = new ApiResponseEvent($response);
 
             $this->eventDispatcher->dispatch(ApiEvent::API_RESPONSE, $event);

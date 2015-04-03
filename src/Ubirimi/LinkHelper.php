@@ -27,7 +27,7 @@ class LinkHelper {
         foreach ($parameters as $key => $value) {
             if (is_array($value))
                 $parameters[$key] = implode('|', $value);
-            else if ($value == null) {
+            else if ($value === null) {
                 unset($parameters[$key]);
             }
         }
