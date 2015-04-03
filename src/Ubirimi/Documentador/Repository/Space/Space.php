@@ -771,7 +771,7 @@ class Space {
         }
     }
 
-    public function generateTreeStructure($pagesInSpace, $entityId) {
+    public function generateTreeStructure(\mysqli_result $pagesInSpace, $entityId) {
         $treeStructure = array();
         $expandedId = 0;
         while ($pageInSpace = $pagesInSpace->fetch_array(MYSQLI_ASSOC)) {
