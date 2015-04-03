@@ -69,7 +69,7 @@ use Ubirimi\Yongo\Repository\Workflow\Workflow;
                             <table width="100%" cellspacing="0px" cellpadding="0px" border="0px">
                                 <?php if ($swimlaneStrategy == 'assignee'): ?>
                                     <?php if ($lastParentId != $issue['parent_id'] && $lastIssueId != $issue['parent_id']): ?>
-                                        <?php if (($issue['parent_status_id'] && $issue['parent_status_id'] != $issue['status']) || ($issue['parent_assignee'] == null && $issue['assignee'] != null && $issue['parent_id']) || ($issue['parent_assignee'] && $issue['assignee'] != $issue['parent_assignee'])): ?>
+                                        <?php if (($issue['parent_status_id'] && $issue['parent_status_id'] !== $issue['status']) || ($issue['parent_assignee'] === null && $issue['assignee'] !== null && $issue['parent_id']) || ($issue['parent_assignee'] && $issue['assignee'] !== $issue['parent_assignee'])): ?>
                                             <tr>
                                                 <td bgcolor="#DDDDDD" colspan="4"><?php echo $issue['parent_project_code'] . '-' . $issue['parent_nr'] . ' ' . $issue['parent_summary'] ?></td>
                                             </tr>

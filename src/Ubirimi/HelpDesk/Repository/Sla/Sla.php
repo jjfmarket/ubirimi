@@ -378,7 +378,7 @@ class Sla
         $goalData = UbirimiContainer::get()['repository']->get(Sla::class)->getGoalForIssueId($SLA['id'], $issueId, $issue['issue_project_id'], $clientId);
         $goalId = $goalData['id'];
 
-        if ($goalId == null) {
+        if ($goalId === null) {
             return null;
         }
         $goalValue = $goalData['value'];

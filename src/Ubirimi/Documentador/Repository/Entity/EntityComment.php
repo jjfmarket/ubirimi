@@ -108,7 +108,7 @@ class EntityComment {
         for ($i = 0; $i < $commentsCount; $i++) {
 
             if ($comments[$i]['parent_comment_id'] == $commentParentId && $comments[$i]['printed'] == 0) {
-                if ($comments[$i]['parent_comment_id'] == null)
+                if ($comments[$i]['parent_comment_id'] === null)
                     $identationIndex = 0;
 
                 $htmlLayout .= '<table class="table table-hover table-condensed">';

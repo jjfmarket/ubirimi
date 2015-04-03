@@ -36,7 +36,7 @@ $emails = UbirimiContainer::get()['repository']->get(EmailQueue::class)->getBatc
 
 while ($emails && $email = $emails->fetch_array(MYSQLI_ASSOC)) {
     $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($email['client_id']);
-    if (null == $smtpSettings) {
+    if (null === $smtpSettings) {
         echo "No SMTP server defined. Aborting\n";
     }
 
