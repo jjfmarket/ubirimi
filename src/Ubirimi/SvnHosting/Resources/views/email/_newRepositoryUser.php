@@ -15,7 +15,7 @@ require_once __DIR__ . '/_header.php';
     <br />
     Repository name: <?php echo $this->repoName ?>
     <br />
-    Repository URL: <?php echo $baseURL . '/svn/' . Util::slugify($this->clientData['id']) . '/' . Util::slugify($this->repoName) . '/trunk' ?>
+    Repository URL: <?php echo $this->baseURL . '/svn/' . Util::slugify($this->clientData['id']) . '/' . Util::slugify($this->repoName) . '/trunk' ?>
     <br />
     username: <?php echo $this->username ?>
     <br />

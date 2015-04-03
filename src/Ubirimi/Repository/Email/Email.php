@@ -103,12 +103,12 @@ class Email {
                         null,
                         Email::$smtpSettings['email_prefix'] . ' ' . 'Ubirimi - You have been granted access to ' . $repositoryName . ' SVN Repository',
                         Util::getTemplate('_newRepositoryUser.php',array('first_name' => $firstName,
-                                                                                  'last_name' => $lastName,
-                                                                                  'username' => $username,
-                                                                                  'password' => $password,
-                                                                                  'repoName' => $repositoryName,
-                                                                                  'baseURL' => $baseURL,
-                                                                                  'clientData' => UbirimiContainer::get()['session']->get('client'))),
+                                                                         'last_name' => $lastName,
+                                                                         'username' => $username,
+                                                                         'password' => $password,
+                                                                         'repoName' => $repositoryName,
+                                                                         'baseURL' => $baseURL,
+                                                                         'clientData' => UbirimiContainer::get()['session']->get('client'))),
                         Util::getServerCurrentDateTime());
     }
 

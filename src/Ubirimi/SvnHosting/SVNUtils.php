@@ -3,13 +3,7 @@
 namespace Ubirimi\SvnHosting;
 
 use Exception;
-use Path;
-use SimpleXMLElement;
-use Symfony\Component\Console\Output\Output;
 use Ubirimi\ConsoleUtils;
-use Ubirimi\DirectoryUtils;
-use Ubirimi\SvnHosting\Repository\SvnRepository;
-use Ubirimi\Yongo\Repository\Project\YongoProject;
 
 /**
  * Usefull static method to manipulate an svn repository
@@ -34,105 +28,6 @@ class SVNUtils {
     public static $hooks = array('post-commit', 'post-unlock', 'pre-revprop-change', 'post-lock', 'pre-commit', 'pre-unlock', 'post-revprop-change', 'pre-lock', 'start-commit');
 
     /**
-     * @param string Path of subversion repository
-     * @return bool
-     */
-    public static function isSVNRepository($path, $available = false) {
-        if (file_exists($path . "/hooks") && file_exists($path . "/db")) {
-            return true;
-        }
-        if ($available && is_dir($path)) {
-            $not_dir = false;
-            foreach (array_diff(scandir($path), array('.', '..')) as $file) {
-                if (!is_dir($path . '/' . $file)) {
-                    $not_dir = true;
-                }
-            }
-            if ($not_dir === false) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @param string Output of svnlook changed
-     * @return array Exemple array(array('M', 'tutu'), array('M', 'dir/tata'))
-     */
-    public static function changedFiles($list) {
-        $res = array();
-        $list = explode("\n", $list);
-        foreach ($list as $line) {
-            if ($line) {
-                $ex = explode(" ", $line, 2);
-                array_push($res, $ex);
-            }
-        }
-        return $res;
-    }
-
-    /**
-     * Call the svnlook binary on an svn transaction.
-     *
-     * @param string svnlook command (see svnlook help)
-     * @param string SvnRepository path
-     * @param string transaction (call TXN into svn hooks samples)
-     * @return string Output of svnlook
-     * @see http://svnbook.red-bean.com/en/1.1/ch09s03.html
-     */
-    public static function svnLookTransaction($command, $repository, $transaction) {
-        $command = escapeshellarg($command);
-        $transaction = escapeshellarg($transaction);
-        $repository = escapeshellarg($repository);
-        return ConsoleUtils::runCmdCaptureMessage(SVNUtils::svnCommand("$command -t $transaction $repository"), $return);
-    }
-
-    /**
-     * Call the svnlook binary on an svn revision.
-     *
-     * @param string svnlook command (see svnlook help)
-     * @param string SvnRepository path
-     * @param integer revision
-     * @return string Output of svnlook
-     * @see http://svnbook.red-bean.com/en/1.1/ch09s03.html
-     */
-    public static function svnLookRevision($command, $repository, $revision) {
-        $command = escapeshellarg($command);
-        $revision = escapeshellarg($revision);
-        $repository = escapeshellarg($repository);
-        return ConsoleUtils::runCmdCaptureMessage(SVNUtils::svnCommand("$command -r $revision $repository"), $return);
-    }
-
-    /**
-     * Return minor version of svn client
-     *
-     * @return int (ex for svn 1.3.4 return 3)
-     */
-    public static function getSvnMinorVersion() {
-        $version = SVNUtils::getSvnVersion();
-        return $version[1];
-    }
-
-    /**
-     * Return version of svn client
-     *
-     * @return array  (ex: for svn version 1.3.3 array(1, 3, 3))
-     */
-    public static function getSvnVersion() {
-        return SVNUtils::parseSvnVersion(ConsoleUtils::runCmdCaptureMessage(SVNUtils::svnCommand("--version --quiet"), $return));
-    }
-
-    /**
-     * Parse output of svn --version for return the version number
-     *
-     * @param string output of svn --version
-     * @return array  (ex: for svn version 1.3.3 array(1, 3, 3))
-     */
-    public static function parseSvnVersion($version) {
-        $version = rtrim($version);
-        return explode(".", $version);
-    }
-    /**
      * It's for use with testunit. This method simulate svnadmin create $path
      *
      * @param string Path to create directory structs
@@ -152,7 +47,7 @@ class SVNUtils {
      * @param string Parameters
      */
     public static function svnCommand($cmd) {
-        return "svn --config-dir /USVN/fake $cmd";
+        return "svn --config-dir /UBR/fake $cmd";
     }
 
     /**
@@ -161,7 +56,7 @@ class SVNUtils {
      * @param string Parameters
      */
     public static function svnadminCommand($cmd) {
-        return "svnadmin --config-dir /USVN/fake $cmd";
+        return "svnadmin --config-dir /UBR/fake $cmd";
     }
 
     /**
@@ -176,7 +71,7 @@ class SVNUtils {
         $cmd = SVNUtils::svnCommand("import --non-interactive --username Ubirimi -m \"" . "Commit by Ubirimi" . "\" $local $server");
         $message = ConsoleUtils::runCmdCaptureMessage($cmd, $return);
         if ($return) {
-            throw new USVN_Exception("Can't import into subversion repository.\nCommand:\n" . $cmd . "\n\nError:\n" . $message);
+            throw new Exception("Can't import into subversion repository.\nCommand:\n" . $cmd . "\n\nError:\n" . $message);
         }
     }
 
@@ -196,6 +91,54 @@ class SVNUtils {
         }
     }
 
+    static public function removeDirectory($remove_path) {
+        if (!file_exists($remove_path)) {
+            return;
+        }
+        if (($path = realpath($remove_path)) !== FALSE) {
+            if (@chmod($path, 0777) === FALSE) {
+                throw new Exception(sprintf("Can't delete directory %s. Permission denied.", $path));
+            }
+            try {
+                if (is_dir($path)) {
+                    $dh = opendir($path);
+                } else {
+                    return;
+                }
+            } catch (Exception $e) {
+                return;
+            }
+            while (($file = readdir($dh)) !== false) {
+                if ($file != '.' && $file != '..') {
+                    if (is_dir($path . DIRECTORY_SEPARATOR . $file)) {
+                        SVNUtils::removeDirectory($path . DIRECTORY_SEPARATOR . $file);
+                    } else {
+                        if (chmod($path . DIRECTORY_SEPARATOR . $file, 0777) === FALSE) {
+                            throw new Exception(sprintf("Can't delete file %s.", $path . DIRECTORY_SEPARATOR . $file));
+                        }
+                        unlink($path . DIRECTORY_SEPARATOR . $file);
+                    }
+                }
+            }
+            closedir($dh);
+            if (@rmdir($path) === FALSE) {
+                throw new Exception(sprintf("Can't delete directory %s.", $path));
+            }
+        }
+    }
+
+    /**
+     * Create and return a tmp directory
+     *
+     * @return string Path to tmp directory
+     */
+    static public function getTmpDirectory() {
+        $path = tempnam("", "UBR_");
+        unlink($path);
+        mkdir($path);
+        return $path;
+    }
+
     /**
      * Create standard svn directories
      * /trunk
@@ -205,75 +148,18 @@ class SVNUtils {
      * @param string Path to create subversion
      */
     public static function createStandardDirectories($path) {
-        $tmpdir = DirectoryUtils::getTmpDirectory();
+        $tmpdir = SVNUtils::getTmpDirectory();
         try {
             mkdir($tmpdir . DIRECTORY_SEPARATOR . "trunk");
             mkdir($tmpdir . DIRECTORY_SEPARATOR . "branches");
             mkdir($tmpdir . DIRECTORY_SEPARATOR . "tags");
             SVNUtils::_svnImport($path, $tmpdir);
         } catch (Exception $e) {
-            DirectoryUtils::removeDirectory($path);
-            DirectoryUtils::removeDirectory($tmpdir);
+            SVNUtils::removeDirectory($path);
+            SVNUtils::removeDirectory($tmpdir);
             throw $e;
         }
-        DirectoryUtils::removeDirectory($tmpdir);
-    }
-
-    /**
-     * Checkout SVN repository into filesystem
-     * @param string Path to subversion repository
-     * @param string Path to destination
-     */
-    public static function checkoutSvn($src, $dst) {
-        $dst = escapeshellarg($dst);
-        $src = SVNUtils::getRepositoryPath($src);
-        $message = ConsoleUtils::runCmdCaptureMessage(SVNUtils::svnCommand("co $src $dst"), $return);
-        if ($return) {
-
-            throw new USVN_Exception("Can't checkout subversion repository: " . $message);
-        }
-    }
-
-    /**
-     * List files into Subversion
-     *
-     * @param string Path to subversion repository
-     * @param string Path into subversion repository
-     * @return associative array like: array(array(name => "tutu", isDirectory => true))
-     */
-    public static function listSvn($repository, $path) {
-        $escape_path = SVNUtils::getRepositoryPath($repository . '/' . $path);
-        $lists = ConsoleUtils::runCmdCaptureMessageUnsafe(SVNUtils::svnCommand("ls --xml $escape_path"), $return);
-        if ($return) {
-
-            throw new USVN_Exception("Can't list subversion repository: " . $lists);
-        }
-        $res = array();
-        $xml = new SimpleXMLElement($lists);
-        foreach ($xml->list->entry as $list) {
-            if ($list['kind'] == 'file') {
-                array_push($res, array("name" => (string)$list->name, "isDirectory" => false, "path" => str_replace('//', '/', $path . "/" . $list->name), "size" => $list->size, "revision" => $list->commit['revision'], "author" => $list->commit->author, "date" => $list->commit->date));
-            } else {
-                array_push($res, array("name" => (string)$list->name, "isDirectory" => true, "path" => str_replace('//', '/', $path . "/" . $list->name . '/')));
-            }
-        }
-
-        usort($res, array("SVNUtils", "listSvnSort"));
-        return $res;
-    }
-
-    private static function listSvnSort($a, $b) {
-        if ($a["isDirectory"]) {
-            if ($b["isDirectory"]) {
-                return (strcasecmp($a["name"], $b["name"]));
-            } else {
-                return -1;
-            }
-        }
-        if ($b["isDirectory"]) {
-            return 1;
-        }
-        return (strcasecmp($a["name"], $b["name"]));
+        SVNUtils::removeDirectory($tmpdir);
     }
 
     /**
@@ -346,19 +232,40 @@ class SVNUtils {
     }
 
     /**
+     * Copy a file, or recursively copy a folder and its contents
      *
-     * @param string YongoProject name
-     * @param string Path into Subversion
-     * @return string Return url of files into Subversion
+     * @author      Aidan Lister <aidan@php.net>
+     * @version     1.0.1
+     * @link        http://aidanlister.com/repos/v/function.copyr.php
+     * @param       string $source    Source path
+     * @param       string $dest      Destination path
+     * @return      bool     Returns TRUE on success, FALSE on failure
      */
-    public static function getSubversionUrl($project, $path) {
-
-        $config = Zend_Registry::get('config');
-        $url = $config->subversion->url;
-        if (substr($url, -1, 1) != '/') {
-            $url .= '/';
+    static public function copyr($source, $dest) {
+        // Check for symlinks
+        if (is_link($source)) {
+            return symlink(readlink($source), $dest);
         }
-        $url .= $project . $path;
-        return $url;
+        // Simple copy for a file
+        if (is_file($source)) {
+            return copy($source, $dest);
+        }
+        // Make destination directory
+        if (!is_dir($dest)) {
+            mkdir($dest);
+        }
+        // Loop through the folder
+        $dir = dir($source);
+        while (false !== $entry = $dir->read()) {
+            // Skip pointers
+            if ($entry == '.' || $entry == '..') {
+                continue;
+            }
+            // Deep copy directories
+            SVNUtils::copyr("$source/$entry", "$dest/$entry");
+        }
+        // Clean up
+        $dir->close();
+        return true;
     }
 }
