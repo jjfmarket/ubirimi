@@ -84,7 +84,7 @@ class Util {
         }
     }
 
-    public static function getAsArray($mysqliResult, $fieldArray) {
+    public static function getAsArray(\mysqli_result $mysqliResult, $fieldArray) {
         $resultArray = array();
         while ($result = $mysqliResult->fetch_array(MYSQLI_ASSOC)) {
             if (count($fieldArray) > 1) {

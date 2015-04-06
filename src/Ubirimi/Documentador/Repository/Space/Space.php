@@ -517,6 +517,7 @@ class Space {
     }
 
     public function deleteAllFromTrash($spaceId) {
+        /* @var $entities \mysqli_result */
         $entities = UbirimiContainer::get()['repository']->get(Space::class)->getDeletedPages($spaceId);
 
         if ($entities) {

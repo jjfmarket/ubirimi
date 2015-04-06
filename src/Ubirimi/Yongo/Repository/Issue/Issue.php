@@ -1720,7 +1720,7 @@ class Issue
         $stmt->execute();
     }
 
-    public function getSearchParameters($projectsForBrowsing, $clientId, $helpDeskFlag = 0) {
+    public function getSearchParameters(\mysqli_result $projectsForBrowsing, $clientId, $helpDeskFlag = 0) {
         $projectsForBrowsing->data_seek(0);
         $projectIds = Util::getAsArray($projectsForBrowsing, array('id'));
 
@@ -1879,7 +1879,7 @@ class Issue
         return $criteria;
     }
     
-    public function prepareDataForSearchFromPostGet($projectIds, $postArray, $getArray) {
+    public function prepareDataForSearchFromPostGet($projectIds, array $postArray, array $getArray) {
         $getFilter = isset($getArray['filter']) ? $getArray['filter'] : null;
         $searchText = $postArray['query'];
         $summaryFlag = isset($postArray['summary_flag']) ? 1 : 0;
