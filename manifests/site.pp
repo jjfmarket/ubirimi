@@ -244,3 +244,10 @@ exec { 'run install composer':
   command => '/usr/local/bin/composer -d /var/www install',
   require => [Package["apache2"],Exec['install composer']]
 }
+
+# create assets folders
+
+exec { 'create assets folder':
+  command => 'mkdir /vagrant/assets; mkdir -p /vagrant/assets/documentador/attachments; mkdir -p /vagrant/assets/documentador/filelists; mkdir -p /vagrant/assets/yongo/attachments; mkdir -p /vagrant/assets/users;',
+  require => [Exec['run install composer']]
+}
