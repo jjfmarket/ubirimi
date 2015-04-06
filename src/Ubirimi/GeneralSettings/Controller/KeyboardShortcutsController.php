@@ -27,6 +27,6 @@ class KeyboardShortcutsController extends UbirimiController
 {
     public function indexAction(Request $request, SessionInterface $session)
     {
-        return $this->render(__DIR__ . '/../../Resources/views/KeyboardShortcuts.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../Resources/views/KeyboardShortcuts.php', get_defined_vars());
     }
 }

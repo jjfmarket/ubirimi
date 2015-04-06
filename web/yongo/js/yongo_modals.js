@@ -1979,6 +1979,7 @@ $('document').ready(function () {
         $("#addCommentModal").load("/yongo/issue/comment-dialog/" + issueId, [], function () {
             $("#addCommentModal").dialog(options);
             $("#addCommentModal").dialog("open");
+            $('#issue_add_comment').focus();
         });
     }
 
@@ -2347,6 +2348,8 @@ $('document').ready(function () {
                 dateFormat: "dd-mm-yy",
                 ampm: false
             });
+
+            $("#log_work_time_spent").focus();
         });
     });
 

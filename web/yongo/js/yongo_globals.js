@@ -56,6 +56,7 @@ function assignIssue(event) {
         $("#modalEditIssueAssign").dialog(options);
         $("#modalEditIssueAssign").dialog("open");
         $(".ui-dialog-content .select2InputMedium").select2();
+        $(".ui-dialog-content .select2InputMedium").select2("open");
     });
 }
 
