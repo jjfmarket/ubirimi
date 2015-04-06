@@ -23,17 +23,20 @@ require_once __DIR__ . '/../_header.php';
 
         <div>
             <?php
-                $blogPages = UbirimiContainer::get()['repository']->get(Entity::class)->getBlogTreeNavigation($pagesInSpace);
-                foreach ($blogPages as $year => $data) {
-                    echo '<div id="header_tree_' . $year . '">';
-                    echo '<a href="#"><img style="vertical-align: middle;" id="tree_show_content_year_' . $year . '" src="/documentador/img/arrow_down.png" /></a>' . $year . '<br />';
-                    foreach ($data as $month => $pages) {
-                        echo '<div style="display:none" id="tree_show_content_month_' . $year . '_' . $month . '">&nbsp;&nbsp;&nbsp;&nbsp; <a href="#"><img style="vertical-align: middle;" src="/documentador/img/arrow_down.png" /></a> ' . $month . '</div>';
-                        foreach ($pages as $page) {
-                            echo '<div style="display:none" id="tree_month_' . $year . '_' . $month . '_' . $page['id'] . '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bullet; ' . LinkHelper::getDocumentadorPageLink($page['id'], $page['name']) . '</div>';
+                if ($pagesInSpace) {
+                    $blogPages = UbirimiContainer::get()['repository']->get(Entity::class)->getBlogTreeNavigation($pagesInSpace);
+                    foreach ($blogPages as $year => $data) {
+                        echo '<div id="header_tree_' . $year . '">';
+                        echo '<a href="#"><img style="vertical-align: middle;" id="tree_show_content_year_' . $year . '" src="/documentador/img/arrow_down.png" /></a>' . $year . '<br />';
+                        foreach ($data as $month => $pages) {
+                            echo '<div style="display:none" id="tree_show_content_month_' . $year . '_' . $month . '">&nbsp;&nbsp;&nbsp;&nbsp; <a href="#"><img style="vertical-align: middle;" src="/documentador/img/arrow_down.png" /></a> ' . $month . '</div>';
+                            foreach ($pages as $page) {
+                                echo '<div style="display:none" id="tree_month_' . $year . '_' . $month . '_' . $page['id'] . '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bullet; ' . LinkHelper::getDocumentadorPageLink($page['id'], $page['name']) . '</div>';
+                            }
                         }
+                        echo '</div>';
                     }
-                    echo '</div>';
+
                 }
             ?>
         </div>
