@@ -13,7 +13,7 @@ require_once __DIR__ . '/../_header.php';
 <body>
     <?php require_once __DIR__ . '/../_menu.php'; ?>
     <?php
-        if (EntityType::ENTITY_BLANK_PAGE == $page['documentator_entity_type_id']) {
+        if (EntityType::ENTITY_BLANK_PAGE == $page['documentator_entity_type_id'] || EntityType::ENTITY_FILE_LIST == $page['documentator_entity_type_id']) {
             $breadCrumb = '<a href="/documentador/spaces" class="linkNoUnderline">Spaces</a> > ' . $page['space_name'] . ' > ' .
                 '<a class="linkNoUnderline" href="/documentador/pages/' . $spaceId . '">Pages</a> > ';
 

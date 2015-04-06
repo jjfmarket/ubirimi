@@ -33,6 +33,6 @@ class GetFileDataController extends UbirimiController
 
         $revisions = $this->getRepository(Entity::class)->getRevisionsByFileId($fileId);
 
-        return $this->render(__DIR__ . '/../../../Resources/views/page//GetFileData.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/page//GetFileData.php', get_defined_vars());
     }
 }
