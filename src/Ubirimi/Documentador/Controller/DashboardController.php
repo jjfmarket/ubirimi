@@ -40,11 +40,14 @@ class DashboardController extends UbirimiController
             $sectionPageTitle = $session->get('client/settings/title_name')
                 . ' / ' . SystemProduct::SYS_PRODUCT_DOCUMENTADOR_NAME
                 . ' / Dashboard';
+            $clientId = $session->get('client/id');
+            $clientSettings = $session->get('client/settings');
 
         } else {
             $httpHOST = Util::getHttpHost();
             $clientId = $this->getRepository(UbirimiClient::class)->getByBaseURL($httpHOST, 'array', 'id');
             $sectionPageTitle = SystemProduct::SYS_PRODUCT_DOCUMENTADOR_NAME. ' / Dashboard';
+            $clientSettings = $this->getRepository(UbirimiClient::class)->getSettings($clientId);
         }
 
         $type = $request->get('type');
@@ -59,6 +62,9 @@ class DashboardController extends UbirimiController
             }
         } else if ($type == 'pages') {
             $pages = $this->getRepository(Entity::class)->getFavouritePagesByClientIdAndUserId($session->get('client/id'), $loggedInUserId);
+        } else if ($type == 'all-spaces') {
+            $spaces = $this->getRepository(Space::class)->getByClientId($clientId);
+
         }
 
         return $this->render(__DIR__ . '/../Resources/views/Dashboard.php', get_defined_vars());

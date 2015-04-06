@@ -48,7 +48,7 @@ if (null == $productsArray) {
         <?php if (Util::checkKeyAndValueInArray('sys_product_id', SystemProduct::SYS_PRODUCT_DOCUMENTADOR, $productsArray)): ?>
             <?php ($session->get('selected_product_id') == SystemProduct::SYS_PRODUCT_DOCUMENTADOR) ? $style = 'background-color: #6A8EB2;' : $style = '' ?>
             <td style="<?php echo $style ?> border-right: 1px #9c9c9c solid;" width="180px" class="product-menu" align="center">
-                <div><a href="/documentador/dashboard/spaces"><?php echo SystemProduct::SYS_PRODUCT_DOCUMENTADOR_NAME ?></a></div>
+                <div><a href="/documentador/dashboard/all-spaces"><?php echo SystemProduct::SYS_PRODUCT_DOCUMENTADOR_NAME ?></a></div>
             </td>
         <?php endif ?>
 

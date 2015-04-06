@@ -36,7 +36,7 @@ class UserSpacesController extends UbirimiController
             $clientId = $session->get('client/id');
             $loggedInUserId = $session->get('user/id');
 
-            $spaces = $this->getRepository(Space::class)->getByClientIdAndFavourite($clientId);
+            $spaces = $this->getRepository(Space::class)->getByClientId($clientId);
             $session->set('selected_product_id', SystemProduct::SYS_PRODUCT_DOCUMENTADOR);
             $sectionPageTitle = $session->get('client/settings/title_name') . ' / ' . SystemProduct::SYS_PRODUCT_DOCUMENTADOR_NAME. ' / Spaces';
             $clientSettings = $session->get('client/settings');
