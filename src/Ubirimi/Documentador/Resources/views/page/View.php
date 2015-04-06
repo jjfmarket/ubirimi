@@ -24,7 +24,8 @@ require_once __DIR__ . '/../_header.php';
             $breadCrumb .= $page['name'];
 
         } else if (EntityType::ENTITY_BLOG_POST == $page['documentator_entity_type_id']) {
-            $breadCrumb = '<a href="/documentador/blog/recent/' . $spaceId . '" class="linkNoUnderline">Blog</a> > ' . $pageYear . ' > ' .
+            $breadCrumb = '<a href="/documentador/spaces" class="linkNoUnderline">Spaces</a> > ' . $page['space_name'] .
+                          ' > <a href="/documentador/blog/recent/' . $spaceId . '" class="linkNoUnderline">Blog</a> > ' . $pageYear . ' > ' .
                 '<a class="linkNoUnderline" href="/documentador/pages/' . $spaceId . '">' . $pageMonth . '</a> > ' . $pageDay . ' > ' . $page['name'];
 
         }
