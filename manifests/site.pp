@@ -248,6 +248,6 @@ exec { 'run install composer':
 # create assets folders
 
 exec { 'create assets folder':
-  command => 'mkdir /vagrant/assets; mkdir -p /vagrant/assets/documentador/attachments; mkdir -p /vagrant/assets/documentador/filelists; mkdir -p /vagrant/assets/yongo/attachments; mkdir -p /vagrant/assets/users;',
+  command => 'mkdir /var/www/assets; mkdir -p /var/www/assets/documentador/attachments; mkdir -p /var/www/assets/documentador/filelists; mkdir -p /var/www/assets/yongo/attachments; mkdir -p /var/www/assets/users;',
   require => [Exec['run install composer']]
 }
