@@ -97,8 +97,6 @@ Once inside the Guest server
 
 `cd /var/www`
 
-`composer install`
-
 `composer setup`
 
 In the setup procedure when asked for the URL enter http://ubirimi.dev
