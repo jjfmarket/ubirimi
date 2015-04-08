@@ -241,13 +241,13 @@ exec { "allow external mysql connections":
 # composer install
 
 exec { 'run install composer':
-  command => '/usr/local/bin/composer -d /var/www install',
+  command => '/usr/local/bin/composer install --working-dir /var/www',
   require => [Package["apache2"],Exec['install composer']]
 }
 
 # create assets folders
 
 exec { 'create assets folder':
-  command => 'mkdir /var/www/assets; mkdir -p /var/www/assets/documentador/attachments; mkdir -p /var/www/assets/documentador/filelists; mkdir -p /var/www/assets/yongo/attachments; mkdir -p /var/www/assets/users;',
+  command => '/bin/mkdir /var/www/assets; /bin/mkdir -p /var/www/assets/documentador/attachments; /bin/mkdir -p /var/www/assets/documentador/filelists; /bin/mkdir -p /var/www/assets/yongo/attachments; /bin/mkdir -p /var/www/assets/users;',
   require => [Exec['run install composer']]
 }
