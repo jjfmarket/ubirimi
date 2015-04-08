@@ -173,7 +173,8 @@ exec { "Disable apache 000-default" :
 exec { "Reload apache" :
   command => "/usr/sbin/service apache2 reload",
   notify  => Service["apache2"],
-  require => [Exec['Disable apache 000-default']]
+  require => [Exec['Disable apache 000-default']],
+  refreshonly => true,
 }
 
 
@@ -242,6 +243,7 @@ exec { "allow external mysql connections":
 
 exec { 'run install composer':
   command => '/usr/local/bin/composer install --working-dir /var/www',
+  timeout => 0,
   require => [Package["apache2"],Exec['install composer']]
 }
 
