@@ -37,7 +37,8 @@ class GetByFiltersController extends UbirimiController
         }
 
         if ($filters['username'] && $filters['domain']) {
-            $result = $this->getRepository(UbirimiUser::class)->getByUsernameAndClientDomain(mb_strtolower($filters['username']), mb_strtolower($filters['domain']));
+            $baseURL = 'http://' . $filters['domain'] . '.ubirimi.net';
+            $result = $this->getRepository(UbirimiUser::class)->getByUsernameAndBaseURL(mb_strtolower($filters['username']), mb_strtolower($baseURL));
         }
 
         return new JsonResponse($result);
