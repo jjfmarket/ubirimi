@@ -24,8 +24,8 @@ use Ubirimi\Container\UbirimiContainer;
 
 class EmailQueue
 {
-    public function send($smtpSettings, $emailData) {
-        $mailer = UbirimiContainer::get()['repository']->get(Email::class)->getMailer($smtpSettings);
+    public function send($clientId, $emailData) {
+        $mailer = UbirimiContainer::get()['repository']->get(Email::class)->getMailer($clientId);
 
         $message = Swift_Message::newInstance($emailData['subject'])
             ->setFrom(array($emailData['from_address']))
