@@ -388,7 +388,7 @@ class Email {
         $subject = Email::$smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work log Deleted " . $issue['project_code'] . '-' . $issue['nr'];
 
         $date = Util::getServerCurrentDateTime();
-d
+
         UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
             Email::$smtpSettings['from_address'],
             $userToNotify['email'],
@@ -549,7 +549,7 @@ d
 
     public function shareEvent($clientId, $event, $userThatShares, $userToSendEmailAddress, $noteContent) {
         Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
-        
+
         if (Email::$smtpSettings) {
             $subject = Email::$smtpSettings['email_prefix'] . ' ' .
                 $userThatShares['first_name'] . ' ' .
