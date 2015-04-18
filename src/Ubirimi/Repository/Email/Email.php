@@ -60,6 +60,8 @@ class Email {
     }
 
     public function sendNewUserNotificationEmail($clientId, $firstName, $lastName, $username, $password, $email, $clientDomain) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
         $subject = Email::$smtpSettings['email_prefix'] . ' ' . 'Ubirimi - A new account has been created for you';
 
         UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
@@ -78,6 +80,8 @@ class Email {
     }
 
     public function sendNewCustomerNotificationEmail($clientId, $firstName, $lastName, $email, $password, $clientDomain) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
         $subject = Email::$smtpSettings['email_prefix'] . ' ' . 'Ubirimi - A new customer account has been created for you';
 
         UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
@@ -97,6 +101,8 @@ class Email {
     }
 
     public function sendNewUserRepositoryNotificationEmail($clientId, $firstName, $lastName, $username, $password, $email, $repositoryName, $baseURL) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
         UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
                         Email::$smtpSettings['from_address'],
                         $email,
@@ -113,6 +119,8 @@ class Email {
     }
 
     public function sendUserChangedPasswordForRepositoryNotificationEmail($clientId, $firstName, $lastName, $username, $password, $email, $repositoryName, $baseURL) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
         UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
                         Email::$smtpSettings['from_address'],
                         $email,
@@ -224,6 +232,8 @@ class Email {
     }
 
     public function sendEmailIssueAssign($issue, $clientId, $oldUserAssignedName, $newUserAssignedName, $user, $comment, $loggedInUser) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
         if (Email::$smtpSettings) {
 
             $subject = Email::$smtpSettings['email_prefix'] . ' ' .
@@ -251,6 +261,8 @@ class Email {
     }
 
     public function sendEmailIssueChanged($issue, $project, $loggedInUser, $clientId, $fieldChanges, $userToNotify) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
         if (Email::$smtpSettings) {
             UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
                 Email::$smtpSettings['from_address'],
@@ -285,6 +297,8 @@ class Email {
     }
 
     public function sendEmailNotificationNewComment($issue, $clientId, $project, $userToNotify, $content, $user) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
         if (Email::$smtpSettings) {
             $subject = Email::$smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue COMMENT " . $issue['project_code'] . '-' . $issue['nr'];
 
@@ -306,6 +320,7 @@ class Email {
     }
 
     public function sendEmailNotificationWorkLogged($issue, $clientId, $project, $userToNotify, $extraInformation, $user) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
         $subject = Email::$smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work Logged " . $issue['project_code'] . '-' . $issue['nr'];
 
@@ -326,6 +341,7 @@ class Email {
     }
 
     public function sendEmailNotificationAddAttachment($issue, $clientId, $project, $userToNotify, $extraInformation, $user) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
         $subject = Email::$smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Add Attachment " . $issue['project_code'] . '-' . $issue['nr'];
 
@@ -346,6 +362,7 @@ class Email {
     }
 
     public function sendEmailNotificationWorkLogUpdated($issue, $clientId, $project, $userToNotify, $extraInformation, $user) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
         $subject = Email::$smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work log Updated " . $issue['project_code'] . '-' . $issue['nr'];
 
@@ -366,11 +383,12 @@ class Email {
     }
 
     public function sendEmailNotificationWorkLogDeleted($issue, $clientId, $project, $userToNotify, $extraInformation, $user) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
         $subject = Email::$smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work log Deleted " . $issue['project_code'] . '-' . $issue['nr'];
 
         $date = Util::getServerCurrentDateTime();
-
+d
         UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
             Email::$smtpSettings['from_address'],
             $userToNotify['email'],
@@ -402,6 +420,7 @@ class Email {
     }
 
     private function sendEmailDeleteIssue($issue, $clientId, $user, $loggedInUser, $project) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
         if (Email::$smtpSettings) {
             $subject = Email::$smtpSettings['email_prefix'] . ' ' .
@@ -481,6 +500,8 @@ class Email {
     }
 
     public function shareIssue($clientId, $issue, $userThatShares, $userToSendEmailAddress, $noteContent) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
         if (Email::$smtpSettings) {
             $subject = Email::$smtpSettings['email_prefix'] . ' ' .
                 $userThatShares['first_name'] . ' ' .
@@ -504,6 +525,8 @@ class Email {
     }
 
     public function shareCalendar($clientId, $calendar, $userThatShares, $userToSendEmailAddress, $noteContent) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
         if (Email::$smtpSettings) {
             $subject = Email::$smtpSettings['email_prefix'] . ' ' .
                 $userThatShares['first_name'] . ' ' .
@@ -525,6 +548,8 @@ class Email {
     }
 
     public function shareEvent($clientId, $event, $userThatShares, $userToSendEmailAddress, $noteContent) {
+        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+        
         if (Email::$smtpSettings) {
             $subject = Email::$smtpSettings['email_prefix'] . ' ' .
                 $userThatShares['first_name'] . ' ' .
