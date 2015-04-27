@@ -36,8 +36,6 @@ use Ubirimi\Yongo\Repository\Project\YongoProject;
 
 class Email {
 
-    public static $smtpSettings;
-
     public function sendNewsletter($toEmailAddress, $content, $subject) {
         $emailContent = UbirimiContainer::get()['repository']->get(Email::class)->getEmailHeader();
         $emailContent .= '<br />';
@@ -136,20 +134,6 @@ class Email {
                         Util::getServerCurrentDateTime());
     }
 
-    public function triggerNewIssueNotification($clientId, $issue, $project, $loggedInUserId) {
-
-        $eventCreatedId = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getByClientIdAndCode($clientId, IssueEvent::EVENT_ISSUE_CREATED_CODE, 'id');
-        $users = UbirimiContainer::get()['repository']->get(YongoProject::class)->getUsersForNotification($project['id'], $eventCreatedId, $issue, $loggedInUserId);
-
-        while ($users && $user = $users->fetch_array(MYSQLI_ASSOC)) {
-            if ($user['user_id'] == $loggedInUserId && !$user['notify_own_changes_flag']) {
-                continue;
-            }
-
-            UbirimiContainer::get()['repository']->get(Email::class)->sendEmailNewIssue($clientId, $issue, $user);
-        }
-    }
-
     public function triggerAssignIssueNotification($clientId, $issue, $oldUserAssignedName, $newUserAssignedName, $project, $loggedInUserId, $comment) {
 
         $eventAssignedId = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getByClientIdAndCode($clientId, IssueEvent::EVENT_ISSUE_ASSIGNED_CODE, 'id');
@@ -165,37 +149,6 @@ class Email {
 
             UbirimiContainer::get()['repository']->get(Email::class)->sendEmailIssueAssign($issue, $clientId, $oldUserAssignedName, $newUserAssignedName, $user, $comment, $loggedInUser);
         }
-    }
-
-    private function sendEmailNewIssue($clientId, $issue, $userToNotify) {
-        $issueId = $issue['id'];
-        $projectId = $issue['issue_project_id'];
-        $versionsAffected = UbirimiContainer::get()['repository']->get(IssueVersion::class)->getByIssueIdAndProjectId($issueId, $projectId, Issue::ISSUE_AFFECTED_VERSION_FLAG);
-        $versionsFixed = UbirimiContainer::get()['repository']->get(IssueVersion::class)->getByIssueIdAndProjectId($issueId, $projectId, Issue::ISSUE_FIX_VERSION_FLAG);
-        $components = UbirimiContainer::get()['repository']->get(IssueComponent::class)->getByIssueIdAndProjectId($issueId, $projectId);
-
-        $customFieldsSingleValue = UbirimiContainer::get()['repository']->get(CustomField::class)->getCustomFieldsData($issueId);
-        $customFieldsUserPickerMultiple = UbirimiContainer::get()['repository']->get(CustomField::class)->getUserPickerData($issueId);
-
-        $subject = Email::$smtpSettings['email_prefix'] . ' ' .
-                            "[Issue] - New issue CREATED " .
-                            $issue['project_code'] . '-' .
-                            $issue['nr'];
-
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                        Email::$smtpSettings['from_address'],
-                        $userToNotify['email'],
-                        null,
-                        $subject,
-                        Util::getTemplate('_newIssue.php', array(
-                            'issue' => $issue,
-                            'custom_fields_single_value' => $customFieldsSingleValue,
-                            'custom_fields_user_picker_multiple' => $customFieldsUserPickerMultiple,
-                            'components' => $components,
-                            'versions_fixed' => $versionsFixed,
-                            'versions_affected' => $versionsAffected)
-                        ),
-                        Util::getServerCurrentDateTime());
     }
 
     public function getMailer($clientId) {
@@ -261,62 +214,12 @@ class Email {
     }
 
     public function sendEmailIssueChanged($issue, $project, $loggedInUser, $clientId, $fieldChanges, $userToNotify) {
-        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
-        if (Email::$smtpSettings) {
-            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                Email::$smtpSettings['from_address'],
-                $userToNotify['email'],
-                null,
-                Email::$smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue UPDATED " . $issue['project_code'] . '-' . $issue['nr'],
-                Util::getTemplate('_issueUpdated.php', array(
-                        'issue' => $issue,
-                        'project' => $project,
-                        'user' => $loggedInUser,
-                        'fieldChanges' => $fieldChanges)
-                ),
-                Util::getServerCurrentDateTime());
-        }
     }
 
     public function triggerIssueUpdatedNotification($clientId, $issue, $loggedInUserId, $changedFields) {
 
-        $projectId = $issue['issue_project_id'];
-        $eventUpdatedId = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getByClientIdAndCode($clientId, IssueEvent::EVENT_ISSUE_UPDATED_CODE, 'id');
-        $users = UbirimiContainer::get()['repository']->get(YongoProject::class)->getUsersForNotification($projectId, $eventUpdatedId, $issue, $loggedInUserId);
-        $project = UbirimiContainer::get()['repository']->get(YongoProject::class)->getById($projectId);
-        $loggedInUser = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getById($loggedInUserId);
 
-        while ($users && $user = $users->fetch_array(MYSQLI_ASSOC)) {
-            if ($user['user_id'] == $loggedInUserId && !$user['notify_own_changes_flag']) {
-                continue;
-            }
-
-            UbirimiContainer::get()['repository']->get(Email::class)->sendEmailIssueChanged($issue, $project, $loggedInUser, $clientId, $changedFields, $user);
-        }
-    }
-
-    public function sendEmailNotificationNewComment($issue, $clientId, $project, $userToNotify, $content, $user) {
-        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
-
-        if (Email::$smtpSettings) {
-            $subject = Email::$smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue COMMENT " . $issue['project_code'] . '-' . $issue['nr'];
-
-            $date = Util::getServerCurrentDateTime();
-
-            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                Email::$smtpSettings['from_address'],
-                $userToNotify['email'],
-                null,
-                $subject,
-                Util::getTemplate('_newComment.php',array(
-                        'issue' => $issue,
-                        'project' => $project,
-                        'content' => $content,
-                        'user' => $user)
-                ),
-                $date);
-        }
     }
 
     public function sendEmailNotificationWorkLogged($issue, $clientId, $project, $userToNotify, $extraInformation, $user) {
@@ -420,39 +323,11 @@ class Email {
     }
 
     private function sendEmailDeleteIssue($issue, $clientId, $user, $loggedInUser, $project) {
-        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
-        if (Email::$smtpSettings) {
-            $subject = Email::$smtpSettings['email_prefix'] . ' ' .
-                "[Issue] - Issue DELETED " .
-                $issue['project_code'] . '-' .
-                $issue['nr'];
-
-            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                Email::$smtpSettings['from_address'],
-                $user['email'],
-                null,
-                $subject,
-                Util::getTemplate('_deleteIssue.php', array('issue' => $issue, 'loggedInUser' => $loggedInUser, 'project' => $project)),
-                Util::getServerCurrentDateTime());
-        }
     }
 
-    public function triggerDeleteIssueNotification($clientId, $issue, $project, $extraInformation) {
-        $projectId = $issue['issue_project_id'];
+    public function triggerDeleteIssueNotification($clientId, $issue, $project, $loggedInUser) {
 
-        $loggedInUser = $extraInformation['loggedInUser'];
-        $loggedInUserId = $loggedInUser['id'];
-
-        $eventDeletedId = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getByClientIdAndCode($clientId, IssueEvent::EVENT_ISSUE_DELETED_CODE, 'id');
-        $users = UbirimiContainer::get()['repository']->get(YongoProject::class)->getUsersForNotification($projectId, $eventDeletedId, $issue, $loggedInUserId);
-
-        while ($users && $user = $users->fetch_array(MYSQLI_ASSOC)) {
-            if ($user['user_id'] == $loggedInUserId && !$user['notify_own_changes_flag']) {
-                continue;
-            }
-            UbirimiContainer::get()['repository']->get(Email::class)->sendEmailDeleteIssue($issue, $clientId, $user, $loggedInUser, $project);
-        }
     }
 
     public function sendFeedback($userData, $like, $improve, $newFeatures, $experience) {

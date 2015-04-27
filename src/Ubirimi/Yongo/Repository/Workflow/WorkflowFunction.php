@@ -170,15 +170,17 @@ class WorkflowFunction
                 break;
 
             case WorkflowFunction::FUNCTION_FIRE_EVENT:
-                if ($postFunction['definition_data'] == 'create_issue') {
-                    $description = 'Create the issue.';
-                } else if (strstr($postFunction['definition_data'], '=')) {
+                if (strstr($postFunction['definition_data'], '=')) {
                     $definitionData = explode('=', $postFunction['definition_data']);
                     $eventId = $definitionData[1];
                     $event = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getById($eventId);
                     $description = 'Fire a <b>' . $event['name'] . '</b> event that can be processed by the listeners.';
                 }
 
+                break;
+
+            case WorkflowFunction::FUNCTION_CREATE_ISSUE:
+                $description = 'Create the issue.';
                 break;
         }
 

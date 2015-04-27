@@ -23,14 +23,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Container\UbirimiContainer;
+use Ubirimi\Repository\Email\Email;
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\SystemProduct;
 use Ubirimi\UbirimiController;
 use Ubirimi\Util;
-use Ubirimi\Yongo\Event\IssueEvent;
-use Ubirimi\Yongo\Event\YongoEvents;
 use Ubirimi\Yongo\Repository\Field\Field;
+use Ubirimi\Yongo\Repository\Issue\IssueEvent;
 use Ubirimi\Yongo\Repository\Project\YongoProject;
+use Ubirimi\Yongo\Repository\Workflow\Workflow;
+use Ubirimi\Yongo\Repository\Workflow\WorkflowFunction;
 
 class SaveController extends UbirimiController
 {
@@ -38,7 +40,8 @@ class SaveController extends UbirimiController
     {
         Util::checkUserIsLoggedInAndRedirect();
 
-        $clientSettings = $this->getRepository(UbirimiClient::class)->getSettings($session->get('client/id'));
+        $clientId = $session->get('client/id');
+        $clientSettings = $this->getRepository(UbirimiClient::class)->getSettings($clientId);
 
         $timeTrackingDefaultUnit = $session->get('yongo/settings/time_tracking_default_unit');
 
@@ -108,19 +111,23 @@ class SaveController extends UbirimiController
             $attachIdsToBeKept,
             $clientSettings,
             $session->get('user/id'),
-            $session->get('client/id')
+            $clientId
         );
 
-        $issueEvent = new IssueEvent($issue, $project, IssueEvent::STATUS_NEW);
+        $workflowUsed = UbirimiContainer::get()['repository']->get(YongoProject::class)->getWorkflowUsedForType($projectId, $issue['issue_type_id']);
+        $creationData = UbirimiContainer::get()['repository']->get(Workflow::class)->getDataForCreation($workflowUsed['id']);
+        $eventData = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getByClientIdAndCode($clientId, IssueEvent::EVENT_ISSUE_CREATED_CODE);
+        $hasNotificationEvent = UbirimiContainer::get()['repository']->get(WorkflowFunction::class)->hasEvent($creationData['id'], 'event=' . $eventData['id']);
 
-        $this->getLogger()->addInfo('ADD Yongo issue ' . $project['code'] . '-' . $issue['nr'], $this->getLoggerContext());
-
-        UbirimiContainer::get()['dispatcher']->dispatch(YongoEvents::YONGO_ISSUE, $issueEvent);
-        UbirimiContainer::get()['dispatcher']->dispatch(YongoEvents::YONGO_ISSUE_EMAIL, $issueEvent);
+        if ($hasNotificationEvent) {
+            UbirimiContainer::get()['issue.email']->emailIssueCreate($clientId, $issue, $project, $session->get('user/id'));
+        }
 
         // clean the search information
         $session->remove('array_ids');
         $session->remove('last_search_parameters');
+
+        $this->getLogger()->addInfo('ADD Yongo issue ' . $project['code'] . '-' . $issue['nr'], $this->getLoggerContext());
 
         return new Response('New Issue Created <a href="/yongo/issue/' . $issue['id'] . '">' . $project['code'] . '-' . $issue['nr'] . '</a>');
     }

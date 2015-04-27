@@ -32,23 +32,6 @@ class IssueEventSubscriber implements EventSubscriberInterface
         $container = UbirimiContainer::get();
     }
 
-    public function onIssueEmail(IssueEvent $event)
-    {
-        $container = UbirimiContainer::get();
-
-        switch ($event->getStatus())
-        {
-            case IssueEvent::STATUS_NEW:
-                $container['issue.email']->emailIssueNew($event->getIssue());
-                break;
-            case IssueEvent::STATUS_DELETE:
-                $container['issue.email']->emailIssueDelete($event->getIssue(), $event->getProject(), $event->getExtra());
-                break;
-            case IssueEvent::STATUS_UPDATE:
-                $container['issue.email']->emailIssueUpdate($event->getIssue(), $event->getExtra()['oldIssueData'], $event->getExtra()['fieldChanges']);
-                break;
-        }
-    }
 
     public function onIssueCommentEmail(IssueEvent $event)
     {
@@ -104,7 +87,6 @@ class IssueEventSubscriber implements EventSubscriberInterface
         return array(
             YongoEvents::YONGO_ISSUE => 'onIssue',
             YongoEvents::YONGO_ISSUE_EMAIL => 'onIssueEmail',
-            YongoEvents::YONGO_ISSUE_COMMENT_EMAIL => 'onIssueCommentEmail',
             YongoEvents::YONGO_ISSUE_LINK_EMAIL => 'onIssueLinkEmail',
             YongoEvents::YONGO_ISSUE_SHARE_EMAIL => 'onIssueShareEmail',
             YongoEvents::YONGO_ISSUE_WORK_LOGGED => 'onIssueWorkLogged',

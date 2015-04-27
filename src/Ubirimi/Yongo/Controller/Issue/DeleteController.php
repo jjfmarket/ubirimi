@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Container\UbirimiContainer;
+use Ubirimi\Repository\Email\Email;
 use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\UbirimiController;
 use Ubirimi\Util;
@@ -44,8 +45,8 @@ class DeleteController extends UbirimiController
         $project = $this->getRepository(YongoProject::class)->getById($issue['issue_project_id']);
 
         $loggedInUser = $this->getRepository(UbirimiUser::class)->getById($loggedInUserId);
-        $issueEvent = new IssueEvent($issue, $project, IssueEvent::STATUS_DELETE, array('loggedInUser' => $loggedInUser));
-        UbirimiContainer::get()['dispatcher']->dispatch(YongoEvents::YONGO_ISSUE_EMAIL, $issueEvent);
+
+        UbirimiContainer::get()['issue.email']->emailIssueDelete($session->get('client/id'), $issue, $project, $loggedInUser);
 
         $this->getRepository(Issue::class)->deleteById($issueId);
 

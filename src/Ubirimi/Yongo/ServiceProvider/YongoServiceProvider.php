@@ -23,7 +23,6 @@ use Ubirimi\Container\ServiceProviderInterface;
 use Ubirimi\Yongo\Service\IssueEmailService;
 use Ubirimi\Yongo\Service\IssueService;
 use Ubirimi\Yongo\Service\ProjectService;
-use Ubirimi\Yongo\Service\WorkflowService;
 
 class YongoServiceProvider implements ServiceProviderInterface
 {
@@ -34,11 +33,7 @@ class YongoServiceProvider implements ServiceProviderInterface
         });
 
         $pimple['issue.email'] = $pimple->share(function($pimple) {
-            return new IssueEmailService($pimple['session'], $pimple['workflow']);
-        });
-
-        $pimple['workflow'] = $pimple->share(function($pimple) {
-            return new WorkflowService($pimple['session']);
+            return new IssueEmailService($pimple['session']);
         });
 
         $pimple['project'] = $pimple->share(function($pimple) {

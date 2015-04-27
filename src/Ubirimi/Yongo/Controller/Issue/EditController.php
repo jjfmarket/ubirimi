@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Container\UbirimiContainer;
+use Ubirimi\Repository\Email\Email;
 use Ubirimi\UbirimiController;
 use Ubirimi\Util;
 use Ubirimi\Yongo\Event\IssueEvent;
@@ -123,11 +124,9 @@ class EditController extends UbirimiController
         Util::manageModalAttachments($issueId, $loggedInUserId, $attachIdsToBeKept);
 
         UbirimiContainer::get()['session']->remove('added_attachments_in_screen');
+        UbirimiContainer::get()['issue.email']->emailIssueUpdate($session->get('client/id'), $oldIssueData, $session->get('user/id'), $fieldChanges);
 
-        $issueEvent = new IssueEvent(null, null, IssueEvent::STATUS_UPDATE, array('oldIssueData' => $oldIssueData, 'fieldChanges' => $fieldChanges));
         $this->getLogger()->addInfo('UPDATE Yongo issue ' . $oldIssueData['project_code'] . '-' . $oldIssueData['nr'], $this->getLoggerContext());
-
-        UbirimiContainer::get()['dispatcher']->dispatch(YongoEvents::YONGO_ISSUE_EMAIL, $issueEvent);
 
         return new Response('');
     }
