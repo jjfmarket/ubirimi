@@ -45,19 +45,4 @@ class UbirimiEvents
      */
     const CONTACT = 'ubirimi.contact';
 
-    /**
-     * Feedback Message Event
-     *
-     * Event triggered when a user sends us feedback.
-     * The Event will pass the general purpose Ubirimi\Event\UbirimiEvent Event.
-     */
-    const FEEDBACK = 'ubirimi.feedback';
-
-    /**
-     * Password Recover Event
-     *
-     * Event triggered when user asks to recover the lost password.
-     * The Event will pass the general purpose Ubirimi\Event\UbirimiEvent Event.
-     */
-    const PASSWORD_RECOVER = 'ubirimi.password_recover';
 }

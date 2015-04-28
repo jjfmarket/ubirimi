@@ -44,17 +44,7 @@ class FeedbackController extends UbirimiController
 
         $userData = $this->getRepository(UbirimiUser::class)->getById($loggedInUserId);
 
-        $event = new UbirimiEvent(
-            array(
-                'userData' => $userData,
-                'like' => $like,
-                'improve' => $improve,
-                'newFeatures' => $newFeatures,
-                'experience' => $experience
-            )
-        );
-
-        UbirimiContainer::get()['dispatcher']->dispatch(UbirimiEvents::FEEDBACK, $event);
+        UbirimiContainer::get()['email']->sendFeedback($userData, $like, $improve, $newFeatures, $experience);
 
         return new Response('');
     }

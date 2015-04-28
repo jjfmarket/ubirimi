@@ -76,26 +76,14 @@ class UbirimiSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function onFeedback(UbirimiEvent $event)
-    {
-        UbirimiContainer::get()['email']->feedback(
-            $event->getData()['userData'],
-            $event->getData()['like'],
-            $event->getData()['improve'],
-            $event->getData()['newFeatures'],
-            $event->getData()['experience']);
-    }
-
     public function onPasswordRecover(UbirimiEvent $event)
     {
-        UbirimiContainer::get()['email']->passwordRecover($event->getData()['client_id'], $event->getData()['email'], $event->getData()['password']);
+
     }
 
     public static function getSubscribedEvents()
     {
         return array(
-            UbirimiEvents::USER => 'onUser',
-            UbirimiEvents::FEEDBACK => 'onFeedback',
-            UbirimiEvents::PASSWORD_RECOVER => 'onPasswordRecover');
+            UbirimiEvents::USER => 'onUser');
     }
 }

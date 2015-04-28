@@ -220,7 +220,20 @@ class IssueEmailService extends UbirimiService
                     continue;
                 }
 
-                UbirimiContainer::get()['repository']->get(Email::class)->sendEmailNotificationWorkLogUpdated($issue, $this->session->get('client/id'), $project, $userToNotify, $extraInformation, $this->session->get('user'));
+                $subject = $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work log Updated " . $issue['project_code'] . '-' . $issue['nr'];
+
+                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+                    $smtpSettings['from_address'],
+                    $userToNotify['email'],
+                    null,
+                    $subject,
+                    Util::getTemplate('_workLogUpdated.php',array(
+                            'issue' => $issue,
+                            'project' => $project,
+                            'extraInformation' => $extraInformation,
+                            'user' => $this->session->get('user'))
+                    ),
+                    Util::getServerCurrentDateTime());
             }
         }
     }
@@ -242,7 +255,20 @@ class IssueEmailService extends UbirimiService
                     continue;
                 }
 
-                UbirimiContainer::get()['repository']->get(Email::class)->sendEmailNotificationWorkLogDeleted($issue, $this->session->get('client/id'), $project, $userToNotify, $extraInformation, $this->session->get('user'));
+                $subject = $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work log Deleted " . $issue['project_code'] . '-' . $issue['nr'];
+
+                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+                    $smtpSettings['from_address'],
+                    $userToNotify['email'],
+                    null,
+                    $subject,
+                    Util::getTemplate('_workLogDeleted.php',array(
+                            'issue' => $issue,
+                            'project' => $project,
+                            'extraInformation' => $extraInformation,
+                            'user' => $this->session->get('user'))
+                    ),
+                    Util::getServerCurrentDateTime());
             }
         }
     }
