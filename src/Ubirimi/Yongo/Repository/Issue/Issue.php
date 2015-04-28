@@ -56,7 +56,7 @@ class Issue
             'yongo_issue_type.id as type, yongo_issue_type.name as type_name, ' .
             'yongo_issue_resolution.name as resolution_name, issue_main_table.resolution_id as resolution, issue_main_table.parent_id, issue_main_table.security_scheme_level_id as security_level, ' .
             'yongo_issue_security_scheme_level.name as security_level_name, ' .
-            'issue_main_table.user_assigned_id as issue_assignee, ' .
+            'issue_main_table.user_assigned_id as issue_assignee, yongo_project.client_id, ' .
             'issue_main_table.original_estimate, issue_main_table.remaining_estimate, issue_main_table.user_reported_ip, ';
 
         if (isset($parameters['sprint'])) {

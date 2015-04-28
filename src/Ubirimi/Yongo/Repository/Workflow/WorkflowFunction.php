@@ -117,7 +117,7 @@ class WorkflowFunction
 
                 $users = UbirimiContainer::get()['repository']->get(YongoProject::class)->getUsersForNotification($projectId, $eventId, $issueData, $loggedInUserId);
 
-                if ($users && Email::$smtpSettings) {
+                if ($users) {
                     while ($user = $users->fetch_array(MYSQLI_ASSOC)) {
                         $sendEmail = true;
                         if ($user['user_id'] == $loggedInUserId && !$user['notify_own_changes_flag']) {
@@ -125,7 +125,7 @@ class WorkflowFunction
                         }
 
                         if ($sendEmail) {
-                            UbirimiContainer::get()['repository']->get(Email::class)->sendEmailIssueChanged($issueData, $project, $loggedInUser, $clientId, $issueFieldChanges, $user);
+                            UbirimiContainer::get()['issue.email']->emailIssueUpdate($clientId, $issueData, $loggedInUserId, $issueFieldChanges);
                         }
                     }
                 }

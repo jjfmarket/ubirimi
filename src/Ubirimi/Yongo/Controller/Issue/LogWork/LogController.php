@@ -68,13 +68,11 @@ class LogController extends UbirimiController
             $this->getRepository(Issue::class)->updateById($issueId, array('date_updated' => $currentDate), $currentDate);
 
             $project = $this->getRepository(YongoProject::class)->getById($issue['issue_project_id']);
-            $issueEventData = array('user_id' => $loggedInUserId,
-                                    'comment' => $comment,
-                                    'date_started' => $dateStartedString,
-                                    'time_spent' => $timeSpentPost);
-            $issueEvent = new IssueEvent($issue, $project, IssueEvent::STATUS_UPDATE, $issueEventData);
 
-            UbirimiContainer::get()['dispatcher']->dispatch(YongoEvents::YONGO_ISSUE_WORK_LOGGED, $issueEvent);
+            UbirimiContainer::get()['issue.email']->emailIssueWorkLogged($issue, $project, array('user_id' => $loggedInUserId,
+                                                                                                 'comment' => $comment,
+                                                                                                 'date_started' => $dateStartedString,
+                                                                                                 'time_spent' => $timeSpentPost));
 
         }
 

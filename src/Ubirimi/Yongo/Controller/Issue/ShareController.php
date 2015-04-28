@@ -24,8 +24,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\UbirimiController;
 use Ubirimi\Util;
-use Ubirimi\Yongo\Event\IssueEvent;
-use Ubirimi\Yongo\Event\YongoEvents;
 use Ubirimi\Yongo\Repository\Issue\Issue;
 
 class ShareController extends UbirimiController
@@ -41,7 +39,6 @@ class ShareController extends UbirimiController
         $issueQueryParameters = array('issue_id' => $issueId);
         $issue = $this->getRepository(Issue::class)->getByParameters($issueQueryParameters);
 
-        $issueEvent = new IssueEvent($issue, null, IssueEvent::STATUS_UPDATE, array('userIds' => $userIds, 'noteContent' => $noteContent));
-        UbirimiContainer::get()['dispatcher']->dispatch(YongoEvents::YONGO_ISSUE_SHARE_EMAIL, $issueEvent);
+        UbirimiContainer::get()['issue.email']->emailIssueShare($issue, $userIds, $noteContent);
     }
 }

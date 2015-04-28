@@ -24,7 +24,6 @@ use Ubirimi\EventListener\UbirimiSubscriber;
 use Ubirimi\Service\ConfigService;
 use Ubirimi\SvnHosting\EventListener\SvnHostingEventSubscriber;
 use Ubirimi\SvnHosting\ServiceProvider\SvnHostingServiceProvider;
-use Ubirimi\Yongo\EventListener\IssueEventSubscriber;
 use Ubirimi\Service\RouteBootstrapService;
 use Ubirimi\ServiceProvider\UbirimiCoreServiceProvider;
 use Ubirimi\Yongo\ServiceProvider\YongoServiceProvider;
@@ -49,7 +48,6 @@ UbirimiContainer::register(new CalendarServiceProvider());
 UbirimiContainer::register(new SvnHostingServiceProvider());
 
 UbirimiContainer::get()['dispatcher']->addSubscriber(new JsonResponseListener());
-UbirimiContainer::get()['dispatcher']->addSubscriber(new IssueEventSubscriber());
 UbirimiContainer::get()['dispatcher']->addSubscriber(new UbirimiSubscriber());
 UbirimiContainer::get()['dispatcher']->addSubscriber(new CalendarEventSubscriber());
 UbirimiContainer::get()['dispatcher']->addSubscriber(new SvnHostingEventSubscriber());

@@ -46,19 +46,12 @@ class SaveIssueTransitionNoScreenController extends UbirimiController
         $workflowId = $request->request->get('workflow_id');
         $issueId = $request->request->get('issue_id');
 
-        $clientSettings = $this->getRepository(UbirimiClient::class)->getSettings($clientId);
-
         $workflowData = $this->getRepository(Workflow::class)->getDataByStepIdFromAndStepIdTo($workflowId, $workflowStepIdFrom, $workflowStepIdTo);
         $issue = $this->getRepository(Issue::class)->getByParameters(array('issue_id' => $issueId), $loggedInUserId);
 
         $canBeExecuted = $this->getRepository(Workflow::class)->checkConditionsByTransitionId($workflowData['id'], $loggedInUserId, $issue);
 
         if ($canBeExecuted) {
-
-            $smtpSettings = $session->get('client/settings/smtp');
-            if ($smtpSettings) {
-                Email::$smtpSettings = $smtpSettings;
-            }
 
             $date = Util::getServerCurrentDateTime();
             $this->getRepository(WorkflowFunction::class)->triggerPostFunctions($clientId, $issue, $workflowData, array(), $loggedInUserId, $date);

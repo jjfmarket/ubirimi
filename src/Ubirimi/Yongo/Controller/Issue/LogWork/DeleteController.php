@@ -44,12 +44,15 @@ class DeleteController extends UbirimiController
         $remainingTime = $request->request->get('remaining');
 
         $workLog = $this->getRepository(WorkLog::class)->getById($workLogId);
+        $issueQueryParameters = array('issue_id' => $issueId);
+        $issue = $this->getRepository(Issue::class)->getByParameters($issueQueryParameters, $session->get('user/id'));
+
+        $project = $this->getRepository(YongoProject::class)->getById($issue['issue_project_id']);
+
         $timeSpent = $workLog['time_spent'];
 
         $this->getRepository(WorkLog::class)->deleteById($workLogId);
 
-        $issueQueryParameters = array('issue_id' => $issueId);
-        $issue = $this->getRepository(Issue::class)->getByParameters($issueQueryParameters, $session->get('user/id'));
         $previousEstimate = $issue['remaining_estimate'];
 
         if ($remainingTime == 'automatic') {
@@ -78,13 +81,9 @@ class DeleteController extends UbirimiController
         $this->getRepository(Issue::class)->updateById($issueId, array('date_updated' => $currentDate), $currentDate);
 
         // send the email notification
-        $project = $this->getRepository(YongoProject::class)->getById($issue['issue_project_id']);
-        $issueEventData = array('user_id' => $loggedInUserId,
-                                'remaining_estimate' => $remainingTime,
-                                'time_spent' => $workLog['time_spent']);
-        $issueEvent = new IssueEvent($issue, $project, IssueEvent::STATUS_UPDATE, $issueEventData);
-
-        UbirimiContainer::get()['dispatcher']->dispatch(YongoEvents::YONGO_ISSUE_WORK_LOG_DELETED, $issueEvent);
+        UbirimiContainer::get()['issue.email']->emailIssueWorkLogDeleted($issue, $project, array('user_id' => $loggedInUserId,
+                                                                                                 'remaining_estimate' => $remainingTime,
+                                                                                                 'time_spent' => $workLog['time_spent']));
 
         return new Response($remainingTime);
     }

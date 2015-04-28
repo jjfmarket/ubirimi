@@ -37,7 +37,6 @@ class DuplicateController extends UbirimiController
         Util::checkUserIsLoggedInAndRedirect();
 
         $loggedInUserId = $session->get('user/id');
-
         $issueId = $request->get('issue_id');
 
         $summary = $request->get('summary');
