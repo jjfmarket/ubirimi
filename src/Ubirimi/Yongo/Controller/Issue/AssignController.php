@@ -57,18 +57,7 @@ class AssignController extends UbirimiController
 
         $project = $this->getRepository(YongoProject::class)->getById($issueData['issue_project_id']);
 
-        $smtpSettings = UbirimiContainer::get()['session']->get('client/settings/smtp');
-
-        Email::$smtpSettings = $smtpSettings;
-        $this->getRepository(Email::class)->triggerAssignIssueNotification(
-            $clientId,
-            $issueData,
-            $oldUserAssignedName,
-            $newUserAssignedName,
-            $project,
-            $loggedInUserId,
-            $comment
-        );
+        UbirimiContainer::get()['issue.email']->emailIssueAssign($clientId, $issueData, $oldUserAssignedName, $newUserAssignedName, $project, $loggedInUserId, $comment);
 
         return new Response('');
     }

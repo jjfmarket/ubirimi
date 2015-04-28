@@ -23,11 +23,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Container\UbirimiContainer;
+use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\SystemProduct;
 use Ubirimi\UbirimiController;
 use Ubirimi\Util;
-use Ubirimi\Yongo\Event\IssueEvent;
-use Ubirimi\Yongo\Event\YongoEvents;
 use Ubirimi\Yongo\Repository\Issue\Issue;
 use Ubirimi\Yongo\Repository\Issue\IssueAttachment;
 
@@ -38,6 +37,7 @@ class OperationConfirmationController extends UbirimiController
         Util::checkUserIsLoggedInAndRedirect();
 
         $loggedInUserId = $session->get('user/id');
+        $loggedInUser = $this->getRepository(UbirimiUser::class)->getById($loggedInUserId);
 
         $menuSelectedCategory = 'issue';
         $clientSettings = $session->get('client/settings');
@@ -50,11 +50,7 @@ class OperationConfirmationController extends UbirimiController
                 for ($i = 0; $i < count($issueIds); $i++) {
                     if (UbirimiContainer::get()['session']->get('bulk_change_send_operation_email')) {
                         $issue = $this->getRepository(Issue::class)->getByParameters(array('issue_id' => $issueIds[$i]), $loggedInUserId);
-
-                        $issueEvent = new IssueEvent($issue, null, IssueEvent::STATUS_DELETE);
-                        $this->getLogger()->addInfo('DELETE Yongo issue ' . $issue['project_code'] . '-' . $issue['nr'], $this->getLoggerContext());
-
-                        UbirimiContainer::get()['dispatcher']->dispatch(YongoEvents::YONGO_ISSUE_EMAIL, $issueEvent);
+                        UbirimiContainer::get()['issue.email']->emailIssueDelete($issue['client_id'], $issue, null, $loggedInUser);
                     }
 
                     $this->getRepository(Issue::class)->deleteById($issueIds[$i]);

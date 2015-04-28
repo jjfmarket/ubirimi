@@ -23,12 +23,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\Repository\Email\Email;
 use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\UbirimiController;
 use Ubirimi\Util;
-use Ubirimi\Yongo\Event\IssueEvent;
-use Ubirimi\Yongo\Event\YongoEvents;
 use Ubirimi\Yongo\Repository\Issue\Issue;
 use Ubirimi\Yongo\Repository\Project\YongoProject;
 
@@ -57,21 +54,7 @@ class AssignToMeController extends UbirimiController
 
         $project = $this->getRepository(YongoProject::class)->getById($issueData['issue_project_id']);
 
-        $smtpSettings = UbirimiContainer::get()['session']->get('client/settings/smtp');
-
-        Email::$smtpSettings = $smtpSettings;
-        $this->getRepository(Email::class)->triggerAssignIssueNotification(
-            $clientId,
-            $issueData,
-            $oldUserAssignedName,
-            $newUserAssignedName,
-            $project,
-            $loggedInUserId,
-            null
-        );
-
-        $issueEvent = new IssueEvent(null, null, IssueEvent::STATUS_UPDATE);
-        UbirimiContainer::get()['dispatcher']->dispatch(YongoEvents::YONGO_ISSUE_UPDATE_ASSIGNEE_EMAIL, $issueEvent);
+        UbirimiContainer::get()['issue.email']->emailIssueAssign($clientId, $issueData, $oldUserAssignedName, $newUserAssignedName, $project, $loggedInUserId, $comment);
 
         return new Response('');
     }

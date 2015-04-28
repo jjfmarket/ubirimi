@@ -111,7 +111,24 @@ class IssueEmailService extends UbirimiService
 
                 $user = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getById($userIds[$i]);
 
-                UbirimiContainer::get()['repository']->get(Email::class)->shareIssue($this->session->get('client/id'), $issue, $userThatShares, $user['email'], $noteContent);
+                $subject = $smtpSettings['email_prefix'] . ' ' .
+                    $userThatShares['first_name'] . ' ' .
+                    $userThatShares['last_name'] . ' shared ' .
+                    $issue['project_code'] . '-' . $issue['nr'] . ': ' . substr($issue['summary'], 0, 20) . ' with you';
+
+                $date = Util::getServerCurrentDateTime();
+
+                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+                    $smtpSettings['from_address'],
+                    $user['email'],
+                    null,
+                    $subject,
+                    Util::getTemplate('_issueShare.php', array(
+                            'issue' => $issue,
+                            'userThatShares' => $userThatShares,
+                            'noteContent' => $noteContent)
+                    ),
+                    $date);
             }
         }
     }
@@ -133,7 +150,20 @@ class IssueEmailService extends UbirimiService
                     continue;
                 }
 
-                UbirimiContainer::get()['repository']->get(Email::class)->sendEmailNotificationWorkLogged($issue, $this->session->get('client/id'), $project, $userToNotify, $extraInformation, $this->session->get('user'));
+                $subject = $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work Logged " . $issue['project_code'] . '-' . $issue['nr'];
+
+                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+                    $smtpSettings['from_address'],
+                    $userToNotify['email'],
+                    null,
+                    $subject,
+                    Util::getTemplate('_workLogged.php',array(
+                            'issue' => $issue,
+                            'project' => $project,
+                            'extraInformation' => $extraInformation,
+                            'user' => $this->session->get('user'))
+                    ),
+                    Util::getServerCurrentDateTime());
             }
         }
     }
@@ -155,7 +185,20 @@ class IssueEmailService extends UbirimiService
                     continue;
                 }
 
-                UbirimiContainer::get()['repository']->get(Email::class)->sendEmailNotificationAddAttachment($issue, $this->session->get('client/id'), $project, $userToNotify, $extraInformation, $this->session->get('user'));
+                $subject = $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Add Attachment " . $issue['project_code'] . '-' . $issue['nr'];
+
+                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+                    $smtpSettings['from_address'],
+                    $userToNotify['email'],
+                    null,
+                    $subject,
+                    Util::getTemplate('_addAttachment.php',array(
+                            'issue' => $issue,
+                            'project' => $project,
+                            'extraInformation' => $extraInformation,
+                            'user' => $this->session->get('user'))
+                    ),
+                    Util::getServerCurrentDateTime());
             }
         }
     }
@@ -317,6 +360,49 @@ class IssueEmailService extends UbirimiService
                 Util::getTemplate('_deleteIssue.php', array('issue' => $issue, 'loggedInUser' => $loggedInUser, 'project' => $project)),
                 Util::getServerCurrentDateTime());
 
+        }
+    }
+
+    public function emailIssueAssign($clientId, $issueData, $oldUserAssignedName, $newUserAssignedName, $project, $loggedInUserId, $comment) {
+
+        $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
+        if (!$clientSmtpSettings) {
+            return;
+        }
+
+        $eventAssignedId = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getByClientIdAndCode($clientId, IssueEvent::EVENT_ISSUE_ASSIGNED_CODE, 'id');
+        $projectId = $project['id'];
+        $users = UbirimiContainer::get()['repository']->get(YongoProject::class)->getUsersForNotification($projectId, $eventAssignedId, $issueData, $loggedInUserId);
+        $loggedInUser = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getById($loggedInUserId);
+
+        while ($users && $user = $users->fetch_array(MYSQLI_ASSOC)) {
+
+            if ($user['user_id'] == $loggedInUserId && !$user['notify_own_changes_flag']) {
+                continue;
+            }
+
+            $subject = $clientSmtpSettings['email_prefix'] . ' ' .
+                "[Issue] - Issue UPDATED " .
+                $issueData['project_code'] . '-' .
+                $issueData['nr'];
+
+            $date = Util::getServerCurrentDateTime();
+
+            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+                $clientSmtpSettings['from_address'],
+                $user['email'],
+                null,
+                $subject,
+                Util::getTemplate('_issueAssign.php', array(
+                        'issue' => $issueData,
+                        'comment' => $comment,
+                        'project' => array('id' => $issueData['issue_project_id'], 'name' => $issueData['project_name']),
+                        'loggedInUser' => $loggedInUser,
+                        'oldUserAssignedName' => $oldUserAssignedName,
+                        'newUserAssignedName' => $newUserAssignedName)
+                ),
+                $date);
         }
     }
 }

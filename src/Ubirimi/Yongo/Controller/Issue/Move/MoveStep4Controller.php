@@ -28,8 +28,6 @@ use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\SystemProduct;
 use Ubirimi\UbirimiController;
 use Ubirimi\Util;
-use Ubirimi\Yongo\Event\IssueEvent;
-use Ubirimi\Yongo\Event\YongoEvents;
 use Ubirimi\Yongo\Repository\Issue\Issue;
 use Ubirimi\Yongo\Repository\Issue\IssueComponent;
 use Ubirimi\Yongo\Repository\Issue\IssueSettings;
@@ -105,10 +103,9 @@ class MoveStep4Controller extends UbirimiController
             $fieldChanges = $this->getRepository(Issue::class)->computeDifference($oldIssueData, $newIssueData, array(), array());
             $this->getRepository(Issue::class)->updateHistory($issueId, $loggedInUserId, $fieldChanges, $currentDate);
 
-            $issueEvent = new IssueEvent(null, null, IssueEvent::STATUS_UPDATE, array('oldIssueData' => $oldIssueData, 'fieldChanges' => $fieldChanges));
             $this->getLogger()->addInfo('MOVE Yongo issue ' . $oldIssueData['project_code'] . '-' . $oldIssueData['nr'], $this->getLoggerContext());
 
-            UbirimiContainer::get()['dispatcher']->dispatch(YongoEvents::YONGO_ISSUE_EMAIL, $issueEvent);
+            UbirimiContainer::get()['issue.email']->emailIssueUpdate($clientId, $oldIssueData, $loggedInUserId, $fieldChanges);
 
             return new RedirectResponse(LinkHelper::getYongoIssueViewLinkJustHref($issueId));
         }
