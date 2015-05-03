@@ -60,7 +60,7 @@ class GetActivityStreamChunkController extends UbirimiController
 
         do {
             $historyList = Util::getProjectHistory($projectIds, 0, null, date_format($startDate, 'Y-m-d'), $endDate);
-            if (null == $historyList && date_format($startDate, 'Y-m-d H:i:s') == $client['date_created']) {
+            if (null === $historyList && date_format($startDate, 'Y-m-d H:i:s') == $client['date_created']) {
                 break;
             }
             $startDate = date_sub($startDate, date_interval_create_from_date_string('2 days'));
@@ -69,7 +69,7 @@ class GetActivityStreamChunkController extends UbirimiController
                 $startDate = new \DateTime($client['date_created'], new \DateTimeZone($clientSettings['timezone']));
                 break;
             }
-        } while ($historyList == null);
+        } while ($historyList === null);
 
         $historyData = array();
         $userData = array();

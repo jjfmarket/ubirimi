@@ -58,14 +58,15 @@ class IndexController extends UbirimiController
 
         $projectIdsArray = array();
         $projectIdsNames = array();
-        for ($i = 0; $i < count($projects); $i++) {
+        $projectCount = count($projects);
+        for ($i = 0; $i < $projectCount; $i++) {
             $projectIdsArray[] = $projects[$i]['id'];
             $projectIdsNames[] = array($projects[$i]['id'], $projects[$i]['name']);
         }
 
         $issueQueryParameters = array(
             'issues_per_page' => $issuesPerPage,
-            'assignee' => $userAssignedId,
+            'assignee' => $userAssignedId,O
             'resolution' => array(-2),
             'sort' => 'code',
             'sort_order' => 'desc'

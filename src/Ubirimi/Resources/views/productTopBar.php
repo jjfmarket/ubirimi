@@ -11,7 +11,7 @@ if ($session->has('client/products')) {
     $productsArray = UbirimiContainer::get()['repository']->get(UbirimiClient::class)->getProducts(UbirimiContainer::get()['repository']->get(UbirimiClient::class)->getClientIdAnonymous(), 'array');
 }
 
-if (null == $productsArray) {
+if (null === $productsArray) {
     $productsArray = array();
 }
 ?>
