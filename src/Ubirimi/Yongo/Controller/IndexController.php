@@ -66,7 +66,7 @@ class IndexController extends UbirimiController
 
         $issueQueryParameters = array(
             'issues_per_page' => $issuesPerPage,
-            'assignee' => $userAssignedId,O
+            'assignee' => $userAssignedId,
             'resolution' => array(-2),
             'sort' => 'code',
             'sort_order' => 'desc'
