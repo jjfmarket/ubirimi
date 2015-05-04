@@ -17,7 +17,6 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-use Ubirimi\Calendar\EventListener\CalendarEventSubscriber;
 use Ubirimi\Component\ApiClient\EventListener\JsonResponseListener;
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Service\ConfigService;
@@ -46,7 +45,6 @@ UbirimiContainer::register(new CalendarServiceProvider());
 UbirimiContainer::register(new SvnHostingServiceProvider());
 
 UbirimiContainer::get()['dispatcher']->addSubscriber(new JsonResponseListener());
-UbirimiContainer::get()['dispatcher']->addSubscriber(new CalendarEventSubscriber());
 
 $routeBootstrapper = new RouteBootstrapService();
 $urlMatcher = $routeBootstrapper->bootstrap(UbirimiContainer::get()['deploy.on_demand']);
