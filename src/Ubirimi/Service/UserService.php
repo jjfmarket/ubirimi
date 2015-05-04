@@ -23,8 +23,6 @@ use Ubirimi\Calendar\Repository\Calendar\UbirimiCalendar;
 use Ubirimi\Calendar\Repository\Reminder\ReminderPeriod;
 use Ubirimi\Calendar\Repository\Reminder\ReminderType;
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\Event\UbirimiEvents;
-use Ubirimi\Event\UserEvent;
 use Ubirimi\QuickNotes\Repository\Notebook;
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\Repository\User\UbirimiGroup;

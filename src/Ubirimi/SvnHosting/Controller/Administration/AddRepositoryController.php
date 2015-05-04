@@ -23,8 +23,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\Event\UbirimiEvents;
-use Ubirimi\Event\UserEvent;
 use Ubirimi\SvnHosting\Repository\SvnRepository;
 use Ubirimi\SvnHosting\SVNUtils;
 use Ubirimi\SystemProduct;
@@ -102,7 +100,7 @@ class AddRepositoryController extends UbirimiController
                     )
                 );
 
-                UbirimiContainer::get()['email']->emailNewUserRepository($clientId,
+                UbirimiContainer::get()['svn.email']->newUserRepository($clientId,
                                                                          $session->get('user/first_name'),
                                                                          $session->get('user/last_name'),
                                                                          $session->get('user/username'),

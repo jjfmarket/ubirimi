@@ -153,27 +153,4 @@ class EmailService extends UbirimiService
             ),
             Util::getServerCurrentDateTime());
     }
-
-    public function emailNewUserRepository($clientId, $firstName, $lastName, $username, $password, $email, $repositoryName, $baseURL) {
-
-        $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
-
-        if (!$clientSmtpSettings) {
-            return;
-        }
-
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-            $clientSmtpSettings['from_address'],
-            $email,
-            null,
-            $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - You have been granted access to ' . $repositoryName . ' SVN Repository',
-            Util::getTemplate('_newRepositoryUser.php',array('first_name' => $firstName,
-                'last_name' => $lastName,
-                'username' => $username,
-                'password' => $password,
-                'repoName' => $repositoryName,
-                'baseURL' => $baseURL,
-                'clientData' => UbirimiContainer::get()['session']->get('client'))),
-            Util::getServerCurrentDateTime());
-    }
 }

@@ -21,50 +21,56 @@ namespace Ubirimi\SvnHosting\Service;
 
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\Email\Email;
+use Ubirimi\Repository\Email\EmailQueue;
+use Ubirimi\Repository\SMTPServer;
 use Ubirimi\Service\UbirimiService;
+use Ubirimi\Util;
 
 class EmailService extends UbirimiService
 {
-    public function newUser($repositoryName, $firstName, $lastName, $username, $mail, $baseURL)
+    public function passwordUpdate($clientId, $repositoryName, $user, $password, $baseURL)
     {
-        if ($this->session->get('client/settings/smtp')) {
+        $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
-            Email::$smtpSettings = $this->session->get('client/settings/smtp');
-            UbirimiContainer::get()['repository']->get(Email::class)->sendNewUserRepositoryNotificationEmail($this->session->get('client/id'), $firstName, $lastName, $username, null, $mail, $repositoryName, $baseURL);
+        if (!$clientSmtpSettings) {
+            return;
         }
+
+        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+            $clientSmtpSettings['from_address'],
+            $user['email'],
+            null,
+            $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - Password change for ' . $repositoryName . ' SVN Repository',
+            Util::getTemplate('_userChangePassword.php', array('first_name' => $user['first_name'],
+                'last_name' => $user['last_name'],
+                'username' => $user['username'],
+                'password' => $password,
+                'repoName' => $repositoryName,
+                'baseURL' => $baseURL
+            )),
+            Util::getServerCurrentDateTime());
     }
 
-    public function passwordUpdate($repositoryName, $user, $password, $baseURL)
-    {
-        if ($this->session->get('client/settings/smtp')) {
-            Email::$smtpSettings = $this->session->get('client/settings/smtp');
+    public function newUserRepository($clientId, $firstName, $lastName, $username, $password, $email, $repositoryName, $baseURL) {
 
-            UbirimiContainer::get()['repository']->get(Email::class)->sendUserChangedPasswordForRepositoryNotificationEmail(
-                $this->session->get('client/id'),
-                $user['first_name'],
-                $user['last_name'],
-                $user['username'],
-                $password,
-                $user['email'],
-                $repositoryName,
-                $baseURL
-            );
-        }
-    }
+        $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
-    public function importUsers($repositoryName, $user)
-    {
-        if ($this->session->get('client/settings/smtp')) {
-            Email::$smtpSettings = $this->session->get('client/settings/smtp');
-            UbirimiContainer::get()['repository']->get(Email::class)->sendNewUserRepositoryNotificationEmail(
-                $this->session->get('client/id'),
-                $user['first_name'],
-                $user['last_name'],
-                $user['username'],
-                null,
-                $user['email'],
-                $repositoryName
-            );
+        if (!$clientSmtpSettings) {
+            return;
         }
+
+        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+            $clientSmtpSettings['from_address'],
+            $email,
+            null,
+            $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - You have been granted access to ' . $repositoryName . ' SVN Repository',
+            Util::getTemplate('_newRepositoryUser.php',array('first_name' => $firstName,
+                'last_name' => $lastName,
+                'username' => $username,
+                'password' => $password,
+                'repoName' => $repositoryName,
+                'baseURL' => $baseURL,
+                'clientData' => UbirimiContainer::get()['session']->get('client'))),
+            Util::getServerCurrentDateTime());
     }
 }

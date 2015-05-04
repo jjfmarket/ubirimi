@@ -36,23 +36,6 @@ use Ubirimi\Yongo\Repository\Project\YongoProject;
 
 class Email {
 
-    public function sendUserChangedPasswordForRepositoryNotificationEmail($clientId, $firstName, $lastName, $username, $password, $email, $repositoryName, $baseURL) {
-        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
-
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                        Email::$smtpSettings['from_address'],
-                        $email,
-                        null,
-                        Email::$smtpSettings['email_prefix'] . ' ' . 'Ubirimi - Password change for ' . $repositoryName . ' SVN Repository',
-                        Util::getTemplate('_userChangePassword.php', array('first_name' => $firstName,
-                                                                                 'last_name' => $lastName,
-                                                                                 'username' => $username,
-                                                                                 'password' => $password,
-                                                                                 'repoName' => $repositoryName,
-                                                                                 'baseURL' => $baseURL,
-                                                                                 'clientData' => UbirimiContainer::get()['session']->get('client'))),
-                        Util::getServerCurrentDateTime());
-    }
 
     public function shareCalendar($clientId, $calendar, $userThatShares, $userToSendEmailAddress, $noteContent) {
         Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
