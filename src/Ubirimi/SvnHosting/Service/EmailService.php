@@ -20,7 +20,6 @@
 namespace Ubirimi\SvnHosting\Service;
 
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\Repository\Email\Email;
 use Ubirimi\Repository\Email\EmailQueue;
 use Ubirimi\Repository\SMTPServer;
 use Ubirimi\Service\UbirimiService;
@@ -46,7 +45,8 @@ class EmailService extends UbirimiService
                 'username' => $user['username'],
                 'password' => $password,
                 'repoName' => $repositoryName,
-                'baseURL' => $baseURL
+                'baseURL' => $baseURL,
+                'clientId' => $clientId
             )),
             Util::getServerCurrentDateTime());
     }
