@@ -30,14 +30,6 @@ class UbirimiEvents
     const LOG = 'ubirimi.log';
 
     /**
-     * User Event
-     *
-     * Event triggered when an operation is performed upon a user.
-     * The Event will pass a Ubirimi\Event\UserEvent Event.
-     */
-    const USER = 'ubirimi.user';
-
-    /**
      * Contact Message Event
      *
      * Event triggered when a contact message is sent via website.

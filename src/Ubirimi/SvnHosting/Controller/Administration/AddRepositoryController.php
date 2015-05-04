@@ -89,17 +89,27 @@ class AddRepositoryController extends UbirimiController
 
                 }
 
-                $userEvent = new UserEvent(
-                    UserEvent::STATUS_NEW_SVN,
-                    $session->get('user/first_name'),
-                    $session->get('user/last_name'),
-                    $session->get('user/username'),
-                    null,
-                    $session->get('user/email'),
-                    array('svnRepoId' => $repoId, 'repositoryName' => $name, 'baseURL' => $session->get('client/base_url'))
+                UbirimiContainer::get()['user']->newUser(
+                    array(
+                        'clientId' => $clientId,
+                        'firstName' => $session->get('user/first_name'),
+                        'lastName' => $session->get('user/last_name'),
+                        'email' => $session->get('user/email'),
+                        'username' => $session->get('user/username'),
+                        'baseURL' => $session->get('client/base_url'),
+                        'svnRepoId' => $repoId,
+                        'repositoryName' => $name
+                    )
                 );
 
-                UbirimiContainer::get()['dispatcher']->dispatch(UbirimiEvents::USER, $userEvent);
+                UbirimiContainer::get()['email']->emailNewUserRepository($clientId,
+                                                                         $session->get('user/first_name'),
+                                                                         $session->get('user/last_name'),
+                                                                         $session->get('user/username'),
+                                                                         null,
+                                                                         $session->get('user/email'),
+                                                                         $name,
+                                                                         $session->get('client/base_url'));
 
                 $this->getLogger()->addInfo('ADD SVN Repository ' . Util::slugify($name), $this->getLoggerContext());
 

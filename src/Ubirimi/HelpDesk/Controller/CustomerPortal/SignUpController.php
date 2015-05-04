@@ -64,24 +64,29 @@ class SignUpController extends UbirimiController
 
             $emailData = $this->getRepository(UbirimiUser::class)->getUserByClientIdAndEmailAddress($clientId, mb_strtolower($email));
 
-            if ($emailData)
+            if ($emailData) {
                 $errors['email_already_exists'] = true;
+            }
 
-            if (empty($firstName))
+            if (empty($firstName)) {
                 $errors['empty_first_name'] = true;
+            }
 
-            if (empty($lastName))
+            if (empty($lastName)) {
                 $errors['empty_last_name'] = true;
+            }
 
-            if (empty($password))
+            if (empty($password)) {
                 $errors['empty_password'] = true;
+            }
 
-            if ($password != $passwordAgain)
+            if ($password != $passwordAgain) {
                 $errors['password_mismatch'] = true;
+            }
 
             if (Util::hasNoErrors($errors)) {
 
-                $userId = UbirimiContainer::get()['user']->newUser(
+                UbirimiContainer::get()['user']->newUser(
                     array(
                         'clientId' => $clientId,
                         'firstName' => $firstName,
@@ -92,6 +97,8 @@ class SignUpController extends UbirimiController
                         'clientBaseURL' => $client['base_url']
                     )
                 );
+
+                UbirimiContainer::get()['email']->emailNewHelpDeskUser($clientId, $firstName, $lastName, $email, $password, $client['base_url']);
 
                 return new RedirectResponse('/helpdesk/customer-portal');
             }

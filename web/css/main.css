@@ -1423,7 +1423,7 @@ footer ul li.last p {
     behavior: url(/css/PIE.htc);
     color: #222222;
     font-size: 16px;
-    padding: 22px 0 22px 60px;
+    padding: 22px 0 22px 0;
     width: 423px;
 }
 
@@ -1433,10 +1433,6 @@ footer ul li.last p {
 
 .global-msg.warning {
     background: #fbf0d0 url("/img/site/bg.global-msg.png") 20px -80px no-repeat scroll;
-}
-
-.global-msg.confirmation {
-    background: url("/img/site/bg.global-msg.png") 0px -165px no-repeat scroll;
 }
 
 .global-msg.info {

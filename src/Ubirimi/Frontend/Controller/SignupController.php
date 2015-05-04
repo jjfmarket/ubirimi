@@ -101,6 +101,7 @@ class SignupController extends UbirimiController
             }
 
             if (Util::hasNoErrors($errors)) {
+
                 $userId = UbirimiContainer::get()['user']->newUser(
                     array(
                         'clientId' => $clientId,
@@ -113,6 +114,8 @@ class SignupController extends UbirimiController
                         'country' => $countryId
                     )
                 );
+
+                UbirimiContainer::get()['email']->emailNewRegularUser($clientId, $firstName, $lastName, $email, $username, $password, $client['base_url']);
 
                 $session->set('user_account_created', true);
                 $email = $firstName = $lastName = $username = $password = $passwordAgain = $email = null;

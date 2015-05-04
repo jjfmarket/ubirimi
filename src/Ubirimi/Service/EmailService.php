@@ -27,23 +27,9 @@ use Ubirimi\Util;
 
 class EmailService extends UbirimiService
 {
-    public function newUser($firstName, $lastName, $username, $password, $email, $clientDomain, $clientId)
-    {
-        UbirimiContainer::get()['repository']->get(EmailRepository::class)->sendNewUserNotificationEmail($clientId, $firstName, $lastName, $username, $password, $email, $clientDomain);
-    }
-
-    public function newUserCustomer($firstName, $lastName, $password, $email, $clientDomain, $clientId)
-    {
-        UbirimiContainer::get()['repository']->get(EmailRepository::class)->sendNewCustomerNotificationEmail($clientId, $firstName, $lastName, $email, $password, $clientDomain);
-    }
-
     public function feedback($userData, $like, $improve, $newFeatures, $experience)
     {
         UbirimiContainer::get()['repository']->get(EmailRepository::class)->sendFeedback($userData, $like, $improve, $newFeatures, $experience);
-    }
-
-    public function passwordRecover($clientId, $email, $password)
-    {
     }
 
     private function getEmailHeader($product = null) {
@@ -113,6 +99,81 @@ class EmailService extends UbirimiService
             Util::getTemplate('_restorePassword.php',array(
                     'password' => $password
             )),
+            Util::getServerCurrentDateTime());
+    }
+
+    public function emailNewRegularUser($clientId, $firstName, $lastName, $email, $username, $password, $clientDomain) {
+
+        $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
+        if (!$clientSmtpSettings) {
+            return;
+        }
+
+        $subject = $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - A new account has been created for you';
+
+        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+            $clientSmtpSettings['from_address'],
+            $email,
+            null,
+            $subject,
+            Util::getTemplate('_newUser.php', array(
+                    'firstName' => $firstName,
+                    'lastName' => $lastName,
+                    'username' => $username,
+                    'password' => $password,
+                    'clientDomain' => $clientDomain)
+            ),
+            Util::getServerCurrentDateTime());
+
+    }
+
+    public function emailNewHelpDeskUser($clientId, $firstName, $lastName, $email, $password, $clientDomain) {
+
+        $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
+        if (!$clientSmtpSettings) {
+            return;
+        }
+
+        $subject = $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - A new customer account has been created for you';
+
+        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+            $clientSmtpSettings['from_address'],
+            $email,
+            null,
+            $subject,
+            Util::getTemplate('_newUser.php', array(
+                    'firstName' => $firstName,
+                    'lastName' => $lastName,
+                    'email' => $email,
+                    'password' => $password,
+                    'isCustomer' => true,
+                    'clientDomain' => $clientDomain)
+            ),
+            Util::getServerCurrentDateTime());
+    }
+
+    public function emailNewUserRepository($clientId, $firstName, $lastName, $username, $password, $email, $repositoryName, $baseURL) {
+
+        $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
+
+        if (!$clientSmtpSettings) {
+            return;
+        }
+
+        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+            $clientSmtpSettings['from_address'],
+            $email,
+            null,
+            $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - You have been granted access to ' . $repositoryName . ' SVN Repository',
+            Util::getTemplate('_newRepositoryUser.php',array('first_name' => $firstName,
+                'last_name' => $lastName,
+                'username' => $username,
+                'password' => $password,
+                'repoName' => $repositoryName,
+                'baseURL' => $baseURL,
+                'clientData' => UbirimiContainer::get()['session']->get('client'))),
             Util::getServerCurrentDateTime());
     }
 }

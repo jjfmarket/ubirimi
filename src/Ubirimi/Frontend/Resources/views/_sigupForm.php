@@ -1,6 +1,6 @@
 
     <?php if ($session->has('user_account_created')): ?>
-    <div class="global-msg confirmation">
+    <div class="global-msg">
         Done. Check your email in a few minutes for further details.
     </div>
     <?php endif ?>

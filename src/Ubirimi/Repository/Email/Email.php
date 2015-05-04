@@ -36,65 +36,6 @@ use Ubirimi\Yongo\Repository\Project\YongoProject;
 
 class Email {
 
-    public function sendNewUserNotificationEmail($clientId, $firstName, $lastName, $username, $password, $email, $clientDomain) {
-        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
-
-        $subject = Email::$smtpSettings['email_prefix'] . ' ' . 'Ubirimi - A new account has been created for you';
-
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                        Email::$smtpSettings['from_address'],
-                        $email,
-                        null,
-                        $subject,
-                        Util::getTemplate('_newUser.php', array(
-                            'firstName' => $firstName,
-                            'lastName' => $lastName,
-                            'username' => $username,
-                            'password' => $password,
-                            'clientDomain' => $clientDomain)
-                        ),
-                        Util::getServerCurrentDateTime());
-    }
-
-    public function sendNewCustomerNotificationEmail($clientId, $firstName, $lastName, $email, $password, $clientDomain) {
-        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
-
-        $subject = Email::$smtpSettings['email_prefix'] . ' ' . 'Ubirimi - A new customer account has been created for you';
-
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                        Email::$smtpSettings['from_address'],
-                        $email,
-                        null,
-                        $subject,
-                        Util::getTemplate('_newUser.php', array(
-                            'firstName' => $firstName,
-                            'lastName' => $lastName,
-                            'email' => $email,
-                            'password' => $password,
-                            'isCustomer' => true,
-                            'clientDomain' => $clientDomain)
-                        ),
-                        Util::getServerCurrentDateTime());
-    }
-
-    public function sendNewUserRepositoryNotificationEmail($clientId, $firstName, $lastName, $username, $password, $email, $repositoryName, $baseURL) {
-        Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
-
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                        Email::$smtpSettings['from_address'],
-                        $email,
-                        null,
-                        Email::$smtpSettings['email_prefix'] . ' ' . 'Ubirimi - You have been granted access to ' . $repositoryName . ' SVN Repository',
-                        Util::getTemplate('_newRepositoryUser.php',array('first_name' => $firstName,
-                                                                         'last_name' => $lastName,
-                                                                         'username' => $username,
-                                                                         'password' => $password,
-                                                                         'repoName' => $repositoryName,
-                                                                         'baseURL' => $baseURL,
-                                                                         'clientData' => UbirimiContainer::get()['session']->get('client'))),
-                        Util::getServerCurrentDateTime());
-    }
-
     public function sendUserChangedPasswordForRepositoryNotificationEmail($clientId, $firstName, $lastName, $username, $password, $email, $repositoryName, $baseURL) {
         Email::$smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 

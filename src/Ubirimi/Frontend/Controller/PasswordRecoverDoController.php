@@ -63,7 +63,9 @@ class PasswordRecoverDoController extends UbirimiController
                 $emailAddressNotExists = true;
             }
 
-            return $this->render(__DIR__ . '/../Resources/views/_passwordRecoverForm.php', get_defined_vars());
+            $content = 'PasswordRecover.php';
+
+            return $this->render(__DIR__ . '/../Resources/views/_main.php', get_defined_vars());
         } else if ($request->request->has('go_back')) {
             return new RedirectResponse('/');
         }

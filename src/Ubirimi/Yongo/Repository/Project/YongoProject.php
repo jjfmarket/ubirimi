@@ -1867,7 +1867,7 @@ class YongoProject
     }
 
     public function toggleHelpDeskFlag($projectId) {
-        $query = 'update yongo_project  help_desk_enabled_flag = 1 - help_desk_enabled_flag where id = ? limit 1';
+        $query = 'update yongo_project set help_desk_enabled_flag = 1 - help_desk_enabled_flag where id = ? limit 1';
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $stmt->bind_param("i", $projectId);

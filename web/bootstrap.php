@@ -20,7 +20,6 @@
 use Ubirimi\Calendar\EventListener\CalendarEventSubscriber;
 use Ubirimi\Component\ApiClient\EventListener\JsonResponseListener;
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\EventListener\UbirimiSubscriber;
 use Ubirimi\Service\ConfigService;
 use Ubirimi\SvnHosting\EventListener\SvnHostingEventSubscriber;
 use Ubirimi\SvnHosting\ServiceProvider\SvnHostingServiceProvider;
@@ -48,7 +47,6 @@ UbirimiContainer::register(new CalendarServiceProvider());
 UbirimiContainer::register(new SvnHostingServiceProvider());
 
 UbirimiContainer::get()['dispatcher']->addSubscriber(new JsonResponseListener());
-UbirimiContainer::get()['dispatcher']->addSubscriber(new UbirimiSubscriber());
 UbirimiContainer::get()['dispatcher']->addSubscriber(new CalendarEventSubscriber());
 UbirimiContainer::get()['dispatcher']->addSubscriber(new SvnHostingEventSubscriber());
 
