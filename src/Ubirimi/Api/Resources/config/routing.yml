@@ -10,6 +10,11 @@ apiIssuePOST:
   defaults: { _controller: '\Ubirimi\Api\Controller\Issue\PostController' }
   methods:  [POST]
 
+apiIssueSearch:
+  path: /api/issue/search
+  defaults: { _controller: '\Ubirimi\Api\Controller\Issue\SearchController' }
+  methods:  [GET]
+
 apiIssueMetadataGET:
   path: /api/issue/metadata
   defaults: { _controller: '\Ubirimi\Api\Controller\Issue\MetadataController' }
@@ -61,10 +66,3 @@ apiClientValidateDomain:
   path: /api/client/validate/domain/{domain}
   defaults: { _controller: '\Ubirimi\Api\Controller\Client\ValidateDomainController' }
   methods:  [GET]
-
-apiGetPaymentAmountByCountUsers:
-  path: /api/payment/{client_id}
-  defaults: { _controller: '\Ubirimi\Api\Controller\Payment\GetController' }
-  methods:  [GET]
-  requirements:
-    client_id:  \d+

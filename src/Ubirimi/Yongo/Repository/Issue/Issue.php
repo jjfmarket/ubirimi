@@ -625,7 +625,7 @@ class Issue
         if (isset($parameters['page'])) {
             $query .= ' LIMIT ' . (($parameters['page'] - 1) * $parameters['issues_per_page']) . ', ' . ($parameters['issues_per_page']);
         }
-
+//
 //        $queryTest = $query;
 //        for ($p = 0; $p < count($parameterArray); $p++) {
 //            $queryTest = preg_replace('/\?/', $parameterArray[$p], $queryTest, 1);
