@@ -27,6 +27,24 @@ use Ubirimi\Util;
 
 class EmailService extends UbirimiService
 {
+
+    public function getMailer($smtpSettings) {
+        $smtpSecurity = null;
+
+        if ($smtpSettings['smtp_protocol'] == SMTPServer::PROTOCOL_SECURE_SMTP) {
+            $smtpSecurity = 'ssl';
+        }
+        if (isset($smtpSettings['tls_flag'])) {
+            $smtpSecurity = 'tls';
+        }
+
+        $transport = \Swift_SmtpTransport::newInstance($smtpSettings['hostname'], $smtpSettings['port'], $smtpSecurity)
+                ->setUsername($smtpSettings['username'])
+                ->setPassword($smtpSettings['password']);
+
+        return \Swift_Mailer::newInstance($transport);
+    }
+
     public function feedback($userData, $like, $improve, $newFeatures, $experience) {
         $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($userData['client_id']);
 

@@ -21,37 +21,71 @@ namespace Ubirimi\Calendar\Service;
 
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\Email\Email;
+use Ubirimi\Repository\Email\EmailQueue;
+use Ubirimi\Repository\SMTPServer;
 use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\Service\UbirimiService;
+use Ubirimi\Util;
 
 class EmailService extends UbirimiService
 {
-    public function shareCalendar($calendar, $userThatShares, $usersToShareWith, $noteContent)
+    public function share($calendar, $userThatShares, $usersToShareWith, $noteContent)
     {
-        $smtpSettings = UbirimiContainer::get()['session']->get('client/settings/smtp');
+        $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($calendar['client_id']);
 
-        if ($smtpSettings) {
-            Email::$smtpSettings = $smtpSettings;
-            $usersToShareWithCount = count($usersToShareWith);
-            for ($i = 0; $i < $usersToShareWithCount; $i++) {
-                $user = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getById($usersToShareWith[$i]);
-
-                UbirimiContainer::get()['repository']->get(Email::class)->shareCalendar($this->session->get('client/id'), $calendar, $userThatShares, $user['email'], $noteContent);
-            }
+        if (!$clientSmtpSettings) {
+            return;
         }
+
+        $usersToShareWithCount = count($usersToShareWith);
+        for ($i = 0; $i < $usersToShareWithCount; $i++) {
+            $user = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getById($usersToShareWith[$i]);
+
+            $subject = $clientSmtpSettings['email_prefix'] . ' ' .
+                $userThatShares['first_name'] . ' ' .
+                $userThatShares['last_name'] . ' shared calendar ' .
+                $calendar['name'] . ' with you';
+
+            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($calendar['client_id'],
+                $clientSmtpSettings['from_address'],
+                $user['email'],
+                null,
+                $subject,
+                Util::getTemplate('_share.php', array('calendar' => $calendar,
+                                                      'userThatShares' => $userThatShares,
+                                                      'noteContent' => $noteContent)),
+                Util::getServerCurrentDateTime());
+        }
+
     }
 
-    public function shareEvent($event, $userThatShares, $usersToShareWith, $noteContent)
+    public function shareEvent($clientId, $event, $userThatShares, $usersToShareWith, $noteContent)
     {
-        $smtpSettings = UbirimiContainer::get()['session']->get('client/settings/smtp');
+        $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
-        if ($smtpSettings) {
-            Email::$smtpSettings = $smtpSettings;
-            $usersToShareWithCount = count($usersToShareWith);
-            for ($i = 0; $i < $usersToShareWithCount; $i++) {
-                $user = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getById($usersToShareWith[$i]);
-                UbirimiContainer::get()['repository']->get(Email::class)->shareEvent($this->session->get('client/id'), $event, $userThatShares, $user['email'], $noteContent);
-            }
+        if (!$clientSmtpSettings) {
+            return;
+        }
+
+        $usersToShareWithCount = count($usersToShareWith);
+        for ($i = 0; $i < $usersToShareWithCount; $i++) {
+            $user = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getById($usersToShareWith[$i]);
+
+            $subject = $clientSmtpSettings['email_prefix'] . ' ' .
+                $userThatShares['first_name'] . ' ' .
+                $userThatShares['last_name'] . ' shared event ' .
+                $event['name'] . ' with you';
+
+            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+                $clientSmtpSettings['from_address'],
+                $user['email'],
+                null,
+                $subject,
+                Util::getTemplate('_eventShare.php', array('event' => $event,
+                                                           'userThatShares' => $userThatShares,
+                                                           'noteContent' => $noteContent)),
+                Util::getServerCurrentDateTime());
+
         }
     }
 }

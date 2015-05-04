@@ -48,16 +48,19 @@ class ShareController extends UbirimiController
 
         if ($userIds) {
             $this->getRepository(UbirimiCalendar::class)->shareWithUsers($calendarId, $userIds, $currentDate);
-            $calendarEvent = new CalendarEvent(
-                $calendar,
-                array(
-                    'userThatShares' => $userThatShares,
-                    'usersToShareWith' => $userIds,
-                    'noteContent' => $noteContent
-                )
-            );
 
-            UbirimiContainer::get()['dispatcher']->dispatch(CalendarEvents::CALENDAR_SHARE, $calendarEvent);
+//            $calendarEvent = new CalendarEvent(
+//                $calendar,
+//                array(
+//                    'userThatShares' => $userThatShares,
+//                    'usersToShareWith' => $userIds,
+//                    'noteContent' => $noteContent
+//                )
+//            );
+
+//            UbirimiContainer::get()['dispatcher']->dispatch(CalendarEvents::CALENDAR_SHARE, $calendarEvent);
+
+            UbirimiContainer::get()['calendar.email']->share($calendar, $userThatShares, $userIds, $noteContent);
 
             $this->getLogger()->addInfo('Share Calendar ' . $calendar['name'], $this->getLoggerContext());
         }

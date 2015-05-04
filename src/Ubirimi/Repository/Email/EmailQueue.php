@@ -24,13 +24,13 @@ use Ubirimi\Container\UbirimiContainer;
 
 class EmailQueue
 {
-    public function send($clientId, $emailData) {
-        $mailer = UbirimiContainer::get()['repository']->get(Email::class)->getMailer($clientId);
+    public function send($smtpSettings, $emailData) {
+        $mailer = UbirimiContainer::get()['email']->getMailer($smtpSettings);
 
         $message = Swift_Message::newInstance($emailData['subject'])
-            ->setFrom(array($emailData['from_address']))
-            ->setTo(array($emailData['to_address']))
-            ->setBody($emailData['content'], 'text/html');
+                ->setFrom(array($emailData['from_address']))
+                ->setTo(array($emailData['to_address']))
+                ->setBody($emailData['content'], 'text/html');
 
         @$mailer->send($message);
     }

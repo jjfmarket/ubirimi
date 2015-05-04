@@ -47,17 +47,8 @@ class AddGuestController extends UbirimiController
         $userThatShares = $this->getRepository(UbirimiUser::class)->getById($session->get('user/id'));
 
         $this->getLogger()->addInfo('Add Guest for Event ' . $event['name'], $this->getLoggerContext());
-        $calendarEvent = new CalEvent(
-            null,
-            array(
-                'event' => $event,
-                'userThatShares' => $userThatShares,
-                'usersToShareWith' => $userIds,
-                'noteContent' => $noteContent
-            )
-        );
 
-        UbirimiContainer::get()['dispatcher']->dispatch(CalendarEvents::CALENDAR_EVENT_GUEST, $calendarEvent);
+        UbirimiContainer::get()['calendar.email']->shareEvent($session->get('client/id'), $event, $userThatShares, $userIds, $noteContent);
 
         return new Response('');
     }

@@ -79,7 +79,7 @@ while ($reminders && $reminder = $reminders->fetch_array(MYSQLI_ASSOC)) {
         if ($eventStartDateReminder >= $eventStartDate) {
 
             // send the reminder
-            $mailer = UbirimiContainer::get()['repository']->get(Email::class)->getMailer($smtpSettings);
+            $mailer = UbirimiContainer::get()['email']->getMailer($smtpSettings);
             $message = Swift_Message::newInstance($emailSubject)
                 ->setFrom(array($smtpSettings['from_address']))
                 ->setTo(array($reminder['email']))

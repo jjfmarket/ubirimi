@@ -42,7 +42,7 @@ while ($emails && $email = $emails->fetch_array(MYSQLI_ASSOC)) {
 
     try {
         echo 'Process email Id: ' . $email['id'] . "\n";
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->send($email['client_id'], $email);
+        UbirimiContainer::get()['repository']->get(EmailQueue::class)->send($smtpSettings, $email);
         UbirimiContainer::get()['repository']->get(EmailQueue::class)->deleteById($email['id']);
     } catch (Swift_TransportException $e) {
         echo $e->getMessage() . "\n";

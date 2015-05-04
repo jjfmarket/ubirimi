@@ -89,12 +89,26 @@ class IssueEmailService extends UbirimiService
             $users = UbirimiContainer::get()['repository']->get(YongoProject::class)->getUsersForNotification($issue['issue_project_id'], $eventId, $issue, $this->session->get('user/id'));
 
             while ($users && $userToNotify = $users->fetch_array(MYSQLI_ASSOC)) {
-                if ($userToNotify['user_id'] == $this->session->get('user/id') && $userToNotify['notify_own_changes_flag']) {
-                    UbirimiContainer::get()['repository']->get(Email::class)->sendEmailNotificationNewComment($issue, $this->session->get('client/id'), $project, $userToNotify, $comment, $this->session->get('user'));
+                if ($userToNotify['user_id'] == $this->session->get('user/id') && !$userToNotify['notify_own_changes_flag']) {
+                    continue;
                 }
-                else {
-                    UbirimiContainer::get()['repository']->get(Email::class)->sendEmailNotificationNewComment($issue, $this->session->get('client/id'), $project, $userToNotify, $comment, $this->session->get('user'));
-                }
+
+                $subject = $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue COMMENT " . $issue['project_code'] . '-' . $issue['nr'];
+
+                $date = Util::getServerCurrentDateTime();
+
+                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
+                    $smtpSettings['from_address'],
+                    $userToNotify['email'],
+                    null,
+                    $subject,
+                    Util::getTemplate('_newComment.php',array(
+                            'issue' => $issue,
+                            'project' => $project,
+                            'content' => $comment,
+                            'user' => $userToNotify)
+                    ),
+                    $date);
             }
         }
     }
@@ -116,8 +130,6 @@ class IssueEmailService extends UbirimiService
                     $userThatShares['last_name'] . ' shared ' .
                     $issue['project_code'] . '-' . $issue['nr'] . ': ' . substr($issue['summary'], 0, 20) . ' with you';
 
-                $date = Util::getServerCurrentDateTime();
-
                 UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
                     $smtpSettings['from_address'],
                     $user['email'],
@@ -128,7 +140,7 @@ class IssueEmailService extends UbirimiService
                             'userThatShares' => $userThatShares,
                             'noteContent' => $noteContent)
                     ),
-                    $date);
+                    Util::getServerCurrentDateTime());
             }
         }
     }

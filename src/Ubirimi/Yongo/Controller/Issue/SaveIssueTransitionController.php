@@ -125,11 +125,6 @@ class SaveIssueTransitionController extends UbirimiController
 
             }
 
-            $smtpSettings = $session->get('client/settings/smtp');
-            if ($smtpSettings) {
-                Email::$smtpSettings = $smtpSettings;
-            }
-
             $this->getRepository(WorkflowFunction::class)->triggerPostFunctions($clientId, $issueData, $workflowData, $fieldChanges, $loggedInUserId, $currentDate);
 
             // update the date_updated field
