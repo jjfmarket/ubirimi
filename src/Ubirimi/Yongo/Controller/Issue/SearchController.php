@@ -44,12 +44,18 @@ class SearchController extends UbirimiController
             $clientSettings = $session->get('client/settings');
             $clientId = $session->get('client/id');
             $loggedInUserId = $session->get('user/id');
+            $columns = explode('#', $session->get('user/issues_display_columns'));
+
+            $columns[] = 'settings_menu';
+            $columns[] = '';
+
         } else {
             $issuesPerPage = 25;
             $httpHOST = Util::getHttpHost();
             $clientId = $this->getRepository(UbirimiClient::class)->getByBaseURL($httpHOST, 'array', 'id');
             $loggedInUserId = null;
             $clientSettings = $this->getRepository(UbirimiClient::class)->getSettings($clientId);
+            $columns = array('code', 'summary', 'priority', 'status', 'created', 'updated', 'reporter', 'assignee', 'settings_menu');
         }
 
         $sectionPageTitle = $clientSettings['title_name'] . ' / ' . SystemProduct::SYS_PRODUCT_YONGO_NAME . ' / Search';
@@ -111,14 +117,6 @@ class SearchController extends UbirimiController
                     $getSearchParameters['link_to_page'] = '/yongo/issue/search';
                 }
             }
-        }
-
-        $columns = array('code', 'summary', 'priority', 'status', 'created', 'updated', 'reporter', 'assignee', 'settings_menu');
-        if (Util::checkUserIsLoggedIn()) {
-            $columns = explode('#', $session->get('user/issues_display_columns'));
-
-            $columns[] = 'settings_menu';
-            $columns[] = '';
         }
 
         $hasGlobalBulkPermission = $this->getRepository(UbirimiUser::class)->hasGlobalPermission($clientId, $loggedInUserId, GlobalPermission::GLOBAL_PERMISSION_YONGO_BULK_CHANGE);
