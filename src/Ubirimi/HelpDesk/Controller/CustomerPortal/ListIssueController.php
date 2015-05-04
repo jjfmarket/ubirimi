@@ -77,7 +77,7 @@ class ListIssueController extends UbirimiController
             }
 
             $parseURLData = parse_url($_SERVER['REQUEST_URI']);
-            $projectsForBrowsing = array(229);
+
             if (isset($parseURLData['query']) && $projectsForBrowsing) {
                 if (Util::searchQueryNotEmpty($getSearchParameters)) {
                     $issuesResult = $this->getRepository(Issue::class)->getByParameters($getSearchParameters, $session->get('user/id'));
@@ -97,10 +97,10 @@ class ListIssueController extends UbirimiController
 
         $columns = array('code', 'summary', 'priority', 'status', 'created', 'updated', 'reporter', 'assignee', 'settings_menu');
         if (Util::checkUserIsLoggedIn()) {
-            $columns = explode('#', $session->get('user/issues_display_columns'));
+            $displaySearchColumns = explode('#', $session->get('user/issues_display_columns'));
 
-            $columns[] = 'settings_menu';
-            $columns[] = '';
+            $displaySearchColumns[] = 'settings_menu';
+            $displaySearchColumns[] = '';
         }
 
         $parseData = parse_url($_SERVER['REQUEST_URI']);

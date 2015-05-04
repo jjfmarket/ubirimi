@@ -1,4 +1,5 @@
 <?php
+
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\HelpDesk\Repository\Sla\Sla;
 use Ubirimi\LinkHelper;
@@ -15,7 +16,7 @@ $arrayIds = array();
             <?php Util::renderPaginator($issuesCount, $issuesPerPage, $currentSearchPage, $getSearchParameters); ?>
         <?php endif ?>
         <table class="table table-hover table-condensed">
-            <?php echo Util::renderTableHeader($getSearchParameters, $columns); ?>
+            <?php echo Util::renderTableHeader($getSearchParameters, $displaySearchColumns); ?>
             <?php while ($issue = $issues->fetch_array(MYSQLI_ASSOC)): ?>
                 <?php
                     $arrayIds[] = $issue['id'];
@@ -23,31 +24,31 @@ $arrayIds = array();
                     $slaData = UbirimiContainer::get()['repository']->get(Issue::class)->updateSLAValue($issue, $clientId, $clientSettings);
                 ?>
                 <tr>
-                    <?php for ($i = 0; $i < count($columns); $i++): ?>
-                        <?php if ($columns[$i] == 'code'): ?>
+                    <?php for ($i = 0; $i < count($displaySearchColumns); $i++): ?>
+                        <?php if ($displaySearchColumns[$i] == 'code'): ?>
                             <td class="issuePC">
                                 <a href="<?php echo $urlIssuePrefix . $issue['id'] ?>"><?php echo $issue['project_code'] . '-' . $issue['nr'] ?></a>
                             </td>
                         <?php endif ?>
-                        <?php if ($columns[$i] == 'type'): ?>
+                        <?php if ($displaySearchColumns[$i] == 'type'): ?>
                             <td class="issueType">
                                 <img title="<?php echo $issue['type_name'] . ' - ' . $issue['issue_type_description'] ?>"
                                      height="16px"
                                      src="/yongo/img/issue_type/<?php echo $issue['issue_type_icon_name'] ?>" />
                             </td>
                         <?php endif ?>
-                        <?php if ($columns[$i] == 'summary'): ?>
+                        <?php if ($displaySearchColumns[$i] == 'summary'): ?>
                                 <td class="issueSummary">
                                 <a href="<?php echo $urlIssuePrefix . $issue['id'] ?>"><?php echo $issue['summary'] ?></a>
                             </td>
                         <?php endif ?>
 
-                        <?php if ($columns[$i] == 'description'): ?>
+                        <?php if ($displaySearchColumns[$i] == 'description'): ?>
                             <td class="issueDe">
                                 <a href="/yongo/issue/<?php echo $issue['id'] ?>"><?php echo $issue['description'] ?></a>
                             </td>
                         <?php endif ?>
-                        <?php if ($columns[$i] == 'priority'): ?>
+                        <?php if ($displaySearchColumns[$i] == 'priority'): ?>
                             <td class="issuePriority">
                                 <img title="<?php echo $issue['priority_name'] . ' - ' . $issue['issue_priority_description'] ?>"
                                      height="16px"
@@ -55,17 +56,17 @@ $arrayIds = array();
                             </td>
                         <?php endif ?>
 
-                        <?php if ($columns[$i] == 'status'): ?>
+                        <?php if ($displaySearchColumns[$i] == 'status'): ?>
                             <td class="issueStatus"><?php echo $issue['status_name'] ?></td>
                         <?php endif ?>
 
-                        <?php if ($columns[$i] == 'created'): ?>
+                        <?php if ($displaySearchColumns[$i] == 'created'): ?>
                             <td class="issueDC">
                                 <?php echo Util::getFormattedDate($issue['date_created'], $clientSettings['timezone']) ?>
                             </td>
                         <?php endif ?>
 
-                        <?php if ($columns[$i] == 'updated'): ?>
+                        <?php if ($displaySearchColumns[$i] == 'updated'): ?>
                             <td class="issueDU">
                                 <?php if ($issue['date_updated']): ?>
                                     <?php echo Util::getFormattedDate($issue['date_updated'], $clientSettings['timezone']) ?>
@@ -73,19 +74,19 @@ $arrayIds = array();
                             </td>
                         <?php endif ?>
 
-                        <?php if ($columns[$i] == 'reporter'): ?>
+                        <?php if ($displaySearchColumns[$i] == 'reporter'): ?>
                             <td class="issueUR">
                                 <?php echo LinkHelper::getUserProfileLink($issue[Field::FIELD_REPORTER_CODE], $selectedProductId, $issue['ur_first_name'], $issue['ur_last_name']) ?>
                             </td>
                         <?php endif ?>
-                        <?php if ($columns[$i] == 'assignee'): ?>
+                        <?php if ($displaySearchColumns[$i] == 'assignee'): ?>
                             <td class="issueUA">
                                 <?php echo LinkHelper::getUserProfileLink($issue[Field::FIELD_ASSIGNEE_CODE], $selectedProductId, $issue['ua_first_name'], $issue['ua_last_name']) ?>
                             </td>
                         <?php endif ?>
-                        <?php if (substr($columns[$i], 0, 4) == 'sla_'): ?>
+                        <?php if (substr($displaySearchColumns[$i], 0, 4) == 'sla_'): ?>
                             <?php
-                                $slaIds = explode("_", str_replace('sla_', '', $columns[$i]));
+                                $slaIds = explode("_", str_replace('sla_', '', $displaySearchColumns[$i]));
                             ?>
                             <td class="issueSLA">
                                 <?php for ($j = 0; $j < count($slaIds); $j++): ?>
@@ -105,7 +106,7 @@ $arrayIds = array();
                                 <?php endfor ?>
                             </td>
                         <?php endif ?>
-                        <?php if ($columns[$i] == 'settings_menu' && Util::checkUserIsLoggedIn()):  ?>
+                        <?php if ($displaySearchColumns[$i] == 'settings_menu' && Util::checkUserIsLoggedIn()):  ?>
                             <td width="20px" align="center">
                                 <img id="issue_search_<?php echo $issue['id'] ?>" width="20px" src="/img/settings.png" />
                             </td>
@@ -122,7 +123,7 @@ $arrayIds = array();
         <table>
             <tbody>
                 <tr>
-                    <td colspan="<?php echo count($columns) ?>">No issues were found to match your search</td>
+                    <td colspan="<?php echo count($displaySearchColumns) ?>">No issues were found to match your search</td>
                 </tr>
             </tbody>
         </table>
