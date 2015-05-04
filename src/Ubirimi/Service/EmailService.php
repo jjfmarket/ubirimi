@@ -27,68 +27,25 @@ use Ubirimi\Util;
 
 class EmailService extends UbirimiService
 {
-    public function feedback($userData, $like, $improve, $newFeatures, $experience)
-    {
-        UbirimiContainer::get()['repository']->get(EmailRepository::class)->sendFeedback($userData, $like, $improve, $newFeatures, $experience);
+    public function feedback($userData, $like, $improve, $newFeatures, $experience) {
+        $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($userData['client_id']);
+
+        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($userData['client_id'],
+            $smtpSettings['from_address'],
+            array('domnulnopcea@gmail.com', 'domnuprofesor@gmail.com'),
+            null,
+            'Feedback - Ubirimi.com',
+            Util::getTemplate('_feedback.php',array(
+                'userData' => $userData,
+                'like' => $like,
+                'improve' => $improve,
+                'newFeatures' => $newFeatures,
+                'experience' => $experience
+            )),
+            Util::getServerCurrentDateTime());
     }
 
-    private function getEmailHeader($product = null) {
-        $text = '<div style="background-color: #F6F6F6; padding: 10px; margin: 10px; width: 720px;">';
-        $text .= '<div style="color: #333333;font: 17px Trebuchet MS, sans-serif;white-space: nowrap;padding-bottom: 5px;padding-top: 5px;text-align: left;padding-left: 2px;">';
-
-        $text .= '<a href="https://www.ubirimi.com"><img src="https://www.ubirimi.com/img/email-logo-yongo.png" border="0" /></a>';
-        $text .= '<div><img src="https://www.ubirimi.com/img/bg.page.png" /></div>';
-        $text .= '</div>';
-
-        return $text;
-    }
-
-    private function getEmailFooter() {
-        return '</div>';
-    }
-
-    public function emailFeedback($userData, $like, $improve, $newFeatures, $experience) {
-        $text = $this->getEmailHeader();
-        $text .= '<div style="color: #333333; font: 17px Trebuchet MS, sans-serif; white-space: nowrap; padding-top: 5px;text-align: left;padding-left: 2px;">' . $userData['first_name'] . ' ' . $userData['last_name'] . ' sent the following feedback: </div>';
-        $text .= '<br />';
-        $text .= '<table cellpadding="2" cellspacing="0" border="0">';
-        $text .= '<tr>';
-        $text .= '<td><b>Likes:</b></td>';
-        $text .= '<td>' . $like . '</td>';
-        $text .= '</tr>';
-        $text .= '<tr>';
-        $text .= '<td><b>To be improved:</b></td>';
-        $text .= '<td>' . $improve . '</td>';
-        $text .= '</tr>';
-        $text .= '<tr>';
-        $text .= '<td><b>New features:</b></td>';
-        $text .= '<td>' . $newFeatures . '</td>';
-        $text .= '</tr>';
-        $text .= '<tr>';
-        $text .= '<td><b>Overall experience:</b></td>';
-        $text .= '<td>' . $experience . '</td>';
-        $text .= '</tr>';
-
-        $text .= '</table>';
-
-        $text .= '<div>User giving feedback: </div>';
-        $text .= '<div>Email: ' . $userData['email'] . '</div>';
-        $text .= '<div>Client ID: ' . $userData['client_id'] . '</div>';
-        $text .= '<div>Username: ' . $userData['username'] . '</div>';
-
-        $text .= $this->getEmailFooter();
-
-        $transport = \Swift_SendmailTransport::newInstance('/usr/sbin/sendmail -bs');
-        $mailer = \Swift_Mailer::newInstance($transport);
-        $message = \Swift_Message::newInstance('Feedback - Ubirimi.com')
-            ->setFrom(array('no-reply@ubirimi.com'))
-            ->setTo(array('domnulnopcea@gmail.com', 'domnuprofesor@gmail.com'))
-            ->setBody($text, 'text/html');
-
-        $mailer->send($message);
-    }
-
-    public function emailPasswordRecover($clientId, $address, $password) {
+    public function passwordRestore($clientId, $address, $password) {
         $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
         UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
@@ -102,7 +59,7 @@ class EmailService extends UbirimiService
             Util::getServerCurrentDateTime());
     }
 
-    public function emailNewRegularUser($clientId, $firstName, $lastName, $email, $username, $password, $clientDomain) {
+    public function newRegularUser($clientId, $firstName, $lastName, $email, $username, $password, $clientDomain) {
 
         $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
@@ -128,7 +85,7 @@ class EmailService extends UbirimiService
 
     }
 
-    public function emailNewHelpDeskUser($clientId, $firstName, $lastName, $email, $password, $clientDomain) {
+    public function newHelpDeskUser($clientId, $firstName, $lastName, $email, $password, $clientDomain) {
 
         $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 

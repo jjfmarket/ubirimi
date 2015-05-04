@@ -42,7 +42,7 @@ class FeedbackController extends UbirimiController
 
         $userData = $this->getRepository(UbirimiUser::class)->getById($loggedInUserId);
 
-        UbirimiContainer::get()['email']->sendFeedback($userData, $like, $improve, $newFeatures, $experience);
+        UbirimiContainer::get()['email']->feedback($userData, $like, $improve, $newFeatures, $experience);
 
         return new Response('');
     }

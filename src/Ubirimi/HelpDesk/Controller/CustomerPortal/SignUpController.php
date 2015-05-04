@@ -98,7 +98,7 @@ class SignUpController extends UbirimiController
                     )
                 );
 
-                UbirimiContainer::get()['email']->emailNewHelpDeskUser($clientId, $firstName, $lastName, $email, $password, $client['base_url']);
+                UbirimiContainer::get()['email']->newHelpDeskUser($clientId, $firstName, $lastName, $email, $password, $client['base_url']);
 
                 return new RedirectResponse('/helpdesk/customer-portal');
             }

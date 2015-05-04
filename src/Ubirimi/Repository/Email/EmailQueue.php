@@ -41,8 +41,15 @@ class EmailQueue
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
 
-        $stmt->bind_param("issssss", $clientId, $fromAddress, $toAddress, $replyToAddress, $subject, $content, $date);
-        $stmt->execute();
+        if (is_array($toAddress)) {
+            foreach ($toAddress as $address) {
+                $stmt->bind_param("issssss", $clientId, $fromAddress, $address, $replyToAddress, $subject, $content, $date);
+                $stmt->execute();
+            }
+        } else {
+            $stmt->bind_param("issssss", $clientId, $fromAddress, $toAddress, $replyToAddress, $subject, $content, $date);
+            $stmt->execute();
+        }
     }
 
     public function getBatch() {
