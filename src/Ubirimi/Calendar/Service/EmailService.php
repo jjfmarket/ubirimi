@@ -29,7 +29,7 @@ use Ubirimi\Util;
 
 class EmailService extends UbirimiService
 {
-    public function share($calendar, $userThatShares, $usersToShareWith, $noteContent)
+    public function shareCalendar($calendar, $userThatShares, $usersToShareWith, $noteContent)
     {
         $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($calendar['client_id']);
 
