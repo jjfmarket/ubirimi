@@ -41,7 +41,7 @@ class IssueEmailService extends UbirimiService
         parent::__construct($session);
     }
 
-    public function emailIssueComment($clientId, $loggedInUserId, $issue, $project, $content)
+    public function comment($clientId, $loggedInUserId, $issue, $project, $content)
     {
         $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
@@ -77,7 +77,7 @@ class IssueEmailService extends UbirimiService
         }
     }
 
-    public function emailIssueLink($issueId, $project, $comment)
+    public function link($issueId, $project, $comment)
     {
         $clientId = $project['client_id'];
         $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
@@ -99,7 +99,7 @@ class IssueEmailService extends UbirimiService
         }
     }
 
-    public function emailIssueShare($issue, $userIds, $noteContent)
+    public function share($issue, $userIds, $noteContent)
     {
         $clientId = $issue['client_id'];
         $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
@@ -133,7 +133,7 @@ class IssueEmailService extends UbirimiService
         }
     }
 
-    public function emailIssueWorkLogged($issue, $project, $extraInformation)
+    public function workLogged($issue, $project, $extraInformation)
     {
         $clientId = $project['client_id'];
         $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
@@ -168,7 +168,7 @@ class IssueEmailService extends UbirimiService
         }
     }
 
-    public function emailIssueAddAttachemnt($issue, $project, $extraInformation)
+    public function addAttachment($issue, $project, $extraInformation)
     {
         $clientId = $project['client_id'];
         $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
@@ -203,7 +203,7 @@ class IssueEmailService extends UbirimiService
         }
     }
 
-    public function emailIssueWorkLogUpdated($issue, $project, $extraInformation)
+    public function workLogUpdated($issue, $project, $extraInformation)
     {
         $clientId = $project['client_id'];
         $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
@@ -238,7 +238,7 @@ class IssueEmailService extends UbirimiService
         }
     }
 
-    public function emailIssueWorkLogDeleted($issue, $project, $extraInformation)
+    public function workLogDeleted($issue, $project, $extraInformation)
     {
         $clientId = $project['client_id'];
         $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
@@ -273,7 +273,7 @@ class IssueEmailService extends UbirimiService
         }
     }
 
-    public function emailIssueCreate($clientId, $issue, $project, $loggedInUserId) {
+    public function create($clientId, $issue, $project, $loggedInUserId) {
 
         $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
@@ -320,7 +320,7 @@ class IssueEmailService extends UbirimiService
         }
     }
 
-    public function emailIssueUpdate($clientId, $issue, $loggedInUserId, $fieldChanges) {
+    public function update($clientId, $issue, $loggedInUserId, $fieldChanges) {
 
         $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
@@ -354,7 +354,7 @@ class IssueEmailService extends UbirimiService
         }
     }
 
-    public function emailIssueDelete($clientId, $issue, $project, $loggedInUser) {
+    public function delete($clientId, $issue, $project, $loggedInUser) {
 
         $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
@@ -389,7 +389,7 @@ class IssueEmailService extends UbirimiService
         }
     }
 
-    public function emailIssueAssign($clientId, $issueData, $oldUserAssignedName, $newUserAssignedName, $project, $loggedInUserId, $comment) {
+    public function assign($clientId, $issueData, $oldUserAssignedName, $newUserAssignedName, $project, $loggedInUserId, $comment) {
 
         $clientSmtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 

@@ -53,7 +53,7 @@ class LinkController extends UbirimiController
 
         if ($comment != '') {
             $this->getRepository(IssueComment::class)->add($issueId, $loggedInUserId, $comment, $date);
-            UbirimiContainer::get()['issue.email']->emailIssueLink($issueId, $project, $comment);
+            UbirimiContainer::get()['issue.email']->link($issueId, $project, $comment);
         }
 
         return new Response('');

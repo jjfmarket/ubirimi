@@ -67,10 +67,10 @@ class LogController extends UbirimiController
 
             $project = $this->getRepository(YongoProject::class)->getById($issue['issue_project_id']);
 
-            UbirimiContainer::get()['issue.email']->emailIssueWorkLogged($issue, $project, array('user_id' => $loggedInUserId,
-                                                                                                 'comment' => $comment,
-                                                                                                 'date_started' => $dateStartedString,
-                                                                                                 'time_spent' => $timeSpentPost));
+            UbirimiContainer::get()['issue.email']->workLogged($issue, $project, array('user_id' => $loggedInUserId,
+                                                                                       'comment' => $comment,
+                                                                                       'date_started' => $dateStartedString,
+                                                                                       'time_spent' => $timeSpentPost));
 
         }
 

@@ -54,7 +54,7 @@ class AssignToMeController extends UbirimiController
 
         $project = $this->getRepository(YongoProject::class)->getById($issueData['issue_project_id']);
 
-        UbirimiContainer::get()['issue.email']->emailIssueAssign($clientId, $issueData, $oldUserAssignedName, $newUserAssignedName, $project, $loggedInUserId, $comment);
+        UbirimiContainer::get()['issue.email']->assign($clientId, $issueData, $oldUserAssignedName, $newUserAssignedName, $project, $loggedInUserId, $comment);
 
         return new Response('');
     }

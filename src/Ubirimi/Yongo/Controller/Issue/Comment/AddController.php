@@ -48,7 +48,7 @@ class AddController extends UbirimiController
 
         $this->getLogger()->addInfo('ADD Yongo issue comment ' . $issue['project_code'] . '-' . $issue['nr'], $this->getLoggerContext());
 
-        UbirimiContainer::get()['issue.email']->emailIssueComment($session->get('client/id'), $loggedInUserId, $issue, $project, $content);
+        UbirimiContainer::get()['issue.email']->comment($session->get('client/id'), $loggedInUserId, $issue, $project, $content);
 
         return new Response('');
     }

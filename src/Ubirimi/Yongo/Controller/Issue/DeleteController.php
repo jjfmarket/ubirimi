@@ -44,7 +44,7 @@ class DeleteController extends UbirimiController
 
         $loggedInUser = $this->getRepository(UbirimiUser::class)->getById($loggedInUserId);
 
-        UbirimiContainer::get()['issue.email']->emailIssueDelete($session->get('client/id'), $issue, $project, $loggedInUser);
+        UbirimiContainer::get()['issue.email']->delete($session->get('client/id'), $issue, $project, $loggedInUser);
 
         $this->getRepository(Issue::class)->deleteById($issueId);
 

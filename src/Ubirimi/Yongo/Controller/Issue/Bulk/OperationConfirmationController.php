@@ -50,7 +50,7 @@ class OperationConfirmationController extends UbirimiController
                 for ($i = 0; $i < count($issueIds); $i++) {
                     if (UbirimiContainer::get()['session']->get('bulk_change_send_operation_email')) {
                         $issue = $this->getRepository(Issue::class)->getByParameters(array('issue_id' => $issueIds[$i]), $loggedInUserId);
-                        UbirimiContainer::get()['issue.email']->emailIssueDelete($issue['client_id'], $issue, null, $loggedInUser);
+                        UbirimiContainer::get()['issue.email']->delete($issue['client_id'], $issue, null, $loggedInUser);
                     }
 
                     $this->getRepository(Issue::class)->deleteById($issueIds[$i]);

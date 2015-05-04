@@ -120,7 +120,7 @@ class SaveController extends UbirimiController
         $hasNotificationEvent = UbirimiContainer::get()['repository']->get(WorkflowFunction::class)->hasEvent($creationData['id'], 'event=' . $eventData['id']);
 
         if ($hasNotificationEvent) {
-            UbirimiContainer::get()['issue.email']->emailIssueCreate($clientId, $issue, $project, $session->get('user/id'));
+            UbirimiContainer::get()['issue.email']->create($clientId, $issue, $project, $session->get('user/id'));
         }
 
         // clean the search information

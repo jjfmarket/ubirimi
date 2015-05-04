@@ -121,7 +121,7 @@ class EditController extends UbirimiController
         Util::manageModalAttachments($issueId, $loggedInUserId, $attachIdsToBeKept);
 
         UbirimiContainer::get()['session']->remove('added_attachments_in_screen');
-        UbirimiContainer::get()['issue.email']->emailIssueUpdate($session->get('client/id'), $oldIssueData, $session->get('user/id'), $fieldChanges);
+        UbirimiContainer::get()['issue.email']->update($session->get('client/id'), $oldIssueData, $session->get('user/id'), $fieldChanges);
 
         $this->getLogger()->addInfo('UPDATE Yongo issue ' . $oldIssueData['project_code'] . '-' . $oldIssueData['nr'], $this->getLoggerContext());
 

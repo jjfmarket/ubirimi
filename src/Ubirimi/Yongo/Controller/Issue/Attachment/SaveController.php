@@ -59,7 +59,7 @@ class SaveController extends UbirimiController
 
         UbirimiContainer::get()['session']->remove('added_attachments_in_screen');
 
-        UbirimiContainer::get()['issue.email']->emailIssueAddAttachemnt($issue, $project, array('user_id' => $loggedInUserId,
+        UbirimiContainer::get()['issue.email']->addAttachment($issue, $project, array('user_id' => $loggedInUserId,
                                                                                                 'attachmentIds' => UbirimiContainer::get()['session']->get('added_attachments_in_screen'),
                                                                                                 'comment' => $comment));
 

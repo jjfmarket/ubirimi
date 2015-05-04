@@ -105,7 +105,7 @@ class MoveStep4Controller extends UbirimiController
 
             $this->getLogger()->addInfo('MOVE Yongo issue ' . $oldIssueData['project_code'] . '-' . $oldIssueData['nr'], $this->getLoggerContext());
 
-            UbirimiContainer::get()['issue.email']->emailIssueUpdate($clientId, $oldIssueData, $loggedInUserId, $fieldChanges);
+            UbirimiContainer::get()['issue.email']->update($clientId, $oldIssueData, $loggedInUserId, $fieldChanges);
 
             return new RedirectResponse(LinkHelper::getYongoIssueViewLinkJustHref($issueId));
         }

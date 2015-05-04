@@ -79,7 +79,7 @@ class DeleteController extends UbirimiController
         $this->getRepository(Issue::class)->updateById($issueId, array('date_updated' => $currentDate), $currentDate);
 
         // send the email notification
-        UbirimiContainer::get()['issue.email']->emailIssueWorkLogDeleted($issue, $project, array('user_id' => $loggedInUserId,
+        UbirimiContainer::get()['issue.email']->workLogDeleted($issue, $project, array('user_id' => $loggedInUserId,
                                                                                                  'remaining_estimate' => $remainingTime,
                                                                                                  'time_spent' => $workLog['time_spent']));
 

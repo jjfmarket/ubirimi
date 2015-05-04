@@ -39,6 +39,6 @@ class ShareController extends UbirimiController
         $issueQueryParameters = array('issue_id' => $issueId);
         $issue = $this->getRepository(Issue::class)->getByParameters($issueQueryParameters);
 
-        UbirimiContainer::get()['issue.email']->emailIssueShare($issue, $userIds, $noteContent);
+        UbirimiContainer::get()['issue.email']->share($issue, $userIds, $noteContent);
     }
 }

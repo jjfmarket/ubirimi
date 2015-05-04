@@ -90,7 +90,7 @@ class EditController extends UbirimiController
 
         $project = $this->getRepository(YongoProject::class)->getById($issue['issue_project_id']);
 
-        UbirimiContainer::get()['issue.email']->emailIssueWorkLogUpdated($issue, $project, array('user_id' => $loggedInUserId,
+        UbirimiContainer::get()['issue.email']->workLogUpdated($issue, $project, array('user_id' => $loggedInUserId,
                                                                                                  'comment' => $comment,
                                                                                                  'date_started' => $dateStartedString,
                                                                                                  'remaining_time' => $remainingTimePost,
