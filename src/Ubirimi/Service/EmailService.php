@@ -112,7 +112,7 @@ class EmailService extends UbirimiService
             'Restore password - Ubirimi.com',
             Util::getTemplate('_restorePassword.php',array(
                     'password' => $password
-            ),
-            Util::getServerCurrentDateTime()));
+            )),
+            Util::getServerCurrentDateTime());
     }
 }
