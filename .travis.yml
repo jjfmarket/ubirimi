@@ -16,6 +16,8 @@ matrix:
 install:
   - composer install
 
+script: phpunit -c app/
+
 notifications:
   email:
     - scoutman57@gmail.com
