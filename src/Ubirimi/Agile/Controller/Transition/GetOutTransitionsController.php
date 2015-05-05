@@ -37,7 +37,6 @@ class GetOutTransitionsController extends UbirimiController
         $stepIdFrom = $request->request->get('step_id_from');
 
         $issueId = $request->request->get('issue_id');
-        $projectId = $request->request->get('project_id');
 
         $issueQueryParameters = array('issue_id' => $issueId);
         $issue = $this->getRepository(Issue::class)->getByParameters($issueQueryParameters, $session->get('user/id'));

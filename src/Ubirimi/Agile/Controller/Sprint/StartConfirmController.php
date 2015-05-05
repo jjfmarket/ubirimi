@@ -20,14 +20,13 @@
 namespace Ubirimi\Agile\Controller\Sprint;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Agile\Repository\Sprint\Sprint;
 use Ubirimi\UbirimiController;
 use Ubirimi\Util;
 
 class StartConfirmController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         Util::checkUserIsLoggedInAndRedirect();
 

@@ -3,7 +3,6 @@
 use Ubirimi\LinkHelper;
 use Ubirimi\SystemProduct;
 use Ubirimi\Util;
-use Ubirimi\Yongo\Repository\Field\Field;
 
 if ($historyList): ?>
     <table class="table-condensed" width="100%">

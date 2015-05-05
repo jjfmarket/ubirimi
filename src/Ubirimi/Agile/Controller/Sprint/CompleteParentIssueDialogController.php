@@ -20,12 +20,11 @@
 namespace Ubirimi\Agile\Controller\Sprint;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\UbirimiController;
 
 class CompleteParentIssueDialogController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         $data = $request->request->get('data');
         $dataValues = json_decode($data, true);
