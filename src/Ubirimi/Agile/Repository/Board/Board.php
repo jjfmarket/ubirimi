@@ -45,32 +45,58 @@ class Board
     }
 
     public function save($userCreatedId, $currentDate) {
-        $query = "INSERT INTO agile_board(client_id, filter_id, name, description, swimlane_strategy, user_created_id, date_created) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $boardId = $this->saveAgileBoard($userCreatedId, $currentDate);
 
-        $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
-
-        $defaultSwimlaneStrategy = 'story';
-        $stmt->bind_param("iisssis", $this->clientId, $this->filterId, $this->name, $this->description, $defaultSwimlaneStrategy, $userCreatedId, $currentDate);
-        $stmt->execute();
-
-        $boardId = UbirimiContainer::get()['db.connection']->insert_id;
-
-        for ($i = 0; $i < count($this->projects); $i++) {
-            $query = "INSERT INTO agile_board_project(agile_board_id, project_id) VALUES (?, ?)";
-
-            $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
-
-            $stmt->bind_param("ii", $boardId, $this->projects[$i]);
-            $stmt->execute();
+        $projectCount = count($this->projects);
+        for ($i = 0; $i < $projectCount; $i++) {
+            $this->saveAgileBoardProject($boardId, $this->projects[$i]);
         }
 
         return $boardId;
     }
 
+    protected function saveAgileBoard($userCreatedId, $currentDate) {
+        $query = "INSERT INTO agile_board(
+                 client_id, filter_id, name, description, swimlane_strategy, user_created_id, date_created
+                 ) VALUES (
+                    ?, ?, ?, ?, ?, ?, ?
+                 )";
+
+        $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
+
+        $defaultSwimlaneStrategy = 'story';
+        $stmt->bind_param(
+            "iisssis",
+            $this->clientId,
+            $this->filterId,
+            $this->name,
+            $this->description,
+            $defaultSwimlaneStrategy,
+            $userCreatedId,
+            $currentDate
+        );
+        $stmt->execute();
+
+        $boardId = UbirimiContainer::get()['db.connection']->insert_id;
+
+        return $boardId;
+    }
+
+    protected function saveAgileBoardProject($boardId, $projectIndex) {
+        $query = "INSERT INTO agile_board_project(agile_board_id, project_id) VALUES (?, ?)";
+
+        $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
+
+        $stmt->bind_param("ii", $boardId, $projectIndex);
+        $stmt->execute();
+    }
+
     public function getByClientId($clientId, $resultType = null) {
-        $query = "select agile_board.client_id, agile_board.id, agile_board.filter_id, agile_board.name, agile_board.description, agile_board.swimlane_strategy, " .
-                 "agile_board.user_created_id, agile_board.date_created, general_user.first_name, general_user.last_name, " .
-                 "yongo_filter.name as filter_name, yongo_filter.id as filter_id, yongo_filter.definition as filter_definition " .
+        $query = "select agile_board.client_id, agile_board.id, agile_board.filter_id, " .
+            "agile_board.name, agile_board.description, agile_board.swimlane_strategy, " .
+            "agile_board.user_created_id, agile_board.date_created, general_user.first_name, " .
+            "general_user.last_name, yongo_filter.name as filter_name, yongo_filter.id as filter_id, " .
+            "yongo_filter.definition as filter_definition " .
             "from agile_board " .
             "left join general_user on general_user.id = agile_board.user_created_id " .
             "left join yongo_filter on yongo_filter.id = agile_board.filter_id " .
@@ -95,9 +121,9 @@ class Board
     }
 
     public function getById($boardId) {
-        $query = "select agile_board.id, agile_board.client_id, agile_board.name, agile_board.description, agile_board.user_created_id, agile_board.swimlane_strategy, " .
-                 "yongo_filter.id as filter_id, yongo_filter.name as filter_name, yongo_filter.description as filter_description, " .
-                 "general_user.first_name, general_user.last_name " .
+        $query = "select agile_board.id, agile_board.client_id, agile_board.name, agile_board.description, " .
+            "agile_board.user_created_id, agile_board.swimlane_strategy, yongo_filter.name as filter_name, " .
+            "yongo_filter.description as filter_description, general_user.first_name, general_user.last_name " .
             "from agile_board " .
             "left join yongo_filter on yongo_filter.id = agile_board.filter_id " .
             "left join general_user on general_user.id = agile_board.user_created_id " .
@@ -149,46 +175,37 @@ class Board
 
     public function addDefaultColumnData($clientId, $boardId) {
         // add To Do column
-        $query = "INSERT INTO agile_board_column(agile_board_id, position, name) VALUES (?, ?, ?)";
+        $columnId = $this->saveColumn($boardId, 1, 'To Do');
 
-        $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
-        $columnName = 'To Do';
-        $position = 1;
-        $stmt->bind_param("iis", $boardId, $position, $columnName);
-        $stmt->execute();
-        $columnId = UbirimiContainer::get()['db.connection']->insert_id;
         $openStatusData = UbirimiContainer::get()['repository']->get(IssueSettings::class)->getByName($clientId, 'status', 'Open');
         $reopenedStatusData = UbirimiContainer::get()['repository']->get(IssueSettings::class)->getByName($clientId, 'status', 'Reopened');
         UbirimiContainer::get()['repository']->get(Board::class)->addStatusToColumn($columnId, $openStatusData['id']);
         UbirimiContainer::get()['repository']->get(Board::class)->addStatusToColumn($columnId, $reopenedStatusData['id']);
 
         // add In Progress column
-        $query = "INSERT INTO agile_board_column(agile_board_id, position, name) VALUES (?, ?, ?)";
-        $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
+        $columnId = $this->saveColumn($boardId, 2, 'In Progress');
 
-        $columnName = 'In Progress';
-        $position = 2;
-        $stmt->bind_param("iis", $boardId, $position, $columnName);
-        $stmt->execute();
-        $columnId = UbirimiContainer::get()['db.connection']->insert_id;
         $inProgressStatusData = UbirimiContainer::get()['repository']->get(IssueSettings::class)->getByName($clientId, 'status', 'In Progress');
-
         UbirimiContainer::get()['repository']->get(Board::class)->addStatusToColumn($columnId, $inProgressStatusData['id']);
 
         // add Done column
-        $query = "INSERT INTO agile_board_column(agile_board_id, position, name) VALUES (?, ?, ?)";
-        $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
+        $columnId = $this->saveColumn($boardId, 3, 'Done');
 
-        $columnName = 'Done';
-        $position = 3;
+        $resolvedStatusData = UbirimiContainer::get()['repository']->get(IssueSettings::class)->getByName($clientId, 'status', 'Resolved');
+        $closedStatusData = UbirimiContainer::get()['repository']->get(IssueSettings::class)->getByName($clientId, 'status', 'Closed');
+        UbirimiContainer::get()['repository']->get(Board::class)->addStatusToColumn($columnId, $resolvedStatusData['id']);
+        UbirimiContainer::get()['repository']->get(Board::class)->addStatusToColumn($columnId, $closedStatusData['id']);
+    }
+
+    protected function saveColumn($boardId, $position, $columnName) {
+        $query = "INSERT INTO agile_board_column(agile_board_id, position, name) VALUES (?, ?, ?)";
+
+        $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $stmt->bind_param("iis", $boardId, $position, $columnName);
         $stmt->execute();
         $columnId = UbirimiContainer::get()['db.connection']->insert_id;
-        $resolvedStatusData = UbirimiContainer::get()['repository']->get(IssueSettings::class)->getByName($clientId, 'status', 'Resolved');
-        $closedStatusData = UbirimiContainer::get()['repository']->get(IssueSettings::class)->getByName($clientId, 'status', 'Closed');
 
-        UbirimiContainer::get()['repository']->get(Board::class)->addStatusToColumn($columnId, $resolvedStatusData['id']);
-        UbirimiContainer::get()['repository']->get(Board::class)->addStatusToColumn($columnId, $closedStatusData['id']);
+        return $columnId;
     }
 
     public function getColumns($boardId, $resultType = null) {
@@ -247,7 +264,8 @@ class Board
     public function deleteStatusFromColumn($boardId, $StatusId) {
         $columns = UbirimiContainer::get()['repository']->get(Board::class)->getColumns($boardId, 'array');
         $columnsIds = array();
-        for ($i = 0; $i < count($columns); $i++) {
+        $columnsCount = count($columns);
+        for ($i = 0; $i < $columnsCount; $i++) {
             $columnsIds[] = $columns[$i]['id'];
         }
 
@@ -277,7 +295,8 @@ class Board
         $resultArray = array();
 
         if ($result->num_rows) {
-            for ($i = 0; $i < count($clientStatuses); $i++) {
+            $clientStatusesCount = count($clientStatuses);
+            for ($i = 0; $i < $clientStatusesCount; $i++) {
                 $found = false;
                 while ($status = $result->fetch_array(MYSQLI_ASSOC)) {
                     if ($clientStatuses[$i]['id'] == $status['id']) {
@@ -338,7 +357,8 @@ class Board
         $definition = $filterData['definition'];
         $definitionArray = explode('&', $definition);
         $searchParameters = array();
-        for ($i = 0; $i < count($definitionArray); $i++) {
+        $definitionArrayCount = count($definitionArray);
+        for ($i = 0; $i < $definitionArrayCount; $i++) {
             $keyValueArray = explode('=', $definitionArray[$i]);
             if ($keyValueArray[0] != 'search_query') {
                 $searchParameters[$keyValueArray[0]] = explode('|', $keyValueArray[1]);
@@ -375,25 +395,27 @@ class Board
     public function getIssuesBySprintAndStatusIdAndParentId($sprintId, $parentId = null, $statuses, $onlyMyIssuesFlag, $loggedInUserId) {
         $statusList = implode(", ", $statuses);
 
-        $query = 'select yongo_issue.id, nr, yongo_issue.parent_id, yongo_issue_priority.name as priority_name, yongo_issue_status.name as status_name, yongo_issue_status.id as status, summary, yongo_issue.description, environment, ' .
-            'yongo_issue_type.name as type, ' .
-            'yongo_project.code as project_code, yongo_project.name as project_name, yongo_issue.project_id as issue_project_id, ' .
-            'yongo_issue_type.id as type, yongo_issue_type.description as issue_type_description, yongo_issue_type.icon_name as issue_type_icon_name, ' .
-            'yongo_issue_priority.description as issue_priority_description, yongo_issue_priority.icon_name as issue_priority_icon_name, yongo_issue_priority.color as priority_color ' .
-            "from agile_board_sprint_issue " .
+        $query = "select yongo_issue.id, nr, yongo_issue.parent_id, yongo_issue_priority.name as priority_name, " .
+            "yongo_issue_status.name as status_name, yongo_issue_status.id as status, summary, yongo_issue.description, " .
+            "environment, yongo_issue_type.name as type, yongo_project.code as project_code, yongo_project.name as project_name, " .
+            "yongo_issue.project_id as issue_project_id, yongo_issue_type.id as type, " .
+            "yongo_issue_type.description as issue_type_description, yongo_issue_type.icon_name as issue_type_icon_name, " .
+            "yongo_issue_priority.description as issue_priority_description, yongo_issue_priority.icon_name as issue_priority_icon_name, " .
+            "yongo_issue_priority.color as priority_color from agile_board_sprint_issue " .
             "left join yongo_issue on yongo_issue.id = agile_board_sprint_issue.issue_id " .
-            'LEFT join yongo_issue_priority on yongo_issue.priority_id = yongo_issue_priority.id ' .
-            'LEFT join yongo_issue_type on yongo_issue.type_id = yongo_issue_type.id ' .
-            'LEFT JOIN yongo_issue_status on yongo_issue.status_id = yongo_issue_status.id ' .
-            'LEFT join yongo_project on yongo_issue.project_id = yongo_project.id ' .
+            "LEFT join yongo_issue_priority on yongo_issue.priority_id = yongo_issue_priority.id " .
+            "LEFT join yongo_issue_type on yongo_issue.type_id = yongo_issue_type.id " .
+            "LEFT JOIN yongo_issue_status on yongo_issue.status_id = yongo_issue_status.id " .
+            "LEFT join yongo_project on yongo_issue.project_id = yongo_project.id " .
             "where agile_board_sprint_issue.agile_board_sprint_id = ? " .
             "and yongo_issue.status_id IN (?) ";
         if ($onlyMyIssuesFlag)
-            $query .= 'and yongo_issue.user_assigned_id = ' . $loggedInUserId . ' ';
+            $query .= "and yongo_issue.user_assigned_id = " . $loggedInUserId . " ";
         if ($parentId)
-            $query .= 'and yongo_issue.parent_id = ' . $parentId . ' ';
+            $query .= "and yongo_issue.parent_id = " . $parentId . " ";
         else
-            $query .= 'and yongo_issue.parent_id is null ';
+            $query .= "and yongo_issue.parent_id is null ";
+
         $query .= "order by id desc";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
@@ -474,7 +496,8 @@ class Board
                 }
                 $queryTransfer = 'insert into agile_board_sprint_issue(agile_board_sprint_id, issue_id) values ';
                 $queryTransferPart = array();
-                for ($i = 0; $i < count($issueIdArray); $i++) {
+                $issueIdArrayCount = count($issueIdArray);
+                for ($i = 0; $i < $issueIdArrayCount; $i++) {
                     $queryTransferPart[] = '(' . $nextSprint['id'] . ', ' . $issueIdArray[$i] . ')';
                 }
                 $queryTransfer .= implode(', ', $queryTransferPart);
@@ -514,7 +537,9 @@ class Board
         $stmt->execute();
 
         $sprintIdsArray = UbirimiContainer::get()['repository']->get(Sprint::class)->getByBoardId($boardId, 'array', 'id');
-        for ($i = 0; $i < count($sprintIdsArray); $i++) {
+
+        $sprintIdsArrayCount = count($sprintIdsArray);
+        for ($i = 0; $i < $sprintIdsArrayCount; $i++) {
             $query = "delete from agile_board_sprint_issue where agile_board_sprint_id = ?";
             $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
             $stmt->bind_param("i", $sprintIdsArray[$i]);
@@ -533,7 +558,8 @@ class Board
     }
 
     public function updateColumnOrder($newOrder) {
-        for ($i = 0; $i < count($newOrder); $i++) {
+        $newOrderCount = count($newOrder);
+        for ($i = 0; $i < $newOrderCount; $i++) {
             $query = "update agile_board_column set position = ? where id = ? limit 1";
 
             $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
@@ -582,9 +608,9 @@ class Board
             "from agile_board ";
 
         if (empty($filters['sort_by'])) {
-            $query .= ' order by agile_board.id';
+            $query .= " order by agile_board.id";
         } else {
-            $query .= " order by " . $filters['sort_by'] . ' ' . $filters['sort_order'];
+            $query .= " order by " . $filters['sort_by'] . " " . $filters['sort_order'];
         }
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
