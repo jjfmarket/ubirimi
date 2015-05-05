@@ -21,7 +21,7 @@ namespace Ubirimi\Api\Controller\User;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\Repository\User\UbirimiUser;
@@ -29,7 +29,7 @@ use Ubirimi\UbirimiController;
 
 class AuthenticateController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         $requestParameters = json_decode($request->getContent(), true);
 

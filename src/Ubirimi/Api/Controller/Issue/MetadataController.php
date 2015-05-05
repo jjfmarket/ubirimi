@@ -21,7 +21,7 @@ namespace Ubirimi\Api\Controller\Issue;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
 use Ubirimi\Yongo\Repository\Issue\SystemOperation;
@@ -30,7 +30,7 @@ use Ubirimi\Yongo\Repository\Project\YongoProject;
 
 class MetadataController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         $returnData = array('projects' => array());
 

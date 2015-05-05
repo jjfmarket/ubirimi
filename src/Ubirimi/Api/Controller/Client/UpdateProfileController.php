@@ -21,13 +21,13 @@ namespace Ubirimi\Api\Controller\Client;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
 
 class UpdateProfileController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         $parameters = json_decode($request->getContent(), true);
 

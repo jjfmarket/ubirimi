@@ -20,14 +20,14 @@
 namespace Ubirimi\Api\Controller\Client;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
 
 class GetAllController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction()
     {
         $clientsArray = array();
         $clients = $this->getRepository(UbirimiClient::class)->getAll();

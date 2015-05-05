@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\EventListener\UbirimiKernelViewListener;
 use Ubirimi\UbirimiControllerResolver;
-use Savant3\Savant3;
+
 
 require_once __DIR__ . '/bootstrap.php';
 

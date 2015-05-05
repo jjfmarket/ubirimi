@@ -21,13 +21,13 @@ namespace Ubirimi\Api\Controller\Client;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 use Ubirimi\Repository\GeneralTaskQueue;
 use Ubirimi\UbirimiController;
 
 class SaveController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         $this->getRepository(GeneralTaskQueue::class)->savePendingClientData($request->getContent());
 

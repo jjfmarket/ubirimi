@@ -21,13 +21,13 @@ namespace Ubirimi\Api\Controller\User;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\UbirimiController;
 
 class GetByFiltersController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         $filters = json_decode($request->getContent(), true);
         $result = array();

@@ -21,13 +21,13 @@ namespace Ubirimi\Api\Controller\Client;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
 
 class GetController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         $clientData = $this->getRepository(UbirimiClient::class)->getById($request->get('id'));
         $users = $this->getRepository(UbirimiClient::class)->getUsers($request->get('id'), null, 'array');
