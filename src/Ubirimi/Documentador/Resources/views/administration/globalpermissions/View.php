@@ -34,8 +34,8 @@ require_once __DIR__ . '/../../_header.php';
                 <tbody>
                     <tr>
                         <td width="60%">Anonymous</td>
-                        <td align="center"><?php if ($documentatorSettings['anonymous_use_flag']) echo 'YES'; else echo 'NO' ?></td>
-                        <td align="center"><?php if ($documentatorSettings['anonymous_view_user_profile_flag']) echo 'YES'; else echo 'NO' ?></td>
+                        <td align="center"><?php if ($documentadorSettings['anonymous_use_flag']) echo 'YES'; else echo 'NO' ?></td>
+                        <td align="center"><?php if ($documentadorSettings['anonymous_view_user_profile_flag']) echo 'YES'; else echo 'NO' ?></td>
                     </tr>
                 </tbody>
             </table>

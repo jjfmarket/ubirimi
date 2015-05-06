@@ -40,7 +40,7 @@ class WarmUpService extends UbirimiService
      * @param SessionInterface $session
      * @param $userData some general data about the user
      * @param null $yongoSettings
-     * @param null $documentatorSettings
+     * @param null $documentadorSettings
      */
     public function warmUpClient($userData, $warmYongoSettings = false, $warmDocumentadorSettings = false) {
         /* this is needed because of closure use */

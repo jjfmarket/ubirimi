@@ -90,7 +90,7 @@
         <br />
         <div class="headerPageText">Anonymous Access</div>
         <div>When a user is using Documentador while not logged in, they are using it anonymously.</div>
-        <?php if (!$documentatorSettings['anonymous_use_flag']): ?>
+        <?php if (!$documentadorSettings['anonymous_use_flag']): ?>
             <div class="infoBox">
                 <div>WARNING</div>
                 <div>Anonymous users will not be able to view this space, because they have not been granted the global ‘Use Documentador’ permission. You can grant anonymous access to Documentador from global <a href="/documentador/administration/global-permissions">permissions</a>.</div>
