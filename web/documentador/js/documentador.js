@@ -347,18 +347,18 @@ $('document').ready(function () {
             }
         });
     });
-    $('#documentator_quick_search').on('click', function (event) {
+    $('#documentador_quick_search').on('click', function (event) {
         $(this).val('');
     });
 
-    $('#documentator_quick_search').keyup(function (event) {
+    $('#documentador_quick_search').keyup(function (event) {
         if (event.keyCode == 13) {
-            var value = $('#documentator_quick_search').val();
+            var value = $('#documentador_quick_search').val();
             window.location.href = '/documentador/search?search_query=' + value;
         }
     });
 
-    $('#documentator_quick_search').focusout(function () {
+    $('#documentador_quick_search').focusout(function () {
         $(this).val('Quick Search');
     });
 

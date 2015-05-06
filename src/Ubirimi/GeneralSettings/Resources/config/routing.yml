@@ -23,7 +23,7 @@ generalHelpDeskMenu:
   defaults: { _controller: '\Ubirimi\GeneralSettings\Controller\Menu\HelpDeskController' }
 
 generalDocumentadorMenu:
-  path: /menu/documentator-menu
+  path: /menu/documentador-menu
   defaults: { _controller: '\Ubirimi\GeneralSettings\Controller\Menu\DocumentadorController' }
 
 generalSVNMenu:

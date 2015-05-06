@@ -11,8 +11,8 @@ $loggedInUserLastName = $session->get('user/last_name');
 if (!isset($menuSelectedCategory))
     $menuSelectedCategory = null;
 
-$hasDocumentadorGlobalAdministrationPermission = $session->get('user/documentator/is_global_administrator');
-$hasDocumentadorGlobalSystemAdministrationPermission = $session->get('user/documentator/is_global_system_administrator');
+$hasDocumentadorGlobalAdministrationPermission = $session->get('user/documentador/is_global_administrator');
+$hasDocumentadorGlobalSystemAdministrationPermission = $session->get('user/documentador/is_global_system_administrator');
 Util::renderMaintenanceMessage();
 ?>
 

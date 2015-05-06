@@ -80,7 +80,7 @@ $spacesInMenu = UbirimiContainer::get()['repository']->get(Space::class)->getByC
                             <?php if ($spacesInMenu): ?>
                                 <input type="button" id="btnDocumentadorCreate" value="Create" />
                             <?php endif ?>
-                            <input id="documentator_quick_search" type="text" style="height: 15px; font-style: italic;" value="Quick Search" name="search" />
+                            <input id="documentador_quick_search" type="text" style="height: 15px; font-style: italic;" value="Quick Search" name="search" />
                         <?php endif ?>
                     </td>
                 </tr>

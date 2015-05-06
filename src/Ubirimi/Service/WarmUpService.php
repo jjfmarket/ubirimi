@@ -100,9 +100,9 @@ class WarmUpService extends UbirimiService
         $hasDocumentadorGlobalSystemAdministrationPermission = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->hasGlobalPermission($session->get('client/id'), $session->get('user/id'), GlobalPermission::GLOBAL_PERMISSION_YONGO_SYSTEM_ADMINISTRATORS);
         $hasDocumentadorGlobalCreateSpace = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->hasGlobalPermission($session->get('client/id'), $session->get('user/id'), GlobalPermission::GLOBAL_PERMISSION_DOCUMENTADOR_CREATE_SPACE);
 
-        $session->set('user/documentator/is_global_administrator', $hasDocumentadorGlobalAdministrationPermission);
-        $session->set('user/documentator/is_global_system_administrator', $hasDocumentadorGlobalSystemAdministrationPermission);
-        $session->set('user/documentator/is_global_create_space', $hasDocumentadorGlobalCreateSpace);
+        $session->set('user/documentador/is_global_administrator', $hasDocumentadorGlobalAdministrationPermission);
+        $session->set('user/documentador/is_global_system_administrator', $hasDocumentadorGlobalSystemAdministrationPermission);
+        $session->set('user/documentador/is_global_create_space', $hasDocumentadorGlobalCreateSpace);
     }
 
     /**

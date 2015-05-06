@@ -38,8 +38,8 @@ class IndexController extends UbirimiController
 
         $spacesWithAdminPermission = $this->getRepository(Space::class)->getWithAdminPermissionByUserId($clientId, $loggedInUserId);
 
-        $hasDocumentadorGlobalAdministrationPermission = $session->get('user/documentator/is_global_administrator');
-        $hasDocumentadorGlobalSystemAdministrationPermission = $session->get('user/documentator/is_global_system_administrator');
+        $hasDocumentadorGlobalAdministrationPermission = $session->get('user/documentador/is_global_administrator');
+        $hasDocumentadorGlobalSystemAdministrationPermission = $session->get('user/documentador/is_global_system_administrator');
 
         return $this->render(__DIR__ . '/../../Resources/views/administration/Index.php', get_defined_vars());
     }
