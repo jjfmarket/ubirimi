@@ -20,20 +20,21 @@
 namespace Ubirimi\Api\Controller\Issue;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-
-
+use Symfony\Component\HttpFoundation\Request;
+use Ubirimi\Container\UbirimiContainer;
+use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\UbirimiController;
 use Ubirimi\Util;
 use Ubirimi\Yongo\Repository\Issue\Issue;
 
 class SearchController extends UbirimiController
 {
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        UbirimiContainer::get()['api.auth']->auth($request);
+
         $issuesResult = array();
-
         $getSearchParameters = $this->getRepository(Issue::class)->prepareDataForSearchFromURL($_GET, null);
-
         $getSearchParameters['page'] = null;
 
         $parseURLData = parse_url($_SERVER['REQUEST_URI']);
