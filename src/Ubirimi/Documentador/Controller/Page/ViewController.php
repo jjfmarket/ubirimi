@@ -38,8 +38,9 @@ class ViewController extends UbirimiController
         $entityId = $request->get('id');
         if (Util::checkUserIsLoggedIn()) {
             $session->set('selected_product_id', SystemProduct::SYS_PRODUCT_DOCUMENTADOR);
-
+            $clientId = $session->get('client/id');
             $page = $this->getRepository(Entity::class)->getById($entityId, $session->get('user/id'));
+
             if ($page) {
                 $spaceId = $page['space_id'];
             }
@@ -57,6 +58,7 @@ class ViewController extends UbirimiController
             $documentatorUseAnonymous = $settingsDocumentador['anonymous_use_flag'];
 
             $page = $this->getRepository(Entity::class)->getById($entityId, $loggedInUserId);
+
             if ($page) {
                 $spaceId = $page['space_id'];
                 $spaceHasAnonymousAccess = $this->getRepository(Space::class)->hasAnonymousAccess($spaceId);
@@ -86,7 +88,7 @@ class ViewController extends UbirimiController
 
             $space = $this->getRepository(Space::class)->getById($spaceId);
 
-            if ($space['client_id'] != $session->get('client/id')) {
+            if ($space['client_id'] != $clientId) {
                 return new RedirectResponse('/general-settings/bad-link-access-denied');
             }
 
