@@ -49,7 +49,7 @@ class UserSpacesController extends UbirimiController
             $sectionPageTitle = SystemProduct::SYS_PRODUCT_DOCUMENTADOR_NAME. ' / Spaces';
         }
 
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
 
         return $this->render(__DIR__ . '/../../Resources/views/UserSpaces.php', get_defined_vars());
     }

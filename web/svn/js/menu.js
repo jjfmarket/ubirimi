@@ -44,7 +44,7 @@ $('document').ready(function () {
         } else
             $('#menuAgile').css('background-color', '#6A8EB2');
 
-        if (menuSelected == 'documentator') {
+        if (menuSelected == 'documentador') {
             $('#menuDocumentador').css('background-color', '#eeeeee');
         } else
             $('#menuDocumentador').css('background-color', '#6A8EB2');

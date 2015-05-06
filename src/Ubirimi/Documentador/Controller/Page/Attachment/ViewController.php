@@ -65,7 +65,7 @@ class ViewController extends UbirimiController
             }
             $sectionPageTitle = SystemProduct::SYS_PRODUCT_DOCUMENTADOR_NAME. ' / ' . $page['name'] . ' / Attachments';
         }
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
 
         if ($page) {
             $attachments = $this->getRepository(EntityAttachment::class)->getByEntityId($entityId);

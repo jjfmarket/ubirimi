@@ -71,7 +71,7 @@ class ViewController extends UbirimiController
             $sectionPageTitle = SystemProduct::SYS_PRODUCT_DOCUMENTADOR_NAME. ' / ' . $page['name'];
         }
 
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
 
         if ($page) {
             $parentEntityId = $page['parent_entity_id'];

@@ -62,7 +62,7 @@ class FavouritesController extends UbirimiController
             return new RedirectResponse('/general-settings/bad-link-access-denied');
         }
 
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
         $groups = $this->getRepository(UbirimiGroup::class)->getByUserIdAndProductId($userId, SystemProduct::SYS_PRODUCT_DOCUMENTADOR);
 
         $pages = $this->getRepository(Entity::class)->getFavouritePagesByClientIdAndUserId($clientId, $userId);

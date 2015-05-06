@@ -46,7 +46,7 @@ class ListPagesController extends UbirimiController
         $spaceId = $request->get('space_id');
         $space = $this->getRepository(Space::class)->getById($spaceId);
 
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
         $space = $this->getRepository(Space::class)->getById($spaceId);
 
         if ($space['client_id'] != $session->get('client/id')) {

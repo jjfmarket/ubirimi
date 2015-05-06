@@ -52,7 +52,7 @@ class DashboardController extends UbirimiController
 
         $type = $request->get('type');
 
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
 
         if ($type == 'spaces') {
             if (Util::checkUserIsLoggedIn()) {

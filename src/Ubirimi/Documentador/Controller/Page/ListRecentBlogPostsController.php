@@ -32,8 +32,8 @@ class ListRecentBlogPostsController extends UbirimiController
 {
     public function indexAction(Request $request, SessionInterface $session)
     {
-        $source_application = 'documentator';
-        $menuSelectedCategory = 'documentator';
+        $source_application = 'documentador';
+        $menuSelectedCategory = 'documentador';
 
         Util::checkUserIsLoggedInAndRedirect();
 

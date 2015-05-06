@@ -37,7 +37,7 @@ class HistoryController extends UbirimiController
         $clientId = $session->get('client/id');
         $loggedInUserId = $session->get('user/id');
 
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
 
         $session->set('selected_product_id', SystemProduct::SYS_PRODUCT_DOCUMENTADOR);
         $clientSettings = $this->getRepository(UbirimiClient::class)->getSettings($clientId);

@@ -67,11 +67,11 @@ $spacesInMenu = UbirimiContainer::get()['repository']->get(Space::class)->getByC
             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
                     <td width="104px"
-                        class="menuItemBasic <?php if ($menuSelectedCategory == 'documentator') echo 'menuItemSelected'; else echo 'menuItem' ?>"
+                        class="menuItemBasic <?php if ($menuSelectedCategory == 'documentador') echo 'menuItemSelected'; else echo 'menuItem' ?>"
                         id="menuDocumentador"
                         style="cursor: pointer;">
                         <span>Documentador</span>
-                        <span class="<?php if ($menuSelectedCategory == 'documentator') echo 'arrowSelected'; else echo 'arrow' ?>"></span>
+                        <span class="<?php if ($menuSelectedCategory == 'documentador') echo 'arrowSelected'; else echo 'arrow' ?>"></span>
                         &nbsp;
                     </td>
                     <td>&nbsp;</td>
