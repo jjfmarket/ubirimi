@@ -22,6 +22,7 @@ namespace Ubirimi\Api\Controller\Issue;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
 use Ubirimi\Yongo\Repository\Issue\SystemOperation;
@@ -32,6 +33,8 @@ class MetadataController extends UbirimiController
 {
     public function indexAction(Request $request)
     {
+        UbirimiContainer::get()['api.auth']->auth($request);
+
         $returnData = array('projects' => array());
 
         $projects = $this->getRepository(UbirimiClient::class)->getProjectsByPermission(

@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\UbirimiController;
 use Ubirimi\Yongo\Repository\Issue\Issue;
 
@@ -30,6 +31,8 @@ class GetController extends UbirimiController
 {
     public function indexAction(Request $request)
     {
+        UbirimiContainer::get()['api.auth']->auth($request);
+
         $id = $request->get('id');
         $issue = $this->getRepository(Issue::class)->getById($id);
 

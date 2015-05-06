@@ -22,6 +22,7 @@ namespace Ubirimi\Api\Controller\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\GeneralTaskQueue;
 use Ubirimi\UbirimiController;
 

@@ -22,6 +22,7 @@ namespace Ubirimi\Api\Controller\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
 
@@ -29,6 +30,8 @@ class UpdateProfileController extends UbirimiController
 {
     public function indexAction(Request $request)
     {
+        UbirimiContainer::get()['api.auth']->auth($request);
+
         $parameters = json_decode($request->getContent(), true);
 
         $this->getRepository(UbirimiClient::class)->updateById($parameters['id'],

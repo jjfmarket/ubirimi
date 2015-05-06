@@ -22,6 +22,7 @@ namespace Ubirimi\Api\Controller\Client;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
 
@@ -30,7 +31,6 @@ class ValidateDomainController extends UbirimiController
     public function indexAction(Request $request)
     {
         $domain = $request->get('domain');
-
         $domainAvailable = $this->getRepository(UbirimiClient::class)->checkAvailableDomain($domain);
 
         return new JsonResponse($domainAvailable);

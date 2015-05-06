@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\UbirimiController;
 
@@ -30,6 +31,8 @@ class GetController extends UbirimiController
 {
     public function indexAction(Request $request)
     {
+        UbirimiContainer::get()['api.auth']->auth($request);
+
         $username = $request->get('username');
 
         $baseURL = 'https://' . $request->get('api_client_domain') . '.ubirimi.net';
