@@ -21,7 +21,6 @@ namespace Ubirimi\Api\Controller\Client;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
 

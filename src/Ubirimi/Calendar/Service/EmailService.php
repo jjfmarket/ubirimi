@@ -40,11 +40,10 @@ class EmailService extends UbirimiService
         $usersToShareWithCount = count($usersToShareWith);
         for ($i = 0; $i < $usersToShareWithCount; $i++) {
             $user = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getById($usersToShareWith[$i]);
-
             $subject = $clientSmtpSettings['email_prefix'] . ' ' .
-                $userThatShares['first_name'] . ' ' .
-                $userThatShares['last_name'] . ' shared calendar ' .
-                $calendar['name'] . ' with you';
+            $userThatShares['first_name'] . ' ' .
+            $userThatShares['last_name'] . ' shared calendar ' .
+            $calendar['name'] . ' with you';
 
             UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($calendar['client_id'],
                 $clientSmtpSettings['from_address'],
@@ -70,11 +69,10 @@ class EmailService extends UbirimiService
         $usersToShareWithCount = count($usersToShareWith);
         for ($i = 0; $i < $usersToShareWithCount; $i++) {
             $user = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getById($usersToShareWith[$i]);
-
             $subject = $clientSmtpSettings['email_prefix'] . ' ' .
-                $userThatShares['first_name'] . ' ' .
-                $userThatShares['last_name'] . ' shared event ' .
-                $event['name'] . ' with you';
+            $userThatShares['first_name'] . ' ' .
+            $userThatShares['last_name'] . ' shared event ' .
+            $event['name'] . ' with you';
 
             UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
                 $clientSmtpSettings['from_address'],

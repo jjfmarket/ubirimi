@@ -25,16 +25,14 @@ class EventReminder
 {
     public function getRemindersToBeFired() {
         $query = "SELECT cal_event.date_from, cal_event.name, " .
-                     "cal_event_reminder.cal_event_reminder_period_id, cal_event_reminder.value, cal_event_reminder.id,  " .
-                     "general_user.client_id, general_user.email, " .
-                     "cal_calendar.name as calendar_name, " .
-                     "client.timezone " .
-                 "from cal_event_reminder " .
-                 "left join cal_event on cal_event.id = cal_event_reminder.cal_event_id " .
-                 "left join general_user on general_user.id = cal_event.user_created_id " .
-                 "left join client on client.id = general_user.client_id " .
-                 "left join cal_calendar on cal_calendar.id = cal_event.cal_calendar_id " .
-                 "where fired_flag is null";
+            "cal_event_reminder.cal_event_reminder_period_id, cal_event_reminder.value, cal_event_reminder.id,  " .
+            "general_user.client_id, general_user.email, cal_calendar.name as calendar_name, client.timezone " .
+            "from cal_event_reminder " .
+            "left join cal_event on cal_event.id = cal_event_reminder.cal_event_id " .
+            "left join general_user on general_user.id = cal_event.user_created_id " .
+            "left join client on client.id = general_user.client_id " .
+            "left join cal_calendar on cal_calendar.id = cal_event.cal_calendar_id " .
+            "where fired_flag is null";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $stmt->execute();

@@ -19,7 +19,6 @@
 
 namespace Ubirimi\Calendar\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Calendar\Repository\Calendar\UbirimiCalendar;
 use Ubirimi\SystemProduct;
@@ -28,7 +27,7 @@ use Ubirimi\Util;
 
 class ListSharedWithMeController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(SessionInterface $session)
     {
         Util::checkUserIsLoggedInAndRedirect();
 

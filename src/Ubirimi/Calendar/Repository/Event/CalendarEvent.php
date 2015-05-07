@@ -162,7 +162,9 @@ class CalendarEvent
                 $repeatDates[0] = null;
             }
 
-            $query = "INSERT INTO cal_event_repeat(cal_event_repeat_cycle_id, repeat_every, end_after_occurrences, start_date, end_date, on_day_0, on_day_1, on_day_2, on_day_3, on_day_4, on_day_5, on_day_6) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $query = "INSERT INTO cal_event_repeat(cal_event_repeat_cycle_id, repeat_every, end_after_occurrences, " .
+                "start_date, end_date, on_day_0, on_day_1, on_day_2, on_day_3, on_day_4, on_day_5, on_day_6) " .
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
 
             $day0 = $repeatDay[0];
@@ -182,8 +184,8 @@ class CalendarEvent
             $calEventRepeatId = UbirimiContainer::get()['db.connection']->insert_id;
         }
 
-        $query = "INSERT INTO cal_event(cal_calendar_id, user_created_id, cal_event_repeat_id, name, description, location, date_from, " .
-                 "date_to, color, date_created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO cal_event(cal_calendar_id, user_created_id, cal_event_repeat_id, name, description, " .
+            "location, date_from, date_to, color, date_created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
 
         $stmt->bind_param("iiisssssss",
@@ -212,7 +214,8 @@ class CalendarEvent
             $stmt->bind_param("ii", $eventId, $eventId);
             $stmt->execute();
 
-            $queryMain = "INSERT INTO cal_event(cal_calendar_id, user_created_id, cal_event_link_id, cal_event_repeat_id, name, description, location, date_from, " .
+            $queryMain = "INSERT INTO cal_event(cal_calendar_id, user_created_id, cal_event_link_id, cal_event_repeat_id, " .
+                "name, description, location, date_from, " .
                 "date_to, color, date_created) VALUES ";
             $separator = '';
 
@@ -257,8 +260,10 @@ class CalendarEvent
     }
 
     public function getByCalendarId($calendarId, $filterStartDate, $filterEndDate, $defaultCalendarSelected = null, $userId = null, $resultType = null) {
-        $query = "SELECT cal_event.id, cal_event.user_created_id, cal_event.date_from, cal_event.date_to, cal_event.name, cal_event.description, cal_event.color, cal_event.location, " .
-            "cal_calendar.name as calendar_name, TIMESTAMPDIFF(SECOND, cal_event.date_from, cal_event.date_to) as timediff, cal_calendar.color as calendar_color, " .
+        $query = "SELECT cal_event.id, cal_event.user_created_id, cal_event.date_from, cal_event.date_to, " .
+            "cal_event.name, cal_event.description, cal_event.color, cal_event.location, " .
+            "cal_calendar.name as calendar_name, TIMESTAMPDIFF(SECOND, cal_event.date_from, cal_event.date_to) as timediff, " .
+            "cal_calendar.color as calendar_color, " .
             "cal_event.cal_event_repeat_id, cal_event.cal_event_link_id, cal_calendar.id as calendar_id " .
             "FROM cal_event " .
             "left join cal_calendar on cal_calendar.id = cal_event.cal_calendar_id " .
@@ -270,8 +275,10 @@ class CalendarEvent
         // if $defaultCalendarSelected is true include the events that you are guest at
         if ($defaultCalendarSelected) {
             $query .= ' UNION ' .
-                "SELECT cal_event.id, cal_event.user_created_id, cal_event.date_from, cal_event.date_to, cal_event.name, cal_event.description, cal_event.color, cal_event.location, " .
-                "cal_calendar.name as calendar_name, TIMESTAMPDIFF(SECOND, cal_event.date_from, cal_event.date_to) as timediff, cal_calendar.color as calendar_color, " .
+                "SELECT cal_event.id, cal_event.user_created_id, cal_event.date_from, cal_event.date_to, cal_event.name, " .
+                "cal_event.description, cal_event.color, cal_event.location, " .
+                "cal_calendar.name as calendar_name, TIMESTAMPDIFF(SECOND, cal_event.date_from, cal_event.date_to) as timediff, " .
+                "cal_calendar.color as calendar_color, " .
                 "cal_event.cal_event_repeat_id, cal_event.cal_event_link_id, cal_calendar.id as calendar_id " .
                 "FROM cal_event_share " .
                 "left join cal_event on cal_event.id = cal_event_share.cal_event_id " .
@@ -311,7 +318,8 @@ class CalendarEvent
     }
 
     public function getByCalendarIds($calendarIds, $filterStartDate, $filterEndDate, $resultType = null) {
-        $query = "SELECT cal_event.id, cal_event.user_created_id, cal_event.date_from, cal_event.date_to, cal_event.name, cal_event.description, cal_event.color " .
+        $query = "SELECT cal_event.id, cal_event.user_created_id, cal_event.date_from, cal_event.date_to, " .
+            "cal_event.name, cal_event.description, cal_event.color " .
             "FROM cal_event " .
             "WHERE " .
             "cal_event.cal_calendar_id IN (?) and " .
@@ -341,10 +349,10 @@ class CalendarEvent
     }
 
     public function getById($eventId, $resultType = null) {
-        $query = "SELECT cal_event.id, cal_event.user_created_id, cal_event.date_from, cal_event.date_to, cal_event.name, cal_event.description, cal_event.color, cal_event.location, " .
+        $query = "SELECT cal_event.id, cal_event.user_created_id, cal_event.date_from, cal_event.date_to, " .
+            "cal_event.name, cal_event.description, cal_event.color, cal_event.location, " .
             "cal_event.cal_event_link_id, cal_event.cal_event_repeat_id, " .
-            "cal_calendar.name as calendar_name, cal_calendar.id as calendar_id, " .
-            "general_user.client_id " .
+            "cal_calendar.name as calendar_name, cal_calendar.id as calendar_id, general_user.client_id " .
             "FROM cal_event " .
             "left join cal_calendar on cal_calendar.id = cal_event.cal_calendar_id " .
             "left join general_user on general_user.id = cal_calendar.user_id " .
@@ -502,7 +510,7 @@ class CalendarEvent
 
     public function getByText($userId, $query) {
         $query = "select cal_event.id, cal_event.name, cal_event.description, cal_event.date_from, cal_event.date_to, " .
-                 "cal_calendar.name as calendar_name, cal_event_share.id as shared_event " .
+            "cal_calendar.name as calendar_name, cal_event_share.id as shared_event " .
             "from cal_calendar " .
             "left join cal_event on cal_event.cal_calendar_id = cal_calendar.id " .
             "left join cal_event_share on (cal_event_share.cal_event_id = cal_event.id and cal_event_share.user_id = ?) " .
@@ -587,7 +595,8 @@ class CalendarEvent
     }
 
     public function updateRemoveLinkAndRepeat($eventId, $dateFrom, $dateTo) {
-        $query = "update cal_event set cal_event_repeat_id = NULL, cal_event_link_id = NULL, date_from = ?, date_to = ? where id = ? limit 1";
+        $query = "update cal_event set cal_event_repeat_id = NULL, cal_event_link_id = NULL, date_from = ?, " .
+            "date_to = ? where id = ? limit 1";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $stmt->bind_param("ssi", $dateFrom, $dateTo, $eventId);
@@ -598,9 +607,7 @@ class CalendarEvent
         $event = UbirimiContainer::get()['repository']->get(CalendarEvent::class)->getById($eventId, 'array');
         $linkId = $event['cal_event_link_id'];
 
-        $query = "delete from " .
-            "cal_event " .
-            "where cal_event.cal_event_link_id = ? and id >= ?";
+        $query = "delete from cal_event where cal_event.cal_event_link_id = ? and id >= ?";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $stmt->bind_param("ii", $linkId, $eventId);

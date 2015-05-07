@@ -20,12 +20,11 @@
 namespace Ubirimi\Calendar\Controller\Event;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\UbirimiController;
 
 class DeleteRecurringConfirmController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         $eventId = $request->get('id');
 

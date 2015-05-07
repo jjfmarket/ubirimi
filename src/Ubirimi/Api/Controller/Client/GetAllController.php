@@ -20,10 +20,9 @@
 namespace Ubirimi\Api\Controller\Client;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-
-
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
+
 
 class GetAllController extends UbirimiController
 {

@@ -21,7 +21,6 @@ namespace Ubirimi\Api\Controller\Client;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
 

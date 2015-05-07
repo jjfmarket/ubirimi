@@ -20,11 +20,10 @@
 namespace Ubirimi\Api\Controller\Issue;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-
-
 use Ubirimi\UbirimiController;
 use Ubirimi\Util;
 use Ubirimi\Yongo\Repository\Issue\Issue;
+
 
 class SearchController extends UbirimiController
 {
