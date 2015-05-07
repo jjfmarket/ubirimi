@@ -29,7 +29,7 @@ class GetByFiltersController extends UbirimiController
 {
     public function indexAction(Request $request)
     {
-        UbirimiContainer::gegt()['api.auth']->auth($request);
+        UbirimiContainer::get()['api.auth']->auth($request);
 
         $filters = json_decode($request->getContent(), true);
         $result = array();

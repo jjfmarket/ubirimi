@@ -29,8 +29,6 @@ class GetController extends UbirimiController
 {
     public function indexAction(Request $request)
     {
-        UbirimiContainer::get()['api.auth']->auth($request);
-
         $clientData = $this->getRepository(UbirimiClient::class)->getById($request->get('id'));
         $users = $this->getRepository(UbirimiClient::class)->getUsers($request->get('id'), null, 'array');
         $administrators = $this->getRepository(UbirimiClient::class)->getAdministrators($request->get('id'), null, 'array');
