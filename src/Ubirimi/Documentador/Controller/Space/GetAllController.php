@@ -28,7 +28,7 @@ use Ubirimi\Util;
 
 class GetAllController extends UbirimiController
 {
-    public function indexAction(SessionInterface $session)
+    public function indexAction(Request $request, SessionInterface $session)
     {
         Util::checkUserIsLoggedInAndRedirect();
 

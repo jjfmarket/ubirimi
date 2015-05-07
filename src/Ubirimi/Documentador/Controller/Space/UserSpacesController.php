@@ -29,7 +29,7 @@ use Ubirimi\Util;
 
 class UserSpacesController extends UbirimiController
 {
-    public function indexAction(SessionInterface $session)
+    public function indexAction(Request $request, SessionInterface $session)
     {
         if (Util::checkUserIsLoggedIn()) {
 
