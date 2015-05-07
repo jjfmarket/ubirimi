@@ -36,6 +36,7 @@ class ListPagesController extends UbirimiController
         if (Util::checkUserIsLoggedIn()) {
             $session->set('selected_product_id', SystemProduct::SYS_PRODUCT_DOCUMENTADOR);
             $clientSettings = $session->get('client/settings');
+            $clientId = $session->get('client/id');
         } else {
             $httpHOST = Util::getHttpHost();
             $clientId = $this->getRepository(UbirimiClient::class)->getByBaseURL($httpHOST, 'array', 'id');
@@ -49,7 +50,7 @@ class ListPagesController extends UbirimiController
         $menuSelectedCategory = 'documentador';
         $space = $this->getRepository(Space::class)->getById($spaceId);
 
-        if ($space['client_id'] != $session->get('client/id')) {
+        if ($space['client_id'] != $clientId) {
             return new RedirectResponse('/general-settings/bad-link-access-denied');
         }
 
