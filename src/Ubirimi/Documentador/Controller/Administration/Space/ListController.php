@@ -27,7 +27,7 @@ use Ubirimi\Util;
 
 class ListController extends UbirimiController
 {
-    public function indexAction(SessionInterface $session)
+    public function indexAction(Request $request, SessionInterface $session)
     {
         Util::checkUserIsLoggedInAndRedirect();
 
