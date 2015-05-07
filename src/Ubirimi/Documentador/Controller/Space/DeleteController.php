@@ -28,19 +28,14 @@ use Ubirimi\Util;
 
 class DeleteController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         Util::checkUserIsLoggedInAndRedirect();
-
-        $clientId = $session->get('client/id');
-        $loggedInUserId = $session->get('user/id');
 
         $spaceId = $request->request->get('id');
 
         $space = $this->getRepository(Space::class)->getById($spaceId);
         $this->getRepository(Space::class)->deleteById($spaceId);
-
-        $date = Util::getServerCurrentDateTime();
 
         $this->getLogger()->addInfo('DELETE Documentador space ' . $space['name'], $this->getLoggerContext());
 

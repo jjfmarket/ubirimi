@@ -34,7 +34,6 @@ class UploadAttachmentController extends UbirimiController
     {
         Util::checkUserIsLoggedInAndRedirect();
 
-        $clientId = $session->get('client/id');
         $loggedInUserId = $session->get('user/id');
 
         $entityId = $request->get('id');

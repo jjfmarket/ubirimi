@@ -67,7 +67,8 @@ class EntityComment {
     }
 
     public function addComment($pageId, $userId, $content, $date, $parentCommentId = null) {
-        $query = "INSERT INTO documentator_entity_comment(documentator_entity_id, user_id, parent_comment_id, content, date_created) VALUES (?, ?, ?, ?, ?)";
+        $query = "INSERT INTO documentator_entity_comment(documentator_entity_id, user_id, parent_comment_id, content, " .
+            "date_created) VALUES (?, ?, ?, ?, ?)";
         if ($stmt = UbirimiContainer::get()['db.connection']->prepare($query)) {
 
             $stmt->bind_param("iiiss", $pageId, $userId, $parentCommentId, $content, $date);
@@ -78,9 +79,9 @@ class EntityComment {
     }
 
     public function getComments($pageId, $resultType = null) {
-        $query = "SELECT documentator_entity_comment.id, documentator_entity_comment.user_id, documentator_entity_comment.content, documentator_entity_comment.documentator_entity_id, " .
-            "documentator_entity_comment.date_created, general_user.first_name, general_user.last_name, " .
-            "documentator_entity_comment.parent_comment_id, 0 as printed " .
+        $query = "SELECT documentator_entity_comment.id, documentator_entity_comment.user_id, documentator_entity_comment.content, " .
+            "documentator_entity_comment.documentator_entity_id, documentator_entity_comment.date_created, general_user.first_name, " .
+            "general_user.last_name, documentator_entity_comment.parent_comment_id, 0 as printed " .
             "FROM documentator_entity_comment " .
             "left join general_user on general_user.id = documentator_entity_comment.user_id " .
             "where documentator_entity_comment.documentator_entity_id = ? " .

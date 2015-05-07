@@ -26,7 +26,7 @@ use Ubirimi\Util;
 
 class PageDialogController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         Util::checkUserIsLoggedInAndRedirect();
 

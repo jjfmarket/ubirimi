@@ -26,7 +26,7 @@ use Ubirimi\UbirimiController;
 
 class DeleteConfirmController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction()
     {
         return new Response('Are you sure you want to delete this attachment?');
     }

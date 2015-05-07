@@ -28,12 +28,9 @@ use Ubirimi\Util;
 
 class DeleteFileController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         Util::checkUserIsLoggedInAndRedirect();
-
-        $clientId = $session->get('client/id');
-        $loggedInUserId = $session->get('user/id');
 
         $fileId = $request->request->get('id');
 
@@ -42,7 +39,6 @@ class DeleteFileController extends UbirimiController
 
         $this->getRepository(Entity::class)->deleteFileById($entityId, $fileId);
 
-        $currentDate = Util::getServerCurrentDateTime();
         $this->getLogger()->addInfo('DELETE Documentador file ' . $file['name'], $this->getLoggerContext());
 
         return new Response('');

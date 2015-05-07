@@ -28,7 +28,7 @@ use Ubirimi\Util;
 
 class RestoreDialogController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         Util::checkUserIsLoggedInAndRedirect();
 

@@ -34,15 +34,11 @@ class DeleteController extends UbirimiController
     {
         Util::checkUserIsLoggedInAndRedirect();
 
-        $clientId = $session->get('client/id');
-        $loggedInUserId = $session->get('user/id');
-
         $attachmentId = $request->request->get('id');
         $attachment = $this->getRepository(EntityAttachment::class)->getById($attachmentId);
         $entityId = $attachment['documentator_entity_id'];
         $space = $this->getRepository(Entity::class)->getById($entityId);
         $spaceId = $space['space_id'];
-        $currentDate = Util::getServerCurrentDateTime();
 
         $this->getRepository(EntityAttachment::class)->deleteById($spaceId, $entityId, $attachmentId);
 

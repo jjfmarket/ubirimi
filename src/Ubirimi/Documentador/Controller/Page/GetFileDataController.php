@@ -26,7 +26,7 @@ use Ubirimi\UbirimiController;
 
 class GetFileDataController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         $fileId = $request->request->get('id');
         $file = $this->getRepository(Entity::class)->getFileById($fileId);

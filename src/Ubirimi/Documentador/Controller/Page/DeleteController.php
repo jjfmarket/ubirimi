@@ -32,17 +32,12 @@ class DeleteController extends UbirimiController
     {
         Util::checkUserIsLoggedInAndRedirect();
 
-        $clientId = $session->get('client/id');
-        $loggedInUserId = $session->get('user/id');
-
         $pageId = $request->request->get('id');
-        $spaceId = $request->request->get('space_id');
 
         $entity = $this->getRepository(Entity::class)->getById($pageId);
 
         $this->getRepository(Entity::class)->moveToTrash($pageId);
 
-        $date = Util::getServerCurrentDateTime();
         $this->getLogger()->addInfo('MOVE TO TRASH Documentador entity ' . $entity['name'], $this->getLoggerContext());
 
         return new Response('');

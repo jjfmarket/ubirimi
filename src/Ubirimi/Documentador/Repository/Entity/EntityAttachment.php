@@ -110,7 +110,8 @@ class EntityAttachment {
     }
 
     public function addRevision($attachmentId, $userId, $currentDate) {
-        $query = "INSERT INTO documentator_entity_attachment_revision(documentator_entity_attachment_id, user_created_id, date_created) VALUES (?, ?, ?)";
+        $query = "INSERT INTO documentator_entity_attachment_revision(documentator_entity_attachment_id, user_created_id, " .
+            "date_created) VALUES (?, ?, ?)";
         if ($stmt = UbirimiContainer::get()['db.connection']->prepare($query)) {
 
             $stmt->bind_param("iis", $attachmentId, $userId, $currentDate);

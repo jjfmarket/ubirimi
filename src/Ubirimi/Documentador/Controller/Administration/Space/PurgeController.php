@@ -33,9 +33,6 @@ class PurgeController extends UbirimiController
     {
         Util::checkUserIsLoggedInAndRedirect();
 
-        $clientId = $session->get('client/id');
-        $loggedInUserId = $session->get('user/id');
-
         $entityId = $request->request->get('id');
 
         $entity = $this->getRepository(Entity::class)->getById($entityId);
@@ -48,7 +45,6 @@ class PurgeController extends UbirimiController
         $this->getRepository(EntityAttachment::class)->deleteByEntityId($entityId, $entity['space_id']);
         $this->getRepository(Entity::class)->deleteById($entityId);
 
-        $date = Util::getServerCurrentDateTime();
         $this->getLogger()->addInfo('DELETE Documentador entity ' . $entity['name'], $this->getLoggerContext());
     }
 }

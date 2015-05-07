@@ -28,7 +28,7 @@ use Ubirimi\Util;
 
 class PurgeAllDialogController extends UbirimiController
 {
-    public function indexAction(Request $request, SessionInterface $session)
+    public function indexAction(Request $request)
     {
         Util::checkUserIsLoggedInAndRedirect();
 
