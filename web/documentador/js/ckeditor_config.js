@@ -3,6 +3,7 @@ CKEDITOR.editorConfig = function (config) {
     config.disableAutoInline = true;
     if ($('#product_id').val() == PRODUCT_DOCUMENTADOR) {
         config.plugins = 'dialogui,dialog,about,a11yhelp,dialogadvtab,basicstyles,bidi,blockquote,clipboard,button,panelbutton,panel,floatpanel,colorbutton,colordialog,templates,menu,contextmenu,div,toolbar,elementspath,list,indent,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,format,htmlwriter,horizontalrule,iframe,wysiwygarea,image,smiley,justify,link,liststyle,magicline,maximize,newpage,pagebreak,pastetext,pastefromword,preview,print,removeformat,save,selectall,showblocks,showborders,sourcearea,specialchar,menubutton,scayt,stylescombo,tab,table,tabletools,undo,wsc';
+        config.extraPlugins = 'widget,lineutils,codesnippet';
         config.filebrowserUploadUrl = '/documentador/editor/upload-image';
         config.filebrowserImageWindowWidth = '640';
         config.filebrowserImageWindowHeight = '480';

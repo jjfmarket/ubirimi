@@ -31,7 +31,7 @@ use Ubirimi\Util;
 
 class UploadImageController extends UbirimiController
 {
-    public function indexAction(SessionInterface $session)
+    public function indexAction(Request $request, SessionInterface $session)
     {
         Util::checkUserIsLoggedInAndRedirect();
         $loggedInUserId = $session->get('user/id');

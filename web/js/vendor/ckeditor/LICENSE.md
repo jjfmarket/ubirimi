@@ -2,7 +2,7 @@ Software License Agreement
 ==========================
 
 CKEditor - The text editor for Internet - http://ckeditor.com
-Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
 
 Licensed under the terms of any of the following licenses at your
 choice:
@@ -327,6 +327,8 @@ PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGES.
 
 END OF TERMS AND CONDITIONS
+
+
 Appendix B: The LGPL License
 ----------------------------
 
@@ -788,6 +790,8 @@ SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGES.
 
 END OF TERMS AND CONDITIONS
+
+
 Appendix C: The MPL License
 ---------------------------
 
