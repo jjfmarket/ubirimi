@@ -473,24 +473,6 @@ class UbirimiUser
             return null;
     }
 
-    public function getByUsernameAndPassword($username, $password)
-    {
-        $query = 'SELECT username, id, email, first_name, last_name, client_id, issues_per_page, password, super_user_flag, svn_administrator_flag ' .
-            'from general_user ' .
-            "WHERE username = ? and password = ? " .
-            "LIMIT 1";
-
-        $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
-
-        $stmt->bind_param("ss", $username, $password);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows)
-            return $result->fetch_array(MYSQLI_ASSOC);
-        else
-            return null;
-    }
-
     public function getAll($filters = array()) {
         $query = 'select general_user.id, general_user.first_name, general_user.last_name, general_user.username, general_user.date_created, general_user.email, client_administrator_flag, ' .
                  'client.company_name as client_company_name ' .

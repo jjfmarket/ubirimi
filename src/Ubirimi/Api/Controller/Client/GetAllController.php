@@ -20,14 +20,18 @@
 namespace Ubirimi\Api\Controller\Client;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
 
 
 class GetAllController extends UbirimiController
 {
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        UbirimiContainer::get()['api.auth']->auth($request);
+
         $clientsArray = array();
         $clients = $this->getRepository(UbirimiClient::class)->getAll();
         while ($client = $clients->fetch_array(MYSQLI_ASSOC)) {

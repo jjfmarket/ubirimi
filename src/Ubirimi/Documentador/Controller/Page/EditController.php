@@ -32,7 +32,7 @@ class EditController extends UbirimiController
 {
     public function indexAction(Request $request, SessionInterface $session)
     {
-        $source_application = 'documentator';
+        $source_application = 'documentador';
 
         Util::checkUserIsLoggedInAndRedirect();
 
@@ -51,7 +51,7 @@ class EditController extends UbirimiController
             return new RedirectResponse('general-settings/bad-link-access-denied');
         }
 
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
 
         $session->set('current_edit_entity_id', $entityId);
         $name = $page['name'];

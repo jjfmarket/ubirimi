@@ -45,8 +45,8 @@ class Util {
     }
 
     public static function userHasDocumentadorAdministrativePermission() {
-        $hasDocumentadorGlobalAdministrationPermission = UbirimiContainer::get()['session']->get('user/documentator/is_global_administrator');
-        $hasDocumentadorGlobalSystemAdministrationPermission = UbirimiContainer::get()['session']->get('user/documentator/is_global_system_administrator');
+        $hasDocumentadorGlobalAdministrationPermission = UbirimiContainer::get()['session']->get('user/documentador/is_global_administrator');
+        $hasDocumentadorGlobalSystemAdministrationPermission = UbirimiContainer::get()['session']->get('user/documentador/is_global_system_administrator');
 
         return ($hasDocumentadorGlobalAdministrationPermission || $hasDocumentadorGlobalSystemAdministrationPermission);
     }

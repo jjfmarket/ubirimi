@@ -38,8 +38,8 @@ class ViewController extends UbirimiController
         $clientId = $session->get('client/id');
 
         $menuSelectedCategory = 'doc_users';
-        $documentatorSettings = $this->getRepository(UbirimiClient::class)->getDocumentadorSettings($clientId);
-        $session->set('documentator/settings', $documentatorSettings);
+        $documentadorSettings = $this->getRepository(UbirimiClient::class)->getDocumentadorSettings($clientId);
+        $session->set('documentator/settings', $documentadorSettings);
 
         $users = $this->getRepository(UbirimiUser::class)->getByClientId($clientId);
         $groups = $this->getRepository(UbirimiGroup::class)->getByClientIdAndProductId($clientId, SystemProduct::SYS_PRODUCT_DOCUMENTADOR);

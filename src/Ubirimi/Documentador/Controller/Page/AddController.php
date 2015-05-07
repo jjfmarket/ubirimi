@@ -33,7 +33,7 @@ class AddController extends UbirimiController
 {
     public function indexAction(Request $request, SessionInterface $session)
     {
-        $source_application = 'documentator';
+        $source_application = 'documentador';
 
         Util::checkUserIsLoggedInAndRedirect();
 
@@ -67,7 +67,7 @@ class AddController extends UbirimiController
             }
         }
 
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
 
         if ($request->request->has('add_page')) {
             $name = Util::cleanRegularInputField($request->request->get('name'));

@@ -30,6 +30,8 @@ class PostController extends UbirimiController
 {
     public function indexAction(Request $request)
     {
+        UbirimiContainer::get()['api.auth']->auth($request);
+
         $timeTrackingDefaultUnit = $this->getRepository(UbirimiClient::class)->getYongoSetting(
             $request->get('api_client_id'),
             'time_tracking_default_unit'

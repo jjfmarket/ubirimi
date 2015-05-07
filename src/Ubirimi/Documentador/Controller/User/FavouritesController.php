@@ -44,10 +44,10 @@ class FavouritesController extends UbirimiController
 
             $settingsDocumentador = $this->getRepository(UbirimiClient::class)->getDocumentadorSettings($clientId);
 
-            $documentatorUseAnonymous = $settingsDocumentador['anonymous_use_flag'];
-            $documentatorAnonymousViewUserProfiles = $settingsDocumentador['anonymous_view_user_profile_flag'];
+            $documentadorUseAnonymous = $settingsDocumentador['anonymous_use_flag'];
+            $documentadorAnonymousViewUserProfiles = $settingsDocumentador['anonymous_view_user_profile_flag'];
 
-            if (!($documentatorUseAnonymous && $documentatorAnonymousViewUserProfiles)) {
+            if (!($documentadorUseAnonymous && $documentadorAnonymousViewUserProfiles)) {
                 Util::signOutAndRedirect();
                 die();
             }
@@ -62,7 +62,7 @@ class FavouritesController extends UbirimiController
             return new RedirectResponse('/general-settings/bad-link-access-denied');
         }
 
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
         $groups = $this->getRepository(UbirimiGroup::class)->getByUserIdAndProductId($userId, SystemProduct::SYS_PRODUCT_DOCUMENTADOR);
 
         $pages = $this->getRepository(Entity::class)->getFavouritePagesByClientIdAndUserId($clientId, $userId);

@@ -29,7 +29,6 @@ class ValidateDomainController extends UbirimiController
     public function indexAction(Request $request)
     {
         $domain = $request->get('domain');
-
         $domainAvailable = $this->getRepository(UbirimiClient::class)->checkAvailableDomain($domain);
 
         return new JsonResponse($domainAvailable);

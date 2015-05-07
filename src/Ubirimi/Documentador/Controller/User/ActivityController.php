@@ -44,10 +44,10 @@ class ActivityController extends UbirimiController
 
             $settingsDocumentador = $this->getRepository(UbirimiClient::class)->getDocumentadorSettings($clientId);
 
-            $documentatorUseAnonymous = $settingsDocumentador['anonymous_use_flag'];
-            $documentatorAnonymousViewUserProfiles = $settingsDocumentador['anonymous_view_user_profile_flag'];
+            $documentadorUseAnonymous = $settingsDocumentador['anonymous_use_flag'];
+            $documentadorAnonymousViewUserProfiles = $settingsDocumentador['anonymous_view_user_profile_flag'];
 
-            if (!($documentatorUseAnonymous && $documentatorAnonymousViewUserProfiles)) {
+            if (!($documentadorUseAnonymous && $documentadorAnonymousViewUserProfiles)) {
                 Util::signOutAndRedirect();
                 die();
             }
@@ -59,7 +59,7 @@ class ActivityController extends UbirimiController
             return new RedirectResponse('/general-settings/bad-link-access-denied');
         }
 
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
 
         $activities = $this->getRepository(UbirimiUser::class)->getDocumentadorActivityStream($userId);
         $sectionPageTitle = $session->get('client/settings/title_name') . ' / ' . SystemProduct::SYS_PRODUCT_DOCUMENTADOR_NAME. ' / ' . $user['first_name'] . ' ' . $user['last_name'] . ' / Activity';

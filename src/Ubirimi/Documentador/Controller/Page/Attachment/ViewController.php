@@ -51,21 +51,21 @@ class ViewController extends UbirimiController
 
             $settingsDocumentador = $this->getRepository(UbirimiClient::class)->getDocumentadorSettings($clientId);
 
-            $documentatorUseAnonymous = $settingsDocumentador['anonymous_use_flag'];
+            $documentadorUseAnonymous = $settingsDocumentador['anonymous_use_flag'];
 
             $page = $this->getRepository(Entity::class)->getById($entityId, $loggedInUserId);
             if ($page) {
                 $spaceId = $page['space_id'];
                 $spaceHasAnonymousAccess = $this->getRepository(Space::class)->hasAnonymousAccess($spaceId);
 
-                if (!($documentatorUseAnonymous && $spaceHasAnonymousAccess)) {
+                if (!($documentadorUseAnonymous && $spaceHasAnonymousAccess)) {
                     Util::signOutAndRedirect();
                     die();
                 }
             }
             $sectionPageTitle = SystemProduct::SYS_PRODUCT_DOCUMENTADOR_NAME. ' / ' . $page['name'] . ' / Attachments';
         }
-        $menuSelectedCategory = 'documentator';
+        $menuSelectedCategory = 'documentador';
 
         if ($page) {
             $attachments = $this->getRepository(EntityAttachment::class)->getByEntityId($entityId);

@@ -34,10 +34,10 @@ require_once __DIR__ . '/../../_header.php';
                         <tr>
                             <td width="60%">Anonymous</td>
                             <td align="center">
-                                <input type="checkbox" value="1" name="anonymous_use_flag" <?php if ($documentatorSettings['anonymous_use_flag']) echo 'checked="checked"'; ?> />
+                                <input type="checkbox" value="1" name="anonymous_use_flag" <?php if ($documentadorSettings['anonymous_use_flag']) echo 'checked="checked"'; ?> />
                             </td>
                             <td align="center">
-                                <input type="checkbox" value="1" name="anonymous_view_user_profile_flag" <?php if ($documentatorSettings['anonymous_view_user_profile_flag']) echo 'checked="checked"'; ?> />
+                                <input type="checkbox" value="1" name="anonymous_view_user_profile_flag" <?php if ($documentadorSettings['anonymous_view_user_profile_flag']) echo 'checked="checked"'; ?> />
                             </td>
                         </tr>
                     </tbody>

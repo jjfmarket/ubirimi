@@ -161,7 +161,7 @@ $('document').ready(function () {
 
         $.ajax({
             type: "POST",
-            url: '/menu/documentator-menu',
+            url: '/menu/documentador-menu',
             data: {
             },
             success: function (response) {

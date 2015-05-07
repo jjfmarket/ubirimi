@@ -31,7 +31,7 @@ class EntityResumeEditController extends UbirimiController
 {
     public function indexAction(Request $request, SessionInterface $session)
     {
-        $source_application = 'documentator';
+        $source_application = 'documentador';
 
         Util::checkUserIsLoggedInAndRedirect();
 

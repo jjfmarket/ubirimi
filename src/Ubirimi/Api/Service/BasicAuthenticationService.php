@@ -20,6 +20,8 @@
 namespace Ubirimi\Api\Service;
 
 use Symfony\Component\HttpFoundation\Request;
+use Ubirimi\Container\UbirimiContainer;
+use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\Service\PasswordService;
 
@@ -38,12 +40,16 @@ class BasicAuthenticationService
     public function auth(Request $request)
     {
         $decodedHeader = base64_decode(str_replace('Basic ', '', $request->headers->get('Authorization')));
+        $protocol = $request->isSecure() ? 'https://' : 'http://';
 
-        list($clientDomain, $username) = explode('#', substr($decodedHeader, 0, strpos($decodedHeader, ':')));
-        $password = substr($decodedHeader, strpos($decodedHeader, ':') + 1);
+        $baseURL = $protocol . $request->getHttpHost();
 
-        $baseURL = 'https://' . $clientDomain . '.ubirimi.net';
-        $user = $this->getRepository(UbirimiUser::class)->getByUsernameAndBaseURL($username, $baseURL);
+        list($username, $password) = explode(':', $decodedHeader);
+
+        $clientSettings = UbirimiContainer::get()['repository']->get(UbirimiClient::class)->getSettingsByBaseURL($baseURL);
+        $clientId = $clientSettings['id'];
+
+        $user = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getByUsernameAndClientId($username, $clientId);
 
         if (null === $user) {
             throw new \Exception(sprintf('Api Auth Failed. User [%s] not found', $username));
@@ -54,7 +60,7 @@ class BasicAuthenticationService
         }
 
         $request->attributes->set('api_client_id', $user['client_id']);
-        $request->attributes->set('api_client_domain', $clientDomain);
+        $request->attributes->set('api_client_domain', $baseURL);
         $request->attributes->set('api_username', $username);
         $request->attributes->set('api_user_id', $user['id']);
     }
