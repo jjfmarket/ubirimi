@@ -25,6 +25,6 @@ class AddConfirmController extends UbirimiController
 {
     public function indexAction()
     {
-        return $this->render(__DIR__ . '/../../../Resources/views/board/column/AddConfirm.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../../Resources/views/board/column/AddConfirm.php');
     }
 }

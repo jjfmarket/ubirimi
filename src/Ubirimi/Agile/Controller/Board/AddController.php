@@ -82,6 +82,19 @@ class AddController extends UbirimiController
 
         $sectionPageTitle = $session->get('client/settings/title_name') . ' / ' . SystemProduct::SYS_PRODUCT_AGILE_NAME. ' / Create Board';
 
-        return $this->render(__DIR__ . '/../../Resources/views/board/Add.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/board/Add.php',
+            [
+                'sectionPageTitle' => $sectionPageTitle,
+                'session' => $session,
+                'clientId' => $clientId,
+                'loggedInUserId' => $loggedInUserId,
+                'projectsForBrowsing' => $projectsForBrowsing,
+                'menuSelectedCategory' => $menuSelectedCategory,
+                'name' => $name,
+                'emptyName' => $emptyName,
+                'description' => $description,
+                'projects' => $projects,
+                'noProjectSelected' => $noProjectSelected
+            ]);
     }
 }
