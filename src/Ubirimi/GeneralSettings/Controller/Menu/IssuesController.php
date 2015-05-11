@@ -61,6 +61,10 @@ class IssuesController extends UbirimiController
 
         $recentIssues = $session->get('yongo/recent_issues');
 
-        return $this->render(__DIR__ . '/../../Resources/views/menu/Issues.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/menu/Issues.php',
+            [
+                'hasCreateIssuePermission' => $hasCreateIssuePermission,
+                'recentIssues' => $recentIssues
+            ]);
     }
 }

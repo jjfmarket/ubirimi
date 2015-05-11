@@ -82,6 +82,28 @@ class EditController extends UbirimiController
 
         $sectionPageTitle = $session->get('client/settings/title_name') . ' / GeneralSettings Settings / Update SMTP Server Settings';
 
-        return $this->render(__DIR__ . '/../../Resources/views/smtp/Edit.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/smtp/Edit.php',
+            [
+                'smtpServer' => $smtpServer,
+                'smtpServerId' => $smtpServerId,
+                'name' => $name,
+                'emptyName' => $emptyName,
+                'description' => $description,
+                'fromAddress' => $fromAddress,
+                'emptyFromAddress' => $emptyFromAddress,
+                'emailPrefix' => $emailPrefix,
+                'emptyEmailPrefix' => $emptyEmailPrefix,
+                'protocol' => $protocol,
+                'hostname' => $hostname,
+                'emptyHostname' => $emptyHostname,
+                'port' => $port,
+                'timeout' => $timeout,
+                'username' => $username,
+                'password' => $password,
+                'sectionPageTitle' => $sectionPageTitle,
+                'menuSelectedCategory' => $menuSelectedCategory,
+                'session' => $session,
+                'loggedInUserId' => $loggedInUserId
+            ]);
     }
 }

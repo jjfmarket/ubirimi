@@ -79,6 +79,25 @@ class AddController extends UbirimiController
 
         $sectionPageTitle = $session->get('client/settings/title_name') . ' / GeneralSettings Settings / Create SMTP Server';
 
-        return $this->render(__DIR__ . '/../../Resources/views/smtp/Add.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/smtp/Add.php',
+            [
+                'name' => $name,
+                'emptyName' => $emptyName,
+                'description' => $description,
+                'fromAddress' => $fromAddress,
+                'emptyFromAddress' => $emptyFromAddress,
+                'emailPrefix' => $emailPrefix,
+                'emptyEmailPrefix' => $emptyEmailPrefix,
+                'hostname' => $hostname,
+                'emptyHostname' => $emptyHostname,
+                'port' => $port,
+                'timeout' => $timeout,
+                'username' => $username,
+                'password' => $password,
+                'sectionPageTitle' => $sectionPageTitle,
+                'menuSelectedCategory' => $menuSelectedCategory,
+                'session' => $session,
+                'loggedInUserId' => $loggedInUserId
+            ]);
     }
 }

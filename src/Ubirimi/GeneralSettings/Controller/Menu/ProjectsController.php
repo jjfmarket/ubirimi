@@ -77,6 +77,14 @@ class ProjectsController extends UbirimiController
             GlobalPermission::GLOBAL_PERMISSION_YONGO_SYSTEM_ADMINISTRATORS
         );
 
-        return $this->render(__DIR__ . '/../../Resources/views/menu/Projects.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/menu/Projects.php',
+            [
+                'selectedProjectId' => $selectedProjectId,
+                'urlPrefix' => $urlPrefix,
+                'selectedProjectMenu' => $selectedProjectMenu,
+                'projectsMenu' => $projectsMenu,
+                'hasGlobalAdministrationPermission' => $hasGlobalAdministrationPermission,
+                'hasGlobalSystemAdministrationPermission' => $hasGlobalSystemAdministrationPermission
+            ]);
     }
 }

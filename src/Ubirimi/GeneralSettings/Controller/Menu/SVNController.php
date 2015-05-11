@@ -27,6 +27,6 @@ class SVNController extends UbirimiController
 {
     public function indexAction(Request $request, SessionInterface $session)
     {
-        return $this->render(__DIR__ . '/../../Resources/views/menu/SVN.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/menu/SVN.php');
     }
 }

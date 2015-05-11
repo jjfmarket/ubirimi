@@ -38,6 +38,13 @@ class ViewController extends UbirimiController
 
         $sectionPageTitle = $session->get('client/settings/title_name') . ' / GeneralSettings Settings / SMTP Server Settings';
 
-        return $this->render(__DIR__ . '/../../Resources/views/smtp/View.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/smtp/View.php',
+            [
+                'smtpSettings' => $smtpSettings,
+                'sectionPageTitle' => $sectionPageTitle,
+                'menuSelectedCategory' => $menuSelectedCategory,
+                'session' => $session,
+                'loggedInUserId' => $loggedInUserId
+            ]);
     }
 }
