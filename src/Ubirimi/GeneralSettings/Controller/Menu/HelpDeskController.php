@@ -41,6 +41,9 @@ class HelpDeskController extends UbirimiController
 
         $clientAdministratorFlag = $session->get('user/client_administrator_flag');
 
-        return $this->render(__DIR__ . '/../../Resources/views/menu/HelpDesk.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/menu/HelpDesk.php',
+            [
+                '$clientAdministratorFlag' => $clientAdministratorFlag
+            ]);
     }
 }

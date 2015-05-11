@@ -53,6 +53,12 @@ class FiltersController extends UbirimiController
 
         $customFilters = $this->getRepository(IssueFilter::class)->getByUserId($session->get('user/id'));
 
-        return $this->render(__DIR__ . '/../../Resources/views/menu/Filters.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/menu/Filters.php',
+            [
+                'projectsForBrowsing' => $projectsForBrowsing,
+                'loggedInUserId' => $loggedInUserId,
+                'customFilters' => $customFilters
+
+            ]);
     }
 }

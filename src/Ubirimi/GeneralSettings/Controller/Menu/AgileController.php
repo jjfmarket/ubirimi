@@ -37,6 +37,12 @@ class AgileController extends UbirimiController
 
         $clientAdministratorFlag = $session->get('user/client_administrator_flag');
 
-        return $this->render(__DIR__ . '/../../Resources/views/menu/Agile.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/menu/Agile.php',
+            [
+                'recentBoard' => $recentBoard,
+                'last5Board' => $last5Board,
+                'clientAdministratorFlag' => $clientAdministratorFlag
+            ]);
+
     }
 }

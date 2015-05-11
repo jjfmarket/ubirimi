@@ -40,6 +40,9 @@ class DocumentadorController extends UbirimiController
             $spaces = $this->getRepository(Space::class)->getByClientIdAndAnonymous($clientId);
         }
 
-        return $this->render(__DIR__ . '/../../Resources/views/menu/Documentador.php', get_defined_vars());
+        return $this->render(__DIR__ . '/../../Resources/views/menu/Documentador.php',
+            [
+                'spaces' => $spaces
+            ]);
     }
 }
