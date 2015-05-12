@@ -29,16 +29,14 @@ class GetByFiltersController extends UbirimiController
 {
     public function indexAction(Request $request)
     {
-        UbirimiContainer::get()['api.auth']->auth($request);
-
         $filters = json_decode($request->getContent(), true);
         $result = array();
 
-        if ($filters['email_address'] && $filters['is_administrator']) {
+        if (array_key_exists('email_address', $filters) && array_key_exists('is_administrator', $filters)) {
             $result = $this->getRepository(UbirimiUser::class)->getByEmailAddressAndIsClientAdministrator(mb_strtolower($filters['email_address']));
         }
 
-        if ($filters['username'] && $filters['domain']) {
+        if (array_key_exists('username', $filters) && array_key_exists('domain', $filters)) {
             $baseURL = 'http://' . $filters['domain'] . '.ubirimi.net';
             $result = $this->getRepository(UbirimiUser::class)->getByUsernameAndBaseURL(mb_strtolower($filters['username']), mb_strtolower($baseURL));
         }

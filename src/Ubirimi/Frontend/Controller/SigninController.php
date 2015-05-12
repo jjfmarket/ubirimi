@@ -68,15 +68,14 @@ class SigninController extends UbirimiController
             $password = $request->request->get('password');
 
             $userData = $this->getRepository(UbirimiUser::class)->getByUsernameAndClientId($username, $clientId);
+
             if ($userData['id']) {
                 if (UbirimiContainer::get()['password']->check($password, $userData['password'])) {
                     $session->invalidate();
-                    $clientId = $userData['client_id'];
 
                     UbirimiContainer::get()['warmup']->warmUpClient($userData, true, true);
                     UbirimiContainer::get()['login.time']->userSaveLoginTime($userData['id']);
 
-                    $date = Util::getServerCurrentDateTime();
                     $this->getLogger()->addInfo('LOG IN', $this->getLoggerContext());
 
                     if ($context) {
