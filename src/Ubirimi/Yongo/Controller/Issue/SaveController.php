@@ -19,6 +19,9 @@
 
 namespace Ubirimi\Yongo\Controller\Issue;
 
+use PhpAmqpLib\Connection\AMQPConnection;
+use PhpAmqpLib\Connection\AMQPLazyConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -65,8 +68,7 @@ class SaveController extends UbirimiController
         for ($i = 0; $i < count($fieldTypes); $i++) {
             if ($fieldValues[$i] != 'null' && $fieldValues[$i] != '') {
                 $issueSystemFieldsData[$fieldTypes[$i]] = $fieldValues[$i];
-            }
-            else {
+            } else {
                 $issueSystemFieldsData[$fieldTypes[$i]] = null;
             }
         }

@@ -30,7 +30,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 80, host: 8080
 
   config.ssh.password = "vagrant"
-
   config.ssh.forward_agent = true
 
   # Enable provisioning with Puppet stand alone.  Puppet manifests

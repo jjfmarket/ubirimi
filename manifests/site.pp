@@ -113,6 +113,15 @@ package { ["mc"]:
   ensure => installed
 }
 
+package { ["rabbitmq-server"]:
+  ensure => installed
+}
+
+exec { '/usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management':
+  command => '/usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management',
+  require => Package['rabbitmq-server'],
+}
+
 package { ["subversion"]:
   ensure => installed
 }

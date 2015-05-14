@@ -29,8 +29,9 @@ $configsApplication = ConfigService::process(__DIR__ . '/../app/config/app.prope
 $configsDatabase = ConfigService::process(__DIR__ . '/../app/config/db.properties');
 $configsSMTP = ConfigService::process(__DIR__ . '/../app/config/smtp.properties');
 $configsSubversion = ConfigService::process(__DIR__ . '/../app/config/subversion.properties');
+$configsRabbitMQ = ConfigService::process(__DIR__ . '/../app/config/rabbitmq.properties');
 
-$configs = array_merge($configsApplication, $configsDatabase, $configsSMTP, $configsSubversion);
+$configs = array_merge($configsApplication, $configsDatabase, $configsSMTP, $configsSubversion, $configsRabbitMQ);
 
 /* register global configs to the container */
 UbirimiContainer::loadConfigs($configs);

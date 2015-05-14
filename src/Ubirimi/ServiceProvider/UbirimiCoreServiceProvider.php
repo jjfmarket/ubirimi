@@ -37,6 +37,7 @@ use Ubirimi\Service\ClientService;
 use Ubirimi\Service\DatabaseConnectorService;
 use Ubirimi\Service\EmailService;
 use Ubirimi\Service\LoginTimeService;
+use Ubirimi\Service\MessageQueueService;
 use Ubirimi\Service\PasswordService;
 use Ubirimi\Service\RepositoryService;
 use Ubirimi\Service\UserService;
@@ -115,6 +116,10 @@ class UbirimiCoreServiceProvider implements ServiceProviderInterface
 
         $pimple['warmup'] = $pimple->share(function($pimple) {
             return new WarmUpService($pimple['session']);
+        });
+
+        $pimple['messageQueue'] = $pimple->share(function($pimple) {
+            return new MessageQueueService();
         });
 
         $pimple['savant'] = $pimple->share(function() {

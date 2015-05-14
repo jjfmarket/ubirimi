@@ -19,9 +19,9 @@
 
 namespace Ubirimi\Yongo\Service;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\Repository\Email\Email;
 use Ubirimi\Repository\Email\EmailQueue;
 use Ubirimi\Repository\SMTPServer;
 use Ubirimi\Repository\User\UbirimiUser;
@@ -310,25 +310,26 @@ class IssueEmailService extends UbirimiService
             $customFieldsSingleValue = UbirimiContainer::get()['repository']->get(CustomField::class)->getCustomFieldsData($issueId);
             $customFieldsUserPickerMultiple = UbirimiContainer::get()['repository']->get(CustomField::class)->getUserPickerData($issueId);
 
-            $subject = $clientSmtpSettings['email_prefix'] . ' ' .
-                "[Issue] - New issue CREATED " .
-                $issue['project_code'] . '-' .
-                $issue['nr'];
+            $emailContentObject = UbirimiContainer::get()['savant'];
+            $emailContentObject->assign(array(
+                'issue' => $issue,
+                'custom_fields_single_value' => $customFieldsSingleValue,
+                'custom_fields_user_picker_multiple' => $customFieldsUserPickerMultiple,
+                'components' => $components,
+                'versions_fixed' => $versionsFixed,
+                'versions_affected' => $versionsAffected));
+            $emailContent = $emailContentObject->fetch('_newIssue.php', 'text/html');
 
-            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                $clientSmtpSettings['from_address'],
-                $userToNotify['email'],
-                null,
-                $subject,
-                Util::getTemplate('_newIssue.php', array(
-                        'issue' => $issue,
-                        'custom_fields_single_value' => $customFieldsSingleValue,
-                        'custom_fields_user_picker_multiple' => $customFieldsUserPickerMultiple,
-                        'components' => $components,
-                        'versions_fixed' => $versionsFixed,
-                        'versions_affected' => $versionsAffected)
-                ),
-                Util::getServerCurrentDateTime());
+            new Response()
+            $messageData = array(
+                'from' => $clientSmtpSettings['from_address'],
+                'to' => $userToNotify['email'],
+                'clientId' => $clientId,
+                'subject' => sprintf("%s [Issue] - New issue CREATED %s-%s", $clientSmtpSettings['email_prefix'], $issue['project_code'], $issue['nr']),
+                'content' => $emailContent,
+                'date' => Util::getServerCurrentDateTime());
+
+            UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
         }
     }
 

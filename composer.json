@@ -34,6 +34,7 @@
         "symfony/yaml": "2.5.*",
         "symfony/debug": "2.5.*",
         "symfony/var-dumper": "3.0.*@dev",
+        "symfony/templating": "2.5.*",
         "pimple/pimple": "1.1",
         "guzzle/guzzle": "3.7.*",
         "cogpowered/finediff": "0.0.*",
@@ -44,7 +45,8 @@
         "nyholm/zebra-image": "1.0.1",
         "robmorgan/phinx": "*",
         "monolog/monolog": "1.12.*@dev",
-        "phploc/phploc": "*"
+        "phploc/phploc": "*",
+        "videlalvaro/php-amqplib": "v2.5.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.5.*"
