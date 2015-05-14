@@ -297,6 +297,7 @@ class IssueEmailService extends UbirimiService
         $users = UbirimiContainer::get()['repository']->get(YongoProject::class)->getUsersForNotification($project['id'], $eventCreatedId, $issue, $loggedInUserId);
 
         while ($users && $userToNotify = $users->fetch_array(MYSQLI_ASSOC)) {
+
             if ($userToNotify['user_id'] == $loggedInUserId && !$userToNotify['notify_own_changes_flag']) {
                 continue;
             }
@@ -310,17 +311,14 @@ class IssueEmailService extends UbirimiService
             $customFieldsSingleValue = UbirimiContainer::get()['repository']->get(CustomField::class)->getCustomFieldsData($issueId);
             $customFieldsUserPickerMultiple = UbirimiContainer::get()['repository']->get(CustomField::class)->getUserPickerData($issueId);
 
-            $emailContentObject = UbirimiContainer::get()['savant'];
-            $emailContentObject->assign(array(
+            $emailContent = UbirimiContainer::get()['template']->render('_newIssue.php', array(
                 'issue' => $issue,
                 'custom_fields_single_value' => $customFieldsSingleValue,
                 'custom_fields_user_picker_multiple' => $customFieldsUserPickerMultiple,
                 'components' => $components,
                 'versions_fixed' => $versionsFixed,
                 'versions_affected' => $versionsAffected));
-            $emailContent = $emailContentObject->fetch('_newIssue.php', 'text/html');
 
-            new Response()
             $messageData = array(
                 'from' => $clientSmtpSettings['from_address'],
                 'to' => $userToNotify['email'],

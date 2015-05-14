@@ -44,7 +44,7 @@ class ViewController extends UbirimiController
                 'sectionPageTitle' => $sectionPageTitle,
                 'menuSelectedCategory' => $menuSelectedCategory,
                 'session' => $session,
-                'loggedInUserId' => $loggedInUserId
+                'loggedInUserId' => $session->get('user/id')
             ]);
     }
 }

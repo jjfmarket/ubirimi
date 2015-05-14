@@ -23,13 +23,15 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Processor\WebProcessor;
-use Savant3\Savant3;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
 use Symfony\Component\HttpFoundation\Session\Flash\AutoExpireFlashBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\Templating\Loader\FilesystemLoader;
+use Symfony\Component\Templating\PhpEngine;
+use Symfony\Component\Templating\TemplateNameParser;
 use Ubirimi\Api\Service\BasicAuthenticationService;
 use Ubirimi\Container\ServiceProviderInterface;
 use Ubirimi\DbMonologHandler;
@@ -40,6 +42,7 @@ use Ubirimi\Service\LoginTimeService;
 use Ubirimi\Service\MessageQueueService;
 use Ubirimi\Service\PasswordService;
 use Ubirimi\Service\RepositoryService;
+use Ubirimi\Service\TemplateService;
 use Ubirimi\Service\UserService;
 use Ubirimi\Service\WarmUpService;
 
@@ -122,16 +125,15 @@ class UbirimiCoreServiceProvider implements ServiceProviderInterface
             return new MessageQueueService();
         });
 
-        $pimple['savant'] = $pimple->share(function() {
-            return new Savant3(array(
-                    'template_path' => array(
-                        __DIR__ . '/../Yongo/Resources/views/email/',
-                        __DIR__ . '/../GeneralSettings/Resources/views/email/',
-                        __DIR__ . '/../Calendar/Resources/views/email/',
-                        __DIR__ . '/../SvnHosting/Resources/views/email/',
-                        __DIR__ . '/../Resources/views/email'
-                    ))
-            );
+        $pimple['template'] = $pimple->share(function() {
+            $loader = new FilesystemLoader(array(
+                __DIR__ . '/../Yongo/Resources/views/email/%name%',
+                __DIR__ . '/../GeneralSettings/Resources/views/email/%name%',
+                __DIR__ . '/../Calendar/Resources/views/email/%name%',
+                __DIR__ . '/../SvnHosting/Resources/views/email/%name%',
+                __DIR__ . '/../Resources/views/email/%name%'));
+
+            return new PhpEngine(new TemplateNameParser(), $loader);
         });
     }
 
