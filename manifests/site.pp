@@ -118,8 +118,19 @@ package { ["rabbitmq-server"]:
 }
 
 exec { '/usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management':
+  path => "/usr/bin:/usr/sbin:/bin",
+  environment => "HOME=/root",
   command => '/usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management',
   require => Package['rabbitmq-server'],
+}
+
+package { ["supervisor"]:
+  ensure => installed
+}
+
+exec { '/usr/bin/service supervisor restart':
+  command => '/usr/bin/service supervisor restart',
+  require => Package['supervisor'],
 }
 
 package { ["subversion"]:
@@ -251,6 +262,8 @@ exec { "allow external mysql connections":
 # composer install
 
 exec { 'run install composer':
+  path => "/usr/bin:/usr/sbin:/bin",
+  environment => "HOME=/root",
   command => '/usr/local/bin/composer install --working-dir /var/www',
   timeout => 0,
   require => [Package["apache2"],Exec['install composer']]

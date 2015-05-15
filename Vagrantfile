@@ -17,10 +17,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # Distributor ID:	Ubuntu
-  # Description:	Ubuntu 12.04 LTS
-  # Release:	    12.04
-  # Codename:	    precise
-  config.vm.box = "hashicorp/precise64"
+  # Description:	Ubuntu 14.04 LTS
+  # Release:	    14.04
+  # Codename:	    trusty
+  config.vm.box = "ubuntu/trusty64"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine.
