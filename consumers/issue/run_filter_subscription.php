@@ -10,15 +10,6 @@ use Ubirimi\Util;
 use Ubirimi\Yongo\Repository\Issue\Issue;
 use Ubirimi\Yongo\Repository\Issue\IssueFilter;
 
-/* check locking mechanism */
-if (file_exists(__DIR__ . '/run_filter_subscription.lock')) {
-    $fp = fopen('run_filter_subscription.lock', 'w+');
-    if (!flock($fp, LOCK_EX | LOCK_NB)) {
-        echo "Unable to obtain lock for run_filter_subscription task.\n";
-        exit(-1);
-    }
-}
-
 require_once __DIR__ . '/../../web/bootstrap_cli.php';
 
 $filterSubscriptionId = $argv[1];

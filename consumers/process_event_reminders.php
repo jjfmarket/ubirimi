@@ -24,15 +24,6 @@ use Ubirimi\Repository\Email\Email;
 use Ubirimi\Repository\SMTPServer;
 use Ubirimi\Util;
 
-/* check locking mechanism */
-if (file_exists(__DIR__ . '/process_event_reminders.lock')) {
-    $fp = fopen('process_event_reminders.lock', 'w+');
-    if (!flock($fp, LOCK_EX | LOCK_NB)) {
-        echo "Unable to obtain lock for process_event_reminders task.\n";
-        exit(-1);
-    }
-}
-
 require_once __DIR__ . '/../web/bootstrap_cli.php';
 
 $reminders = UbirimiContainer::get()['repository']->get(EventReminder::class)->getRemindersToBeFired();
