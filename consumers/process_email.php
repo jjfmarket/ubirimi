@@ -21,15 +21,6 @@ use Ubirimi\Repository\Email\EmailQueue;
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\SMTPServer;
 
-/* check locking mechanism */
-if (file_exists(__DIR__ . '/process_mail_queue.lock')) {
-    $fp = fopen('process_mail_queue.lock', 'w+');
-    if (!flock($fp, LOCK_EX | LOCK_NB)) {
-        echo "Unable to obtain lock for process_mail_queue task.\n";
-        exit(-1);
-    }
-}
-
 require_once __DIR__ . '/../web/bootstrap_cli.php';
 
 $emails = UbirimiContainer::get()['repository']->get(EmailQueue::class)->getBatch();
