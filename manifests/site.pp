@@ -139,7 +139,7 @@ package { ["subversion"]:
 
 # Set up a new VirtualHost
 
-file { "/var/www":
+file { "/var/www/products":
   ensure  => "link",
   target  => "/vagrant",
   require => Package["apache2"],
@@ -264,7 +264,7 @@ exec { "allow external mysql connections":
 exec { 'run install composer':
   path => "/usr/bin:/usr/sbin:/bin",
   environment => "HOME=/root",
-  command => '/usr/local/bin/composer install --working-dir /var/www',
+  command => '/usr/local/bin/composer install --working-dir /var/www/products',
   timeout => 0,
   require => [Package["apache2"],Exec['install composer']]
 }
