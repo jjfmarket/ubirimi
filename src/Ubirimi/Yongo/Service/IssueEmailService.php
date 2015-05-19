@@ -19,10 +19,8 @@
 
 namespace Ubirimi\Yongo\Service;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\Repository\Email\EmailQueue;
 use Ubirimi\Repository\SMTPServer;
 use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\Service\UbirimiService;
@@ -57,22 +55,21 @@ class IssueEmailService extends UbirimiService
                     continue;
                 }
 
-                $subject = $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue COMMENT " . $issue['project_code'] . '-' . $issue['nr'];
+                $emailContent = UbirimiContainer::get()['template']->render('_newComment.php', array(
+                    'issue' => $issue,
+                    'project' => $project,
+                    'content' => $content,
+                    'user' => $userToNotify));
 
-                $date = Util::getServerCurrentDateTime();
+                $messageData = array(
+                    'from' => $smtpSettings['from_address'],
+                    'to' => $userToNotify['email'],
+                    'clientId' => $clientId,
+                    'subject' => $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue COMMENT " . $issue['project_code'] . '-' . $issue['nr'],
+                    'content' => $emailContent,
+                    'date' => Util::getServerCurrentDateTime());
 
-                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                    $smtpSettings['from_address'],
-                    $userToNotify['email'],
-                    null,
-                    $subject,
-                    Util::getTemplate('_newComment.php',array(
-                            'issue' => $issue,
-                            'project' => $project,
-                            'content' => $content,
-                            'user' => $userToNotify)
-                    ),
-                    $date);
+                UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
             }
         }
     }
@@ -93,22 +90,21 @@ class IssueEmailService extends UbirimiService
                     continue;
                 }
 
-                $subject = $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue COMMENT " . $issue['project_code'] . '-' . $issue['nr'];
+                $emailContent = UbirimiContainer::get()['template']->render('_newComment.php', array(
+                    'issue' => $issue,
+                    'project' => $project,
+                    'content' => $comment,
+                    'user' => $userToNotify));
 
-                $date = Util::getServerCurrentDateTime();
+                $messageData = array(
+                    'from' => $smtpSettings['from_address'],
+                    'to' => $userToNotify['email'],
+                    'clientId' => $clientId,
+                    'subject' => $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue COMMENT " . $issue['project_code'] . '-' . $issue['nr'],
+                    'content' => $emailContent,
+                    'date' => Util::getServerCurrentDateTime());
 
-                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                    $smtpSettings['from_address'],
-                    $userToNotify['email'],
-                    null,
-                    $subject,
-                    Util::getTemplate('_newComment.php',array(
-                            'issue' => $issue,
-                            'project' => $project,
-                            'content' => $comment,
-                            'user' => $userToNotify)
-                    ),
-                    $date);
+                UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
             }
         }
     }
@@ -130,17 +126,20 @@ class IssueEmailService extends UbirimiService
                     $userThatShares['last_name'] . ' shared ' .
                     $issue['project_code'] . '-' . $issue['nr'] . ': ' . substr($issue['summary'], 0, 20) . ' with you';
 
-                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                    $smtpSettings['from_address'],
-                    $user['email'],
-                    null,
-                    $subject,
-                    Util::getTemplate('_issueShare.php', array(
-                            'issue' => $issue,
-                            'userThatShares' => $userThatShares,
-                            'noteContent' => $noteContent)
-                    ),
-                    Util::getServerCurrentDateTime());
+                $emailContent = UbirimiContainer::get()['template']->render('_issueShare.php', array(
+                    'issue' => $issue,
+                    'userThatShares' => $userThatShares,
+                    'noteContent' => $noteContent));
+
+                $messageData = array(
+                    'from' => $smtpSettings['from_address'],
+                    'to' => $user['email'],
+                    'clientId' => $clientId,
+                    'subject' => $subject,
+                    'content' => $emailContent,
+                    'date' => Util::getServerCurrentDateTime());
+
+                UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
             }
         }
     }
@@ -162,20 +161,21 @@ class IssueEmailService extends UbirimiService
                     continue;
                 }
 
-                $subject = $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work Logged " . $issue['project_code'] . '-' . $issue['nr'];
+                $emailContent = UbirimiContainer::get()['template']->render('_workLogged.php', array(
+                    'issue' => $issue,
+                    'project' => $project,
+                    'extraInformation' => $extraInformation,
+                    'user' => $this->session->get('user')));
 
-                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                    $smtpSettings['from_address'],
-                    $userToNotify['email'],
-                    null,
-                    $subject,
-                    Util::getTemplate('_workLogged.php',array(
-                            'issue' => $issue,
-                            'project' => $project,
-                            'extraInformation' => $extraInformation,
-                            'user' => $this->session->get('user'))
-                    ),
-                    Util::getServerCurrentDateTime());
+                $messageData = array(
+                    'from' => $smtpSettings['from_address'],
+                    'to' => $userToNotify['email'],
+                    'clientId' => $clientId,
+                    'subject' => $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work Logged " . $issue['project_code'] . '-' . $issue['nr'],
+                    'content' => $emailContent,
+                    'date' => Util::getServerCurrentDateTime());
+
+                UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
             }
         }
     }
@@ -197,20 +197,21 @@ class IssueEmailService extends UbirimiService
                     continue;
                 }
 
-                $subject = $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Add Attachment " . $issue['project_code'] . '-' . $issue['nr'];
+                $emailContent = UbirimiContainer::get()['template']->render('_addAttachment.php', array(
+                    'issue' => $issue,
+                    'project' => $project,
+                    'extraInformation' => $extraInformation,
+                    'user' => $this->session->get('user')));
 
-                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                    $smtpSettings['from_address'],
-                    $userToNotify['email'],
-                    null,
-                    $subject,
-                    Util::getTemplate('_addAttachment.php',array(
-                            'issue' => $issue,
-                            'project' => $project,
-                            'extraInformation' => $extraInformation,
-                            'user' => $this->session->get('user'))
-                    ),
-                    Util::getServerCurrentDateTime());
+                $messageData = array(
+                    'from' => $smtpSettings['from_address'],
+                    'to' => $userToNotify['email'],
+                    'clientId' => $clientId,
+                    'subject' => $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Add Attachment " . $issue['project_code'] . '-' . $issue['nr'],
+                    'content' => $emailContent,
+                    'date' => Util::getServerCurrentDateTime());
+
+                UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
             }
         }
     }
@@ -232,20 +233,21 @@ class IssueEmailService extends UbirimiService
                     continue;
                 }
 
-                $subject = $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work log Updated " . $issue['project_code'] . '-' . $issue['nr'];
+                $emailContent = UbirimiContainer::get()['template']->render('_workLogUpdated.php', array(
+                    'issue' => $issue,
+                    'project' => $project,
+                    'extraInformation' => $extraInformation,
+                    'user' => $this->session->get('user')));
 
-                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                    $smtpSettings['from_address'],
-                    $userToNotify['email'],
-                    null,
-                    $subject,
-                    Util::getTemplate('_workLogUpdated.php',array(
-                            'issue' => $issue,
-                            'project' => $project,
-                            'extraInformation' => $extraInformation,
-                            'user' => $this->session->get('user'))
-                    ),
-                    Util::getServerCurrentDateTime());
+                $messageData = array(
+                    'from' => $smtpSettings['from_address'],
+                    'to' => $userToNotify['email'],
+                    'clientId' => $clientId,
+                    'subject' => $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work log Updated " . $issue['project_code'] . '-' . $issue['nr'],
+                    'content' => $emailContent,
+                    'date' => Util::getServerCurrentDateTime());
+
+                UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
             }
         }
     }
@@ -267,20 +269,21 @@ class IssueEmailService extends UbirimiService
                     continue;
                 }
 
-                $subject = $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work log Deleted " . $issue['project_code'] . '-' . $issue['nr'];
+                $emailContent = UbirimiContainer::get()['template']->render('_workLogDeleted.php', array(
+                    'issue' => $issue,
+                    'project' => $project,
+                    'extraInformation' => $extraInformation,
+                    'user' => $this->session->get('user')));
 
-                UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                    $smtpSettings['from_address'],
-                    $userToNotify['email'],
-                    null,
-                    $subject,
-                    Util::getTemplate('_workLogDeleted.php',array(
-                            'issue' => $issue,
-                            'project' => $project,
-                            'extraInformation' => $extraInformation,
-                            'user' => $this->session->get('user'))
-                    ),
-                    Util::getServerCurrentDateTime());
+                $messageData = array(
+                    'from' => $smtpSettings['from_address'],
+                    'to' => $userToNotify['email'],
+                    'clientId' => $clientId,
+                    'subject' => $smtpSettings['email_prefix'] . ' ' . "[Issue] - Issue Work log Deleted " . $issue['project_code'] . '-' . $issue['nr'],
+                    'content' => $emailContent,
+                    'date' => Util::getServerCurrentDateTime());
+
+                UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
             }
         }
     }
@@ -350,18 +353,21 @@ class IssueEmailService extends UbirimiService
                 continue;
             }
 
-            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                $clientSmtpSettings['from_address'],
-                $userToNotify['email'],
-                null,
-                $clientSmtpSettings['email_prefix'] . ' ' . "[Issue] - Issue UPDATED " . $issue['project_code'] . '-' . $issue['nr'],
-                Util::getTemplate('_issueUpdated.php', array(
-                        'issue' => $issue,
-                        'project' => $project,
-                        'user' => $loggedInUser,
-                        'fieldChanges' => $fieldChanges)
-                ),
-                Util::getServerCurrentDateTime());
+            $emailContent = UbirimiContainer::get()['template']->render('_issueUpdated.php', array(
+                    'issue' => $issue,
+                    'project' => $project,
+                    'user' => $loggedInUser,
+                    'fieldChanges' => $fieldChanges));
+
+            $messageData = array(
+                'from' => $clientSmtpSettings['from_address'],
+                'to' => $userToNotify['email'],
+                'clientId' => $clientId,
+                'subject' => $clientSmtpSettings['email_prefix'] . ' ' . "[Issue] - Issue UPDATED " . $issue['project_code'] . '-' . $issue['nr'],
+                'content' => $emailContent,
+                'date' => Util::getServerCurrentDateTime());
+
+            UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
         }
     }
 
@@ -384,19 +390,20 @@ class IssueEmailService extends UbirimiService
                 continue;
             }
 
-            $subject = $clientSmtpSettings['email_prefix'] . ' ' .
-                "[Issue] - Issue DELETED " .
-                $issue['project_code'] . '-' .
-                $issue['nr'];
+            $emailContent = UbirimiContainer::get()['template']->render('_deleteIssue.php', array(
+                'issue' => $issue,
+                'loggedInUser' => $loggedInUser,
+                'project' => $project));
 
-            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                $clientSmtpSettings['from_address'],
-                $user['email'],
-                null,
-                $subject,
-                Util::getTemplate('_deleteIssue.php', array('issue' => $issue, 'loggedInUser' => $loggedInUser, 'project' => $project)),
-                Util::getServerCurrentDateTime());
+            $messageData = array(
+                'from' => $clientSmtpSettings['from_address'],
+                'to' => $user['email'],
+                'clientId' => $clientId,
+                'subject' => $clientSmtpSettings['email_prefix'] . ' ' . "[Issue] - Issue DELETED " . $issue['project_code'] . '-' . $issue['nr'],
+                'content' => $emailContent,
+                'date' => Util::getServerCurrentDateTime());
 
+            UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
         }
     }
 
@@ -419,27 +426,23 @@ class IssueEmailService extends UbirimiService
                 continue;
             }
 
-            $subject = $clientSmtpSettings['email_prefix'] . ' ' .
-                "[Issue] - Issue UPDATED " .
-                $issueData['project_code'] . '-' .
-                $issueData['nr'];
+            $emailContent = UbirimiContainer::get()['template']->render('_issueAssign.php', array(
+                    'issue' => $issueData,
+                    'comment' => $comment,
+                    'project' => array('id' => $issueData['issue_project_id'], 'name' => $issueData['project_name']),
+                    'loggedInUser' => $loggedInUser,
+                    'oldUserAssignedName' => $oldUserAssignedName,
+                    'newUserAssignedName' => $newUserAssignedName));
 
-            $date = Util::getServerCurrentDateTime();
+            $messageData = array(
+                'from' => $clientSmtpSettings['from_address'],
+                'to' => $user['email'],
+                'clientId' => $clientId,
+                'subject' => $clientSmtpSettings['email_prefix'] . ' ' . "[Issue] - Issue UPDATED " . $issueData['project_code'] . '-' . $issueData['nr'],
+                'content' => $emailContent,
+                'date' => Util::getServerCurrentDateTime());
 
-            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                $clientSmtpSettings['from_address'],
-                $user['email'],
-                null,
-                $subject,
-                Util::getTemplate('_issueAssign.php', array(
-                        'issue' => $issueData,
-                        'comment' => $comment,
-                        'project' => array('id' => $issueData['issue_project_id'], 'name' => $issueData['project_name']),
-                        'loggedInUser' => $loggedInUser,
-                        'oldUserAssignedName' => $oldUserAssignedName,
-                        'newUserAssignedName' => $newUserAssignedName)
-                ),
-                $date);
+            UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
         }
     }
 }

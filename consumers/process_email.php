@@ -17,35 +17,33 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-use Ubirimi\Repository\Email\EmailQueue;
+use PhpAmqpLib\Connection\AMQPLazyConnection;
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\SMTPServer;
 
 require_once __DIR__ . '/../web/bootstrap_cli.php';
 
-$emails = UbirimiContainer::get()['repository']->get(EmailQueue::class)->getBatch();
+$connection = new AMQPLazyConnection(UbirimiContainer::get()['rmq.host'], UbirimiContainer::get()['rmq.port'], UbirimiContainer::get()['rmq.user'], UbirimiContainer::get()['rmq.pass']);
+$channel = $connection->channel();
+$channel->queue_declare('process_email', false, false, false, false);
 
-while ($emails && $email = $emails->fetch_array(MYSQLI_ASSOC)) {
-    $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($email['client_id']);
-    if (null === $smtpSettings) {
-        echo "No SMTP server defined. Aborting\n";
-    }
+$callback = function($msg) {
+    $messageData = json_decode($msg->body, true);
+    $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($messageData['clientId']);
+    $mailer = UbirimiContainer::get()['email']->getMailer($smtpSettings);
 
-    try {
-        echo 'Process email Id: ' . $email['id'] . "\n";
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->send($smtpSettings, $email);
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->deleteById($email['id']);
-    } catch (Swift_TransportException $e) {
-        echo $e->getMessage() . "\n";
-    } catch (Swift_IoException $e) {
-        echo $e->getMessage() . "\n";
-    } catch (Swift_RfcComplianceException $e) {
-        echo $e->getMessage() . "\n";
-    } catch (\Exception $e) {
-        echo $e->getMessage() . "\n";
-    }
+    $message = Swift_Message::newInstance($messageData['subject'])
+        ->setFrom(array($messageData['from']))
+        ->setTo(array($messageData['to']))
+        ->setBody($messageData['content'], 'text/html');
+
+    @$mailer->send($message);
+};
+
+$channel->basic_consume('process_email', '', false, true, false, false, $callback);
+while(count($channel->callbacks)) {
+    $channel->wait();
 }
 
-if (null !== $fp) {
-    fclose($fp);
-}
+$channel->close();
+$connection->close();
