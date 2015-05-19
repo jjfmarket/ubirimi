@@ -20,8 +20,6 @@
 namespace Ubirimi\Service;
 
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\Repository\Email\Email as EmailRepository;
-use Ubirimi\Repository\Email\EmailQueue;
 use Ubirimi\Repository\SMTPServer;
 use Ubirimi\Util;
 
@@ -48,33 +46,41 @@ class EmailService extends UbirimiService
     public function feedback($userData, $like, $improve, $newFeatures, $experience) {
         $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($userData['client_id']);
 
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($userData['client_id'],
-            $smtpSettings['from_address'],
-            array('domnulnopcea@gmail.com', 'domnuprofesor@gmail.com'),
-            null,
-            'Feedback - Ubirimi.com',
-            Util::getTemplate('_feedback.php',array(
-                'userData' => $userData,
-                'like' => $like,
-                'improve' => $improve,
-                'newFeatures' => $newFeatures,
-                'experience' => $experience
-            )),
-            Util::getServerCurrentDateTime());
+        $emailContent = UbirimiContainer::get()['template']->render('_feedback.php', array(
+            'userData' => $userData,
+            'like' => $like,
+            'improve' => $improve,
+            'newFeatures' => $newFeatures,
+            'experience' => $experience
+        ));
+
+        $messageData = array(
+            'from' => $smtpSettings['from_address'],
+            'to' => 'support@ubirimi.com',
+            'clientId' => $userData['client_id'],
+            'subject' => 'Feedback - Ubirimi.com',
+            'content' => $emailContent,
+            'date' => Util::getServerCurrentDateTime());
+
+        UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
     }
 
     public function passwordRestore($clientId, $address, $password) {
         $smtpSettings = UbirimiContainer::get()['repository']->get(SMTPServer::class)->getByClientId($clientId);
 
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-            $smtpSettings['from_address'],
-            $address,
-            null,
-            'Restore password - Ubirimi.com',
-            Util::getTemplate('_restorePassword.php',array(
-                    'password' => $password
-            )),
-            Util::getServerCurrentDateTime());
+        $emailContent = UbirimiContainer::get()['template']->render('_restorePassword.php', array(
+            'password' => $password
+        ));
+
+        $messageData = array(
+            'from' => $smtpSettings['from_address'],
+            'to' => $address,
+            'clientId' => $clientId,
+            'subject' => 'Restore password - Ubirimi.com',
+            'content' => $emailContent,
+            'date' => Util::getServerCurrentDateTime());
+
+        UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
     }
 
     public function newRegularUser($clientId, $firstName, $lastName, $email, $username, $password, $clientDomain) {
@@ -85,22 +91,22 @@ class EmailService extends UbirimiService
             return;
         }
 
-        $subject = $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - A new account has been created for you';
+        $emailContent = UbirimiContainer::get()['template']->render('_newUser.php', array(
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'username' => $username,
+            'password' => $password,
+            'clientDomain' => $clientDomain));
 
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-            $clientSmtpSettings['from_address'],
-            $email,
-            null,
-            $subject,
-            Util::getTemplate('_newUser.php', array(
-                    'firstName' => $firstName,
-                    'lastName' => $lastName,
-                    'username' => $username,
-                    'password' => $password,
-                    'clientDomain' => $clientDomain)
-            ),
-            Util::getServerCurrentDateTime());
+        $messageData = array(
+            'from' => $clientSmtpSettings['from_address'],
+            'to' => $email,
+            'clientId' => $clientId,
+            'subject' => $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - A new account has been created for you',
+            'content' => $emailContent,
+            'date' => Util::getServerCurrentDateTime());
 
+        UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
     }
 
     public function newHelpDeskUser($clientId, $firstName, $lastName, $email, $password, $clientDomain) {
@@ -111,21 +117,22 @@ class EmailService extends UbirimiService
             return;
         }
 
-        $subject = $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - A new customer account has been created for you';
+        $emailContent = UbirimiContainer::get()['template']->render('_newUser.php', array(
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'email' => $email,
+            'password' => $password,
+            'isCustomer' => true,
+            'clientDomain' => $clientDomain));
 
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-            $clientSmtpSettings['from_address'],
-            $email,
-            null,
-            $subject,
-            Util::getTemplate('_newUser.php', array(
-                    'firstName' => $firstName,
-                    'lastName' => $lastName,
-                    'email' => $email,
-                    'password' => $password,
-                    'isCustomer' => true,
-                    'clientDomain' => $clientDomain)
-            ),
-            Util::getServerCurrentDateTime());
+        $messageData = array(
+            'from' => $clientSmtpSettings['from_address'],
+            'to' => $email,
+            'clientId' => $clientId,
+            'subject' => $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - A new customer account has been created for you',
+            'content' => $emailContent,
+            'date' => Util::getServerCurrentDateTime());
+
+        UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
     }
 }
