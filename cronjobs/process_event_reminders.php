@@ -20,7 +20,6 @@
 use Ubirimi\Calendar\Repository\Reminder\ReminderPeriod;
 use Ubirimi\Calendar\Repository\Reminder\EventReminder;
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\Repository\Email\Email;
 use Ubirimi\Repository\SMTPServer;
 use Ubirimi\Util;
 
@@ -41,7 +40,7 @@ while ($reminders && $reminder = $reminders->fetch_array(MYSQLI_ASSOC)) {
 
         $emailSubject = 'Reminder: ' . $reminder['name'] . ' @ ' . date('j M Y', strtotime($eventStartDate)) . ' (' . $reminder['calendar_name'] . ')';
 
-        $emailBody = Util::getTemplate('_eventReminder.php', array(
+        $emailBody = UbirimiContainer::get()['template']->render('_eventReminder.php', array(
             'event_name' => $reminder['name'],
             'when' => $eventStartDate,
             'calendar_name' => $reminder['calendar_name']));
@@ -70,21 +69,18 @@ while ($reminders && $reminder = $reminders->fetch_array(MYSQLI_ASSOC)) {
         if ($eventStartDateReminder >= $eventStartDate) {
 
             // send the reminder
-            $mailer = UbirimiContainer::get()['email']->getMailer($smtpSettings);
-            $message = Swift_Message::newInstance($emailSubject)
-                ->setFrom(array($smtpSettings['from_address']))
-                ->setTo(array($reminder['email']))
-                ->setBody($emailBody, 'text/html');
+            $messageData = array(
+                'from' => $smtpSettings['from_address'],
+                'to' => $reminder['email'],
+                'clientId' => $reminder['client_id'],
+                'subject' => $emailSubject,
+                'content' => $emailBody,
+                'date' => Util::getServerCurrentDateTime());
 
-            $mailer->send($message);
+            UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
 
             // update the reminder as fired
-
             UbirimiContainer::get()['repository']->get(EventReminder::class)->setAsFired($reminder['id']);
         }
     }
-}
-
-if (null !== $fp) {
-    fclose($fp);
 }

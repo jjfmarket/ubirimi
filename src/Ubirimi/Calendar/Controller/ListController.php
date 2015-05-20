@@ -19,6 +19,7 @@
 
 namespace Ubirimi\Calendar\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Ubirimi\Calendar\Repository\Calendar\UbirimiCalendar;
 use Ubirimi\SystemProduct;
@@ -27,7 +28,7 @@ use Ubirimi\Util;
 
 class ListController extends UbirimiController
 {
-    public function indexAction(SessionInterface $session)
+    public function indexAction(Request $request, SessionInterface $session)
     {
         Util::checkUserIsLoggedInAndRedirect();
 
