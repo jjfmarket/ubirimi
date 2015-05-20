@@ -8,16 +8,16 @@ $session = UbirimiContainer::get()['session'];
     <?php require __DIR__ . '/_header.php'; ?>
 
     <div style="font: 17px Trebuchet MS, sans-serif;white-space: nowrap;padding-bottom: 5px;padding-top: 5px;text-align: left;padding-left: 2px;">
-        <a style="text-decoration: none;" href="<?php echo $session->get('client/base_url') ?>/yongo/issue/<?php echo $this->issue['id'] ?>"><?php echo $this->issue['summary'] ?></a>
+        <a style="text-decoration: none;" href="<?php echo $session->get('client/base_url') ?>/yongo/issue/<?php echo $issue['id'] ?>"><?php echo $issue['summary'] ?></a>
     </div>
     <div style="height: 10px"></div>
 
     <div>This issue has been deleted.</div>
     <div style="height: 10px"></div>
 
-    <div>Deleted by: <a href="<?php echo $session->get('client/base_url') ?>/yongo/user/profile/<?php echo $this->loggedInUser['id'] ?>"><?php echo $this->loggedInUser['first_name'] . ' ' . $this->loggedInUser['last_name'] ?></a></div>
+    <div>Deleted by: <a href="<?php echo $session->get('client/base_url') ?>/yongo/user/profile/<?php echo $loggedInUser['id'] ?>"><?php echo $loggedInUser['first_name'] . ' ' . $loggedInUser['last_name'] ?></a></div>
     <div>
-        Project: <a href="<?php echo $session->get('client/base_url') ?>/yongo/project/<?php echo $this->project['id'] ?>"><?php echo $this->project['name'] ?></a>
+        Project: <a href="<?php echo $session->get('client/base_url') ?>/yongo/project/<?php echo $project['id'] ?>"><?php echo $project['name'] ?></a>
     </div>
 </div>
 
