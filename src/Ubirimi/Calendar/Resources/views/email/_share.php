@@ -8,21 +8,21 @@ $session = UbirimiContainer::get()['session'];
 ?>
 
 <br />
-<?php echo $this->userThatShares['first_name'] . ' ' . $this->userThatShares['last_name'] ?> just shared
+<?php echo $userThatShares['first_name'] . ' ' . $userThatShares['last_name'] ?> just shared
 
 <a style="text-decoration: none;"
-   href="<?php echo $session->get('client/base_url') ?>/calendar/view/<?php echo $this->calendar['id'] ?>/<?php echo $month ?>/<?php echo $year ?>">
-    <?php echo $this->calendar['name'] ?>
+   href="<?php echo $session->get('client/base_url') ?>/calendar/view/<?php echo $calendar['id'] ?>/<?php echo $month ?>/<?php echo $year ?>">
+    <?php echo $calendar['name'] ?>
 </a> with you
 
 <br />
 <br />
 <br />
 
-<div style="background-color: #DDDDDD"><?php echo $this->noteContent ?></div>
+<div style="background-color: #DDDDDD"><?php echo $noteContent ?></div>
 <br />
 <div>
-    <a style="text-decoration: none;" href="<?php echo $session->get('client/base_url') ?>/calendar/view/<?php echo $this->calendar['id'] ?>/<?php echo $month ?>/<?php echo $year ?>">View Calendar</a>
+    <a style="text-decoration: none;" href="<?php echo $session->get('client/base_url') ?>/calendar/view/<?php echo $calendar['id'] ?>/<?php echo $month ?>/<?php echo $year ?>">View Calendar</a>
 </div>
 
 <?php require '_footer.php' ?>
