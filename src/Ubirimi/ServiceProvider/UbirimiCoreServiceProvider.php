@@ -93,6 +93,10 @@ class UbirimiCoreServiceProvider implements ServiceProviderInterface
         });
 
         $pimple['email'] = $pimple->share(function($pimple) {
+            if (php_sapi_name() === "cli") {
+                return new EmailService();
+            }
+
             return new EmailService($pimple['session']);
         });
 
@@ -101,6 +105,10 @@ class UbirimiCoreServiceProvider implements ServiceProviderInterface
         });
 
         $pimple['user'] = $pimple->share(function($pimple) {
+            if (php_sapi_name() === "cli") {
+                return new UserService();
+            }
+
             return new UserService($pimple['session']);
         });
 
@@ -120,6 +128,9 @@ class UbirimiCoreServiceProvider implements ServiceProviderInterface
         }
 
         $pimple['warmup'] = $pimple->share(function($pimple) {
+            if (php_sapi_name() === "cli") {
+                return new WarmUpService();
+            }
             return new WarmUpService($pimple['session']);
         });
 
