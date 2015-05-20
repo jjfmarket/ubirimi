@@ -31,12 +31,10 @@ class ClientService
         try {
             $conn = UbirimiContainer::get()['db.connection'];
 
-            $data = json_decode($pendingClientData['data'], true);
-
             $clientId = UbirimiContainer::get()['repository']->get(UbirimiClient::class)->create(
                 null,
-                $data['baseURL'],
-                $data['adminEmail'],
+                $pendingClientData['baseURL'],
+                $pendingClientData['adminEmail'],
                 null,
                 UbirimiClient::INSTANCE_TYPE_ON_DEMAND,
                 Util::getServerCurrentDateTime()
@@ -44,11 +42,11 @@ class ClientService
 
             // create the user
             $userId = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->createAdministratorUser(
-                $data['adminFirstName'],
-                $data['adminLastName'],
-                $data['adminUsername'],
-                $data['adminPass'],
-                $data['adminEmail'],
+                $pendingClientData['adminFirstName'],
+                $pendingClientData['adminLastName'],
+                $pendingClientData['adminUsername'],
+                $pendingClientData['adminPass'],
+                $pendingClientData['adminEmail'],
                 $clientId,
                 20, 1, 1,
                 Util::getServerCurrentDateTime()
@@ -61,13 +59,13 @@ class ClientService
 
 
             $emailContent = UbirimiContainer::get()['template']->render('_newAccount.php', array(
-                    'username' => $data['adminUsername'],
-                    'companyBaseURL' => $data['baseURL'],
-                    'emailAddress' => $data['adminEmail']));
+                    'username' => $pendingClientData['adminUsername'],
+                    'companyBaseURL' => $pendingClientData['baseURL'],
+                    'emailAddress' => $pendingClientData['adminEmail']));
 
             $messageData = array(
                 'from' => 'accounts@ubirimi.com',
-                'to' => $data['adminEmail'],
+                'to' => $pendingClientData['adminEmail'],
                 'clientId' => $clientId,
                 'subject' => 'Your account details - Ubirimi.com',
                 'content' => $emailContent,
@@ -77,10 +75,8 @@ class ClientService
 
             $conn->commit();
         } catch (\Exception $e) {
-            $conn->rollback();
-
             throw new \Exception(
-                sprintf('Could not install client [%s]. Error [%s]', $data['baseURL'], $e->getMessage())
+                sprintf('Could not install client [%s]. Error [%s]', $pendingClientData['baseURL'], $e->getMessage())
             );
         }
     }
