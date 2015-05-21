@@ -20,6 +20,16 @@ exec { "apt-get update ppa:ondrej/php5":
   require => Exec["add-apt-repository ppa:ondrej/php5"],
 }
 
+exec { "add-apt-repository ppa:ondrej/mysql-5.6":
+  command => "/usr/bin/add-apt-repository ppa:ondrej/mysql-5.6",
+  require => Package["python-software-properties"]
+}
+
+exec { "apt-get update ppa:ondrej/mysql-5.6":
+  command => "/usr/bin/apt-get update",
+  require => Exec["add-apt-repository ppa:ondrej/mysql-5.6"],
+}
+
 exec { "add-apt-repository ppa:ondrej/apache2":
   command => "/usr/bin/add-apt-repository ppa:ondrej/apache2",
   require => Exec["add-apt-repository ppa:ondrej/php5"]
@@ -58,7 +68,7 @@ package { "libapache2-svn":
 # mysql packages
 package {["mysql-server", "mysql-client"]:
   ensure => installed,
-  require => Exec["apt-get update ppa:ondrej/apache2"]
+  require => Exec["apt-get update ppa:ondrej/apache2", "apt-get update ppa:ondrej/mysql-5.6"]
 }
 
 service { "mysql":

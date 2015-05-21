@@ -2,9 +2,6 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
-  config.vm.hostname = "ubirimi.dev"
-
   config.hostmanager.enabled = true
   config.hostmanager.manage_host = true
   config.hostmanager.ignore_private_ip = false
@@ -14,6 +11,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     node.vm.hostname = 'ubirimi.dev'
     node.vm.network :private_network, ip: '192.168.42.42'
     node.hostmanager.aliases = %w(ubirimi.dev)
+  end
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 4096
+    v.cpus = 2
   end
 
   # Distributor ID:	Ubuntu
