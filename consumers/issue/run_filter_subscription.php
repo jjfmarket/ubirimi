@@ -1,7 +1,6 @@
 <?php
 
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\Repository\Email\EmailQueue;
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\Repository\SMTPServer;
 use Ubirimi\Repository\User\UbirimiGroup;
@@ -51,23 +50,22 @@ foreach ($usersToNotify as $user) {
 
     $columns = explode('#', $user['issues_display_columns']);
 
-    UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($user['client_id'],
-        $smtpSettings['from_address'],
-        $user['email'],
-        null,
-        $subject,
-        Util::getTemplate('_filterSubscription.php', array(
-                'issues' => $issues,
-                'searchParameters' => $searchParameters,
-                'clientSettings' => $clientSettings,
-                'columns' => $columns,
-                'userId' => $user['id'],
-                'clientId' => $user['client_id'],
-                'cliMode' => true)
-        ),
-        Util::getServerCurrentDateTime());
-}
+    $emailContent = UbirimiContainer::get()['template']->render('_filterSubscription.php', array(
+        'issues' => $issues,
+        'searchParameters' => $searchParameters,
+        'clientSettings' => $clientSettings,
+        'columns' => $columns,
+        'userId' => $user['id'],
+        'clientId' => $user['client_id'],
+        'cliMode' => true));
 
-if (null !== $fp) {
-    fclose($fp);
+    $messageData = array(
+        'from' => $smtpSettings['from_address'],
+        'to' => $user['email'],
+        'clientId' => $user['client_id'],
+        'subject' => $subject,
+        'content' => $emailContent,
+        'date' => Util::getServerCurrentDateTime());
+
+    UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
 }

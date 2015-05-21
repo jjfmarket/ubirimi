@@ -20,7 +20,6 @@
 namespace Ubirimi\Service;
 
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\Repository\Email\EmailQueue;
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\Repository\User\UbirimiUser;
 use Ubirimi\Util;
@@ -32,12 +31,10 @@ class ClientService
         try {
             $conn = UbirimiContainer::get()['db.connection'];
 
-            $data = json_decode($pendingClientData['data'], true);
-
             $clientId = UbirimiContainer::get()['repository']->get(UbirimiClient::class)->create(
                 null,
-                $data['baseURL'],
-                $data['adminEmail'],
+                $pendingClientData['baseURL'],
+                $pendingClientData['adminEmail'],
                 null,
                 UbirimiClient::INSTANCE_TYPE_ON_DEMAND,
                 Util::getServerCurrentDateTime()
@@ -45,11 +42,11 @@ class ClientService
 
             // create the user
             $userId = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->createAdministratorUser(
-                $data['adminFirstName'],
-                $data['adminLastName'],
-                $data['adminUsername'],
-                $data['adminPass'],
-                $data['adminEmail'],
+                $pendingClientData['adminFirstName'],
+                $pendingClientData['adminLastName'],
+                $pendingClientData['adminUsername'],
+                $pendingClientData['adminPass'],
+                $pendingClientData['adminEmail'],
                 $clientId,
                 20, 1, 1,
                 Util::getServerCurrentDateTime()
@@ -59,25 +56,27 @@ class ClientService
             UbirimiContainer::get()['repository']->get(UbirimiUser::class)->updateDisplayColumns($userId, $columns);
 
             UbirimiContainer::get()['repository']->get(UbirimiClient::class)->install($clientId);
-            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add(
-                $clientId,
-                'accounts@ubirimi.com',
-                $data['adminEmail'],
-                null,
-                'Your account details - Ubirimi.com',
-                Util::getTemplate('_newAccount.php', array(
-                        'username' => $data['adminUsername'],
-                        'companyBaseURL' => $data['baseURL'],
-                        'emailAddress' => $data['adminEmail'])
-                ),
-                Util::getServerCurrentDateTime());
+
+
+            $emailContent = UbirimiContainer::get()['template']->render('_newAccount.php', array(
+                    'username' => $pendingClientData['adminUsername'],
+                    'companyBaseURL' => $pendingClientData['baseURL'],
+                    'emailAddress' => $pendingClientData['adminEmail']));
+
+            $messageData = array(
+                'from' => 'accounts@ubirimi.com',
+                'to' => $pendingClientData['adminEmail'],
+                'clientId' => $clientId,
+                'subject' => 'Your account details - Ubirimi.com',
+                'content' => $emailContent,
+                'date' => Util::getServerCurrentDateTime());
+
+            UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
 
             $conn->commit();
         } catch (\Exception $e) {
-            $conn->rollback();
-
             throw new \Exception(
-                sprintf('Could not install client [%s]. Error [%s]', $data['baseURL'], $e->getMessage())
+                sprintf('Could not install client [%s]. Error [%s]', $pendingClientData['baseURL'], $e->getMessage())
             );
         }
     }

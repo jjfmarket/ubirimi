@@ -20,7 +20,6 @@
 namespace Ubirimi\SvnHosting\Service;
 
 use Ubirimi\Container\UbirimiContainer;
-use Ubirimi\Repository\Email\EmailQueue;
 use Ubirimi\Repository\SMTPServer;
 use Ubirimi\Service\UbirimiService;
 use Ubirimi\Util;
@@ -35,20 +34,25 @@ class EmailService extends UbirimiService
             return;
         }
 
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-            $clientSmtpSettings['from_address'],
-            $user['email'],
-            null,
-            $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - Password change for ' . $repositoryName . ' SVN Repository',
-            Util::getTemplate('_userChangePassword.php', array('first_name' => $user['first_name'],
-                'last_name' => $user['last_name'],
-                'username' => $user['username'],
-                'password' => $password,
-                'repoName' => $repositoryName,
-                'baseURL' => $baseURL,
-                'clientId' => $clientId
-            )),
-            Util::getServerCurrentDateTime());
+        $emailContent = UbirimiContainer::get()['template']->render('_userChangePassword.php', array(
+            'first_name' => $user['first_name'],
+            'last_name' => $user['last_name'],
+            'username' => $user['username'],
+            'password' => $password,
+            'repoName' => $repositoryName,
+            'baseURL' => $baseURL,
+            'clientId' => $clientId
+        ));
+
+        $messageData = array(
+            'from' => $clientSmtpSettings['from_address'],
+            'to' => $user['email'],
+            'clientId' => $clientId,
+            'subject' => $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - Password change for ' . $repositoryName . ' SVN Repository',
+            'content' => $emailContent,
+            'date' => Util::getServerCurrentDateTime());
+
+        UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
     }
 
     public function newUserRepository($clientId, $firstName, $lastName, $username, $password, $email, $repositoryName, $baseURL) {
@@ -59,18 +63,23 @@ class EmailService extends UbirimiService
             return;
         }
 
-        UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-            $clientSmtpSettings['from_address'],
-            $email,
-            null,
-            $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - You have been granted access to ' . $repositoryName . ' SVN Repository',
-            Util::getTemplate('_newRepositoryUser.php',array('first_name' => $firstName,
-                'last_name' => $lastName,
-                'username' => $username,
-                'password' => $password,
-                'repoName' => $repositoryName,
-                'baseURL' => $baseURL,
-                'clientData' => UbirimiContainer::get()['session']->get('client'))),
-            Util::getServerCurrentDateTime());
+        $emailContent = UbirimiContainer::get()['template']->render('_newRepositoryUser.php', array(
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'username' => $username,
+            'password' => $password,
+            'repoName' => $repositoryName,
+            'baseURL' => $baseURL,
+            'clientData' => UbirimiContainer::get()['session']->get('client')));
+
+        $messageData = array(
+            'from' => $clientSmtpSettings['from_address'],
+            'to' => $email,
+            'clientId' => $clientId,
+            'subject' => $clientSmtpSettings['email_prefix'] . ' ' . 'Ubirimi - You have been granted access to ' . $repositoryName . ' SVN Repository',
+            'content' => $emailContent,
+            'date' => Util::getServerCurrentDateTime());
+
+        UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
     }
 }

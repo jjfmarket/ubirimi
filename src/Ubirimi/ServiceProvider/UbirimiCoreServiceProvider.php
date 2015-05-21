@@ -93,6 +93,10 @@ class UbirimiCoreServiceProvider implements ServiceProviderInterface
         });
 
         $pimple['email'] = $pimple->share(function($pimple) {
+            if (php_sapi_name() === "cli") {
+                return new EmailService();
+            }
+
             return new EmailService($pimple['session']);
         });
 
@@ -101,6 +105,10 @@ class UbirimiCoreServiceProvider implements ServiceProviderInterface
         });
 
         $pimple['user'] = $pimple->share(function($pimple) {
+            if (php_sapi_name() === "cli") {
+                return new UserService();
+            }
+
             return new UserService($pimple['session']);
         });
 
@@ -108,16 +116,21 @@ class UbirimiCoreServiceProvider implements ServiceProviderInterface
             return new LoginTimeService();
         });
 
-        $pimple['session'] = $pimple->share(function() {
-            $lastDot = strrpos($_SERVER['SERVER_NAME'], '.');
-            $secondToLastDot = strrpos($_SERVER['SERVER_NAME'], '.', $lastDot - strlen($_SERVER['SERVER_NAME']) - 1);
+        if (php_sapi_name() !== "cli") {
+            $pimple['session'] = $pimple->share(function() {
+                $lastDot = strrpos($_SERVER['SERVER_NAME'], '.');
+                $secondToLastDot = strrpos($_SERVER['SERVER_NAME'], '.', $lastDot - strlen($_SERVER['SERVER_NAME']) - 1);
 
-            $storage = new NativeSessionStorage(array('cookie_domain' => substr($_SERVER['SERVER_NAME'], $secondToLastDot)), new NativeFileSessionHandler());
+                $storage = new NativeSessionStorage(array('cookie_domain' => substr($_SERVER['SERVER_NAME'], $secondToLastDot)), new NativeFileSessionHandler());
 
-            return new Session($storage, new NamespacedAttributeBag(), new AutoExpireFlashBag());
-        });
+                return new Session($storage, new NamespacedAttributeBag(), new AutoExpireFlashBag());
+            });
+        }
 
         $pimple['warmup'] = $pimple->share(function($pimple) {
+            if (php_sapi_name() === "cli") {
+                return new WarmUpService();
+            }
             return new WarmUpService($pimple['session']);
         });
 

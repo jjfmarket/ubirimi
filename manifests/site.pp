@@ -55,11 +55,6 @@ package {"apache2":
   require => [Exec["apt-get update ppa:ondrej/php5"], Exec["apt-get update ppa:ondrej/apache2"]]
 }
 
-service { "apache2":
-  ensure => "running",
-  require => Package["apache2"]
-}
-
 package { "libapache2-svn":
   ensure => present,
   require => [Exec["apt-get update ppa:ondrej/apache2"],Package["apache2"]]
@@ -115,6 +110,12 @@ exec { "/usr/sbin/a2enmod macro" :
   require => Package["apache2"]
 }
 
+service { "apache2":
+  ensure => "running",
+  enable => true,
+  require => Package["apache2"]
+}
+
 package { ["git"]:
   ensure => installed
 }
@@ -134,13 +135,13 @@ exec { '/usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management':
   require => Package['rabbitmq-server'],
 }
 
-package { ["supervisor"]:
-  ensure => installed
+exec { 'restart rabbitmq server':
+  command => '/etc/init.d/rabbitmq-server restart',
+  require => Exec["/usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management"],
 }
 
-exec { '/usr/bin/service supervisor restart':
-  command => '/usr/bin/service supervisor restart',
-  require => Package['supervisor'],
+package { ["supervisor"]:
+  ensure => installed
 }
 
 package { ["subversion"]:
@@ -207,6 +208,75 @@ exec { "Reload apache" :
   refreshonly => true,
 }
 
+# Set up supervisor configuration file
+
+exec { "create consumers log dir" :
+  command => "/bin/mkdir /var/log/consumers",
+  require => Package["supervisor"],
+}
+
+file { "process_email_out":
+  path => "/var/log/consumers/process_email.out.log",
+  replace => true,
+  ensure => 'present',
+  mode => 0644,
+  require => Exec["create consumers log dir"],
+}
+
+file { "process_email_err":
+  path => "/var/log/consumers/process_email.err.log",
+  replace => true,
+  ensure => 'present',
+  mode => 0644,
+  require => File["process_email_out"],
+}
+
+file { "process_install_client_out":
+  path => "/var/log/consumers/process_install_client.out.log",
+  replace => true,
+  ensure => 'present',
+  mode => 0644,
+  require => File["process_email_err"],
+}
+
+file { "process_install_client_err":
+  path => "/var/log/consumers/process_install_client.err.log",
+  replace => true,
+  ensure => 'present',
+  mode => 0644,
+  require => File["process_install_client_out"],
+}
+
+file { "/etc/supervisor/conf.d/process_email.conf":
+  ensure  => "link",
+  target  => "/vagrant/manifests/supervisor/process_email.conf",
+  replace => yes,
+  force   => true,
+  require => File["process_install_client_err"],
+}
+
+file { "/etc/supervisor/conf.d/process_install_client.conf":
+  ensure  => "link",
+  target  => "/vagrant/manifests/supervisor/process_install_client.conf",
+  replace => yes,
+  force   => true,
+  require => File["/etc/supervisor/conf.d/process_email.conf"],
+}
+
+exec { 'supervisor-restart':
+  command => '/usr/bin/service supervisor restart',
+  require => [Package['supervisor'],File['/etc/supervisor/conf.d/process_install_client.conf']]
+}
+
+exec { 'supervisor-reread':
+  command => '/usr/bin/supervisorctl reread',
+  require => Exec['supervisor-restart']
+}
+
+exec { 'supervisor-update':
+  command => '/usr/bin/supervisorctl update',
+  require => Exec['supervisor-reread']
+}
 
 # Setup xdebug
 file { '/etc/php5/mods-available/xdebug.ini':

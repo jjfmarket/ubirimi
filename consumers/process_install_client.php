@@ -19,26 +19,28 @@
 
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\GeneralTaskQueue;
+use PhpAmqpLib\Connection\AMQPLazyConnection;
 
 require_once __DIR__ . '/../web/bootstrap_cli.php';
 
 $conn = UbirimiContainer::get()['db.connection'];
 
-$pendingClients = UbirimiContainer::get()['repository']->get(GeneralTaskQueue::class)->getPendingClients();
+$connection = new AMQPLazyConnection(UbirimiContainer::get()['rmq.host'], UbirimiContainer::get()['rmq.port'], UbirimiContainer::get()['rmq.user'], UbirimiContainer::get()['rmq.pass']);
+$channel = $connection->channel();
+$channel->queue_declare('process_install_client', false, false, false, false);
 
-if (!empty($pendingClients)) {
-    foreach ($pendingClients as $pendingClient) {
-        try {
-            UbirimiContainer::get()['client']->add($pendingClient);
-            UbirimiContainer::get()['repository']->get(GeneralTaskQueue::class)->delete($pendingClient['id']);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-    }
+$callback = function($msg) {
+    $messageData = json_decode($msg->body, true);
+    UbirimiContainer::get()['client']->add($messageData);
+
+    // for backup save it
+    UbirimiContainer::get()['repository']->get(GeneralTaskQueue::class)->savePendingClientData($messageData);
+};
+
+$channel->basic_consume('process_install_client', '', false, true, false, false, $callback);
+while(count($channel->callbacks)) {
+    $channel->wait();
 }
 
-$conn->autocommit(true);
-
-if (null !== $fp) {
-    fclose($fp);
-}
+$channel->close();
+$connection->close();

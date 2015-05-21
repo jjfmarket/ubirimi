@@ -19,12 +19,6 @@
     "autoload": {
         "psr-4": {"": "src/"}
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/domnulnopcea/Savant3.git"
-        }
-    ],
     "require": {
         "symfony/event-dispatcher": "2.5.*",
         "symfony/http-foundation": "2.5.*",
@@ -38,7 +32,6 @@
         "pimple/pimple": "1.1",
         "guzzle/guzzle": "3.7.*",
         "cogpowered/finediff": "0.0.*",
-        "saltybeagle/savant3": "dev-master",
         "sabre/vobject": "3.1.2",
         "swiftmailer/swiftmailer": "5.4.*",
         "tecnick.com/tcpdf": "6.2.*",

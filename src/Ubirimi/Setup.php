@@ -16,6 +16,7 @@ class Setup {
         $configsDatabase = ConfigService::process(__DIR__ . '/../../app/config/db.properties');
         $configsSMTP = ConfigService::process(__DIR__ . '/../../app/config/smtp.properties');
         $configsSubversion = ConfigService::process(__DIR__ . '/../../app/config/subversion.properties');
+        $configsSubversion = ConfigService::process(__DIR__ . '/../../app/config/rabbitmq.properties');
 
         $configs = array_merge($configsApplication, $configsDatabase, $configsSMTP, $configsSubversion);
 

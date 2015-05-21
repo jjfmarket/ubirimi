@@ -6,22 +6,22 @@ require __DIR__ . '/_header.php';
 ?>
 
 <br />
-<?php echo $this->userThatShares['first_name'] . ' ' . $this->userThatShares['last_name'] ?> just shared
+<?php echo $userThatShares['first_name'] . ' ' . $userThatShares['last_name'] ?> just shared
 
 <a style="text-decoration: none;"
-   href="<?php echo $session->get('client/base_url') ?>/yongo/issue/<?php echo $this->issue['id'] ?>">
-        <?php echo $this->issue['project_code'] ?>-<?php echo $this->issue['nr'] ?>
+   href="<?php echo $session->get('client/base_url') ?>/yongo/issue/<?php echo $issue['id'] ?>">
+        <?php echo $issue['project_code'] ?>-<?php echo $issue['nr'] ?>
 </a> with you
 
 <div style="color: #333333;font: 17px Trebuchet MS, sans-serif;white-space: nowrap;padding-bottom: 5px;padding-top: 5px;text-align: left;padding-left: 2px;">
-    <a style="text-decoration: none; " href="<?php echo $session->get('client/base_url') ?>/yongo/issue/<?php echo $this->issue['id'] ?>"><?php echo $this->issue['summary'] ?></a>
+    <a style="text-decoration: none; " href="<?php echo $session->get('client/base_url') ?>/yongo/issue/<?php echo $issue['id'] ?>"><?php echo $issue['summary'] ?></a>
 </div>
 <br />
 
-<div style="background-color: #DDDDDD"><?php echo str_replace("\n", '<br />', $this->noteContent); ?></div>
+<div style="background-color: #DDDDDD"><?php echo str_replace("\n", '<br />', $noteContent); ?></div>
 <br />
 <div>
-    <a style="text-decoration: none;" href="<?php echo $session->get('client/base_url') ?>/yongo/issue/<?php echo $this->issue['id'] ?>">View Issue</a>
+    <a style="text-decoration: none;" href="<?php echo $session->get('client/base_url') ?>/yongo/issue/<?php echo $issue['id'] ?>">View Issue</a>
 </div>
 
 <?php require __DIR__ . '/_footer.php' ?>

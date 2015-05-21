@@ -21,6 +21,7 @@ namespace Ubirimi\Api\Controller\Client;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\GeneralTaskQueue;
 use Ubirimi\UbirimiController;
 
@@ -28,7 +29,7 @@ class SaveController extends UbirimiController
 {
     public function indexAction(Request $request)
     {
-        $this->getRepository(GeneralTaskQueue::class)->savePendingClientData($request->getContent());
+        UbirimiContainer::get()['messageQueue']->send('process_install_client', $request->getContent());
 
         return new Response('');
     }

@@ -15,26 +15,26 @@ $smallFieldsCustomIds = array(Field::CUSTOM_FIELD_TYPE_USER_PICKER_MULTIPLE_USER
 <?php require __DIR__ . '/_header.php'; ?>
 
     <div style="font: 17px Trebuchet MS, sans-serif;white-space: nowrap;padding-bottom: 5px;padding-top: 5px;text-align: left;padding-left: 2px;">
-        <a style="text-decoration: none;" href="<?php echo $session->get('client/base_url') ?>/yongo/issue/<?php echo $this->issue['id'] ?>"><?php echo $this->issue['summary'] ?></a>
+        <a style="text-decoration: none;" href="<?php echo $session->get('client/base_url') ?>/yongo/issue/<?php echo $issue['id'] ?>"><?php echo $issue['summary'] ?></a>
     </div>
     <div style="height: 10px"></div>
 
-    <div>Current Project: <a href="<?php echo $session->get('client/base_url') ?>/yongo/project/<?php echo $this->project['id'] ?>"><?php echo $this->project['name'] ?></a></div>
+    <div>Current Project: <a href="<?php echo $session->get('client/base_url') ?>/yongo/project/<?php echo $project['id'] ?>"><?php echo $project['name'] ?></a></div>
 
-    <?php for ($index = 0; $index < count($this->fieldChanges); $index++): ?>
-        <?php $fieldChanged = ucfirst(str_replace('_', ' ', $this->fieldChanges[$index][0])) ?>
+    <?php for ($index = 0; $index < count($fieldChanges); $index++): ?>
+        <?php $fieldChanged = ucfirst(str_replace('_', ' ', $fieldChanges[$index][0])) ?>
         <div>
-            <?php if ($this->fieldChanges[$index][0] == 'comment'): ?>
-                <span><?php echo ucfirst($fieldChanged) . ': ' . str_replace("\n", '<br />', $this->fieldChanges[$index][1]) ?></span>
-            <?php elseif (in_array($this->fieldChanges[$index][0], $smallFields) || (isset($this->fieldChanges[$index][5]) && in_array($this->fieldChanges[$index][5], $smallFieldsCustomIds))): ?>
-                <?php echo ucfirst($fieldChanged) . ': ' ?><span style="text-decoration: line-through; background-color: #F78181;"><?php echo $this->fieldChanges[$index][1] ?></span> <span style="background-color: #BCF5A9;"><?php echo $this->fieldChanges[$index][2] ?></span>
+            <?php if ($fieldChanges[$index][0] == 'comment'): ?>
+                <span><?php echo ucfirst($fieldChanged) . ': ' . str_replace("\n", '<br />', $fieldChanges[$index][1]) ?></span>
+            <?php elseif (in_array($fieldChanges[$index][0], $smallFields) || (isset($fieldChanges[$index][5]) && in_array($fieldChanges[$index][5], $smallFieldsCustomIds))): ?>
+                <?php echo ucfirst($fieldChanged) . ': ' ?><span style="text-decoration: line-through; background-color: #F78181;"><?php echo $fieldChanges[$index][1] ?></span> <span style="background-color: #BCF5A9;"><?php echo $fieldChanges[$index][2] ?></span>
             <?php else: ?>
                 <?php
                     $granularity = new cogpowered\FineDiff\Granularity\Word();
                     $diff = new cogpowered\FineDiff\Diff($granularity);
 
-                    $fromText = $this->fieldChanges[$index][1];
-                    $toText = $this->fieldChanges[$index][2];
+                    $fromText = $fieldChanges[$index][1];
+                    $toText = $fieldChanges[$index][2];
                     $opCodes = $diff->getOpcodes($fromText, $toText);
 
                     $render = new cogpowered\FineDiff\Render\Html;
@@ -47,7 +47,7 @@ $smallFieldsCustomIds = array(Field::CUSTOM_FIELD_TYPE_USER_PICKER_MULTIPLE_USER
             <?php endif ?>
         </div>
     <?php endfor ?>
-    <div>Changed by: <a href="<?php echo $session->get('client/base_url') ?>/yongo/user/profile/<?php echo $this->user['id'] ?>"><?php echo $this->user['first_name'] . ' ' . $this->user['last_name'] ?></a></div>
+    <div>Changed by: <a href="<?php echo $session->get('client/base_url') ?>/yongo/user/profile/<?php echo $user['id'] ?>"><?php echo $user['first_name'] . ' ' . $user['last_name'] ?></a></div>
 </div>
 
 <?php require __DIR__ . '/_footer.php' ?>

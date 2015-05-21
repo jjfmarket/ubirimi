@@ -40,20 +40,23 @@ class EmailService extends UbirimiService
         $usersToShareWithCount = count($usersToShareWith);
         for ($i = 0; $i < $usersToShareWithCount; $i++) {
             $user = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getById($usersToShareWith[$i]);
-            $subject = $clientSmtpSettings['email_prefix'] . ' ' .
-            $userThatShares['first_name'] . ' ' .
-            $userThatShares['last_name'] . ' shared calendar ' .
-            $calendar['name'] . ' with you';
 
-            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($calendar['client_id'],
-                $clientSmtpSettings['from_address'],
-                $user['email'],
-                null,
-                $subject,
-                Util::getTemplate('_share.php', array('calendar' => $calendar,
-                                                      'userThatShares' => $userThatShares,
-                                                      'noteContent' => $noteContent)),
-                Util::getServerCurrentDateTime());
+            $subject = $clientSmtpSettings['email_prefix'] . ' ' . $userThatShares['first_name'] . ' ' . $userThatShares['last_name'] . ' shared calendar ' . $calendar['name'] . ' with you';
+
+            $emailContent = UbirimiContainer::get()['template']->render('_share.php', array(
+                'calendar' => $calendar,
+                'userThatShares' => $userThatShares,
+                'noteContent' => $noteContent));
+
+            $messageData = array(
+                'from' => $clientSmtpSettings['from_address'],
+                'to' => $user['email'],
+                'clientId' => $calendar['client_id'],
+                'subject' => $subject,
+                'content' => $emailContent,
+                'date' => Util::getServerCurrentDateTime());
+
+            UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
         }
 
     }
@@ -69,21 +72,23 @@ class EmailService extends UbirimiService
         $usersToShareWithCount = count($usersToShareWith);
         for ($i = 0; $i < $usersToShareWithCount; $i++) {
             $user = UbirimiContainer::get()['repository']->get(UbirimiUser::class)->getById($usersToShareWith[$i]);
-            $subject = $clientSmtpSettings['email_prefix'] . ' ' .
-            $userThatShares['first_name'] . ' ' .
-            $userThatShares['last_name'] . ' shared event ' .
-            $event['name'] . ' with you';
 
-            UbirimiContainer::get()['repository']->get(EmailQueue::class)->add($clientId,
-                $clientSmtpSettings['from_address'],
-                $user['email'],
-                null,
-                $subject,
-                Util::getTemplate('_eventShare.php', array('event' => $event,
-                                                           'userThatShares' => $userThatShares,
-                                                           'noteContent' => $noteContent)),
-                Util::getServerCurrentDateTime());
+            $subject = $clientSmtpSettings['email_prefix'] . ' ' . $userThatShares['first_name'] . ' ' . $userThatShares['last_name'] . ' shared event ' . $event['name'] . ' with you';
 
+            $emailContent = UbirimiContainer::get()['template']->render('_eventShare.php', array(
+                'event' => $event,
+                'userThatShares' => $userThatShares,
+                'noteContent' => $noteContent));
+
+            $messageData = array(
+                'from' => $clientSmtpSettings['from_address'],
+                'to' => $user['email'],
+                'clientId' => $clientId,
+                'subject' => $subject,
+                'content' => $emailContent,
+                'date' => Util::getServerCurrentDateTime());
+
+            UbirimiContainer::get()['messageQueue']->send('process_email', json_encode($messageData));
         }
     }
 }

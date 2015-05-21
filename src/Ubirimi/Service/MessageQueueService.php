@@ -31,7 +31,7 @@ class MessageQueueService
         $channel = $connection->channel();
         $channel->queue_declare($queueName, false, false, false, false);
 
-        $message = new AMQPMessage($messageBody);
+        $message = new AMQPMessage($messageBody, array('delivery_mode' => 2));
         $channel->basic_publish($message, '', $queueName);
     }
 }

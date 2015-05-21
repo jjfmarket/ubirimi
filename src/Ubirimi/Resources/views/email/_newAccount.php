@@ -8,7 +8,7 @@
     <br />
     You can use Ubirimi product suite at:
     <br />
-    <a href="<?php echo $this->companyBaseURL ?>"><?php echo $this->companyBaseURL ?></a>
+    <a href="<?php echo $companyBaseURL ?>"><?php echo $companyBaseURL ?></a>
     <br /><br />
 
     You can manage your Ubirimi account at:
@@ -19,14 +19,14 @@
 
     The credentials are:
     <br /><br />
-    Username: <?php echo $this->username ?>
+    Username: <?php echo $username ?>
     <br />
     Password: provided during the sign up process.
     <br /><br /><br />
 
     For reference, the email address provided during sign up is:
     <br />
-    <?php echo $this->emailAddress ?>
+    <?php echo $emailAddress ?>
     <br /><br />
     Thank you for your interest in Ubirimi and our products.
 </div>
