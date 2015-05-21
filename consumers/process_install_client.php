@@ -23,8 +23,6 @@ use PhpAmqpLib\Connection\AMQPLazyConnection;
 
 require_once __DIR__ . '/../web/bootstrap_cli.php';
 
-$conn = UbirimiContainer::get()['db.connection'];
-
 $connection = new AMQPLazyConnection(UbirimiContainer::get()['rmq.host'], UbirimiContainer::get()['rmq.port'], UbirimiContainer::get()['rmq.user'], UbirimiContainer::get()['rmq.pass']);
 $channel = $connection->channel();
 $channel->queue_declare('process_install_client', false, false, false, false);

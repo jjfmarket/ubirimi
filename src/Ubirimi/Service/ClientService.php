@@ -57,7 +57,6 @@ class ClientService
 
             UbirimiContainer::get()['repository']->get(UbirimiClient::class)->install($clientId);
 
-
             $emailContent = UbirimiContainer::get()['template']->render('_newAccount.php', array(
                     'username' => $pendingClientData['adminUsername'],
                     'companyBaseURL' => $pendingClientData['baseURL'],

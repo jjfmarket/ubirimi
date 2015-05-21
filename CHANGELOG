@@ -1,3 +1,10 @@
+v 2.22
+  - add rabbitmq for processing emails
+  - add rabbitmq for processing the instalation of the clients
+  - get rid of savand template engine, use symfony component instead
+  - configure dev box with vagrant and puppet to have
+  - new API for searching issues
+
 v 2.21
   - add a favicon
   - remove unused imports
