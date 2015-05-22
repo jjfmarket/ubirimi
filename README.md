@@ -100,6 +100,7 @@ You can log in into the dev vm by executing "vagrant ssh ubirimi". Once inside d
 `composer setup`
 
 In the setup procedure when asked for the URL enter http://ubirimi.dev
+
 Sometimes it is needed to restart the apache web server. Do this by executing: 
 `/etc/init.d/apache2 restart`
 
