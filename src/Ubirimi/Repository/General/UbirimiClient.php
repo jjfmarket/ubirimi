@@ -1854,28 +1854,6 @@ class UbirimiClient
         UbirimiContainer::get()['repository']->get(Notebook::class)->save($userData['id'], 'Default Notebook', 'My default notebook', 1, $clientCreatedDate);
     }
 
-    public function getCurrentMonthAndDayPayingCustomers() {
-        $query = "SELECT client.base_url,
-                         client.contact_email,
-                         client.id,
-                         general_invoice.number as invoice_number,
-                         general_invoice.amount as invoice_amount
-                    FROM client
-                    left join general_invoice on general_invoice.client_id = client.id
-                    WHERE general_invoice.client_id is not null
-                    and DAY(general_invoice.date_created) = DAY(NOW())
-                    and MONTH(general_invoice.date_created) = MONTH(NOW())
-                    AND YEAR(general_invoice.date_created) = YEAR(NOW())";
-
-        $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows)
-            return $result;
-        else
-            return null;
-    }
-
     public function getCountryById($countryId) {
         $query = 'SELECT * ' .
             'FROM sys_country ' .
