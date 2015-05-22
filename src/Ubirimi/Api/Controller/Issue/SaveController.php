@@ -25,7 +25,6 @@ use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Repository\General\UbirimiClient;
 use Ubirimi\UbirimiController;
 
-
 class PostController extends UbirimiController
 {
     public function indexAction(Request $request)

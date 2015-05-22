@@ -5,10 +5,24 @@ apiIssueGET:
   requirements:
     id:  \d+
 
-apiIssuePOST:
+apiIssueSave:
   path: /api/issue
-  defaults: { _controller: '\Ubirimi\Api\Controller\Issue\PostController' }
+  defaults: { _controller: '\Ubirimi\Api\Controller\Issue\SaveController' }
   methods:  [POST]
+
+apiIssueUpdate:
+  path: /api/issue/{id}
+  defaults: { _controller: '\Ubirimi\Api\Controller\Issue\UpdateController' }
+  methods:  [POST]
+  requirements:
+    id:  \d+
+
+apiIssueWorklog:
+  path: /api/issue/{id}/worklog
+  defaults: { _controller: '\Ubirimi\Api\Controller\Issue\WorklogController' }
+  methods:  [POST]
+  requirements:
+    id:  \d+
 
 apiIssueSearch:
   path: /api/issue/search
@@ -71,3 +85,4 @@ apiSharedGetCountries:
   path: /api/shared/countries
   defaults: { _controller: '\Ubirimi\Api\Controller\Shared\GetCountriesController' }
   methods:  [GET]
+

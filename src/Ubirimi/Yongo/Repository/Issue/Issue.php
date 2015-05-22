@@ -737,11 +737,19 @@ class Issue
         }
     }
 
-    public function updateField($issueId, $field_type, $newValue) {
-        $query = 'update yongo_issue SET ' . $field_type . ' = ? where id = ? limit 1';
+    public function updateField($issueId, $fieldName, $newValue) {
+        $query = 'update yongo_issue SET ' . $fieldName . ' = ? where id = ? limit 1';
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $stmt->bind_param("ii", $newValue, $issueId);
+        $stmt->execute();
+    }
+
+    public function updateStringField($issueId, $fieldName, $newValue) {
+        $query = 'update yongo_issue SET ' . $fieldName . ' = ? where id = ? limit 1';
+
+        $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
+        $stmt->bind_param("si", $newValue, $issueId);
         $stmt->execute();
     }
 
