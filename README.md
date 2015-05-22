@@ -93,13 +93,16 @@ Inside then newly created project, from the terminal run the following commands:
 
 `vagrant ssh`
 
-Once inside the Guest server  
+You can log in into the dev vm by executing "vagrant ssh ubirimi". Once inside do: 
 
 `cd /var/www`
 
 `composer setup`
 
 In the setup procedure when asked for the URL enter http://ubirimi.dev
+
+Sometimes it is needed to restart the apache web server. Do this by executing: 
+`/etc/init.d/apache2 restart`
 
 You will be all set with a working project.
 
