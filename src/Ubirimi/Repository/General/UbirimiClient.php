@@ -1665,7 +1665,7 @@ class UbirimiClient
         $clientRepository->addProduct($clientId, SystemProduct::SYS_PRODUCT_QUICK_NOTES, $clientCreatedDate);
 
         $clientRepository->installYongoProduct($clientId, $userId, $clientCreatedDate);
-die('jj');
+
         $clientRepository->installDocumentadorProduct($clientId, $userId, $clientCreatedDate);
         $clientRepository->installCalendarProduct($clientId, $userId, $clientCreatedDate);
         $clientRepository->installQuickNotesProduct($clientId, $userId, $clientCreatedDate);
