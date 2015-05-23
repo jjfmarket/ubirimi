@@ -1337,38 +1337,38 @@ class UbirimiClient
         $fieldConfigurationRepository->addCompleteData($fieldConfigurationId, $field['id'], 1, 0, '');
     }
 
-    public function addDefaultDocumentadorGlobalPermissionData($clientId) {
+    public function addDefaultDocumentadorGlobalPermissionData($clientId, $date) {
         $groupAdministrators = UbirimiContainer::get()['repository']->get(UbirimiGroup::class)->getByName($clientId, 'Documentador Administrators');
         $groupUsers = UbirimiContainer::get()['repository']->get(UbirimiGroup::class)->getByName($clientId, 'Documentador Users');
 
         $groupAdministratorsId = $groupAdministrators['id'];
         $groupUsersId = $groupUsers['id'];
 
-        $query = "INSERT INTO yongo_permission_global_data(client_id, sys_permission_global_id, group_id) VALUES (?, ?, ?)";
+        $query = "INSERT INTO yongo_permission_global_data(client_id, sys_permission_global_id, group_id, date_created) VALUES (?, ?, ?, ?)";
 
         // for Administrators group
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $permissionId = GlobalPermission::GLOBAL_PERMISSION_DOCUMENTADOR_CREATE_SPACE;
-        $stmt->bind_param("iii", $clientId, $permissionId, $groupAdministratorsId);
+        $stmt->bind_param("iiis", $clientId, $permissionId, $groupAdministratorsId, $date);
 
         $stmt->execute();
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $permissionId = GlobalPermission::GLOBAL_PERMISSION_DOCUMENTADOR_ADMINISTRATOR;
-        $stmt->bind_param("iii", $clientId, $permissionId, $groupAdministratorsId);
+        $stmt->bind_param("iiis", $clientId, $permissionId, $groupAdministratorsId, $date);
 
         $stmt->execute();
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $permissionId = GlobalPermission::GLOBAL_PERMISSION_DOCUMENTADOR_SYSTEM_ADMINISTRATOR;
-        $stmt->bind_param("iii", $clientId, $permissionId, $groupAdministratorsId);
+        $stmt->bind_param("iiis", $clientId, $permissionId, $groupAdministratorsId, $date);
 
         $stmt->execute();
 
         // for Users group
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $permissionId = GlobalPermission::GLOBAL_PERMISSION_DOCUMENTADOR_CREATE_SPACE;
-        $stmt->bind_param("iii", $clientId, $permissionId, $groupUsers);
+        $stmt->bind_param("iiis", $clientId, $permissionId, $groupUsers, $date);
 
         $stmt->execute();
     }
@@ -1837,7 +1837,7 @@ class UbirimiClient
         UbirimiContainer::get()['repository']->get(UbirimiGroup::class)->addData($groupUsers['id'], array($userId), $clientCreatedDate);
 
         UbirimiContainer::get()['repository']->get(UbirimiClient::class)->addDefaultDocumentadorSettings($clientId);
-        UbirimiContainer::get()['repository']->get(UbirimiClient::class)->addDefaultDocumentadorGlobalPermissionData($clientId);
+        UbirimiContainer::get()['repository']->get(UbirimiClient::class)->addDefaultDocumentadorGlobalPermissionData($clientId, $clientCreatedDate);
     }
 
     public function installCalendarProduct($clientId, $userId, $clientCreatedDate) {
