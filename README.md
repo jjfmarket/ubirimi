@@ -89,6 +89,12 @@ Inside then newly created project, from the terminal run the following commands:
 
 `vagrant plugin install vagrant-hostmanager`
 
+If you have problems installing the plugin try running
+
+`sudo apt-get install git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev`
+
+then run
+ 
 `vagrant up`
 
 `vagrant ssh`
