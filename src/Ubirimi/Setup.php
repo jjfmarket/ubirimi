@@ -2,10 +2,10 @@
 
 namespace Ubirimi;
 
-use Composer\Script\Event;
 use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\Service\ConfigService;
 use Ubirimi\ServiceProvider\UbirimiCoreServiceProvider;
+use Composer\Script\Event;
 
 class Setup {
 
@@ -33,14 +33,14 @@ class Setup {
         $adminEmail = $io->ask("Administrator Password (again): ");
         $baseURL = "http://ubirimi.dev";
 
-        $clientData = array('data' => json_encode(array(
+        $clientData = array(
             'adminFirstName' => $adminFirstName,
             'adminLastName' => $adminLastName,
             'adminUsername' => $adminUsername,
             'adminPass' => $adminPassword,
             'adminEmail' => $adminEmail,
             'baseURL' => $baseURL
-        )));
+        );
 
         UbirimiContainer::get()['client']->add($clientData);
 

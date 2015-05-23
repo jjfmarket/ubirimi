@@ -558,11 +558,11 @@ class Workflow
             return null;
     }
 
-    public function createDefaultStep($workflowId, $linkedIssueStatusId, $stepName, $initialStepFlag) {
-        $query = "INSERT INTO yongo_workflow_step(workflow_id, linked_issue_status_id, name, initial_step_flag) VALUES (?, ?, ?, ?)";
+    public function createDefaultStep($workflowId, $linkedIssueStatusId, $stepName, $initialStepFlag, $date) {
+        $query = "INSERT INTO yongo_workflow_step(workflow_id, linked_issue_status_id, name, initial_step_flag, date_created) VALUES (?, ?, ?, ?, ?)";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
-        $stmt->bind_param("iiss", $workflowId, $linkedIssueStatusId, $stepName, $initialStepFlag);
+        $stmt->bind_param("iisss", $workflowId, $linkedIssueStatusId, $stepName, $initialStepFlag, $date);
         $stmt->execute();
 
         return UbirimiContainer::get()['db.connection']->insert_id;

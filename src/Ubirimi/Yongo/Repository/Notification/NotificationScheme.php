@@ -252,7 +252,7 @@ class NotificationScheme
         $stmt->execute();
     }
 
-    public function addDefaultNotifications($clientId, $notificationSchemeId) {
+    public function addDefaultNotifications($clientId, $notificationSchemeId, $date) {
         $eventCreatedId = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getByClientIdAndCode($clientId, IssueEvent::EVENT_ISSUE_CREATED_CODE, 'id');
 
         $eventUpdatedId = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getByClientIdAndCode($clientId, IssueEvent::EVENT_ISSUE_UPDATED_CODE, 'id');
@@ -277,63 +277,63 @@ class NotificationScheme
 
         $eventGenericId = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getByClientIdAndCode($clientId, IssueEvent::EVENT_GENERIC_CODE, 'id');
 
-        $query = "INSERT INTO yongo_notification_scheme_data(notification_scheme_id, event_id, reporter) VALUES " .
-            "(" . $notificationSchemeId. "," . $eventCreatedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventUpdatedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventAssignedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventResolvedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventClosedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventCommentedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventCommentEditedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventReopenedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventDeletedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkStartedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventGenericId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventMovedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkLoggedOnIssueId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkLogUpdatedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkLogDeletedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkStoppedId . ', 1)';
+        $query = "INSERT INTO yongo_notification_scheme_data(notification_scheme_id, event_id, reporter, date_created) VALUES " .
+            "(" . $notificationSchemeId . "," . $eventCreatedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventUpdatedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventAssignedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventResolvedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventClosedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventCommentedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventCommentEditedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventReopenedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventDeletedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkStartedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventGenericId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventMovedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkLoggedOnIssueId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkLogUpdatedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkLogDeletedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkStoppedId . ", 1, '" . $date . "')";
 
         UbirimiContainer::get()['db.connection']->query($query);
 
-        $query = "INSERT INTO yongo_notification_scheme_data(notification_scheme_id, event_id, current_assignee) VALUES " .
-            "(" . $notificationSchemeId. "," . $eventCreatedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventUpdatedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventAssignedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventResolvedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventClosedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventCommentedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventCommentEditedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventReopenedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventDeletedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkStartedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventGenericId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventMovedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkLoggedOnIssueId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkLogUpdatedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkLogDeletedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkStoppedId . ', 1)';
+        $query = "INSERT INTO yongo_notification_scheme_data(notification_scheme_id, event_id, current_assignee, date_created) VALUES " .
+            "(" . $notificationSchemeId . "," . $eventCreatedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventUpdatedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventAssignedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventResolvedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventClosedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventCommentedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventCommentEditedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventReopenedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventDeletedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkStartedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventGenericId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventMovedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkLoggedOnIssueId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkLogUpdatedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkLogDeletedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkStoppedId . ", 1, '" . $date . "')";
 
         UbirimiContainer::get()['db.connection']->query($query);
 
-        $query = "INSERT INTO yongo_notification_scheme_data(notification_scheme_id, event_id, all_watchers) VALUES " .
-            "(" . $notificationSchemeId. "," . $eventCreatedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventUpdatedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventAssignedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventResolvedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventClosedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventCommentedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventCommentEditedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventReopenedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventDeletedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkStartedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventGenericId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventMovedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkLoggedOnIssueId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkLogUpdatedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkLogDeletedId . ', 1),' .
-            "(" . $notificationSchemeId. "," . $eventWorkStoppedId . ', 1)';
+        $query = "INSERT INTO yongo_notification_scheme_data(notification_scheme_id, event_id, all_watchers, date_created) VALUES " .
+            "(" . $notificationSchemeId . "," . $eventCreatedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventUpdatedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventAssignedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventResolvedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventClosedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventCommentedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventCommentEditedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventReopenedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventDeletedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkStartedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventGenericId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventMovedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkLoggedOnIssueId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkLogUpdatedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkLogDeletedId . ", 1, '" . $date . "')," .
+            "(" . $notificationSchemeId . "," . $eventWorkStoppedId . ", 1, '" . $date . "')";
 
         UbirimiContainer::get()['db.connection']->query($query);
     }

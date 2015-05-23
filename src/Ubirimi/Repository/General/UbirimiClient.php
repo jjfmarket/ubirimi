@@ -780,28 +780,29 @@ class UbirimiClient
 
         $screenWorkflowData = UbirimiContainer::get()['repository']->get(Screen::class)->getByName($clientId, 'Workflow Screen');
         $screenWorkflowId = $screenWorkflowData['id'];
-        $createStepId = $workflowRepository->createDefaultStep($workflowId, null, 'Create Issue', 1);
+
+        $createStepId = $workflowRepository->createDefaultStep($workflowId, null, 'Create Issue', 1, $currentDate);
 
         $statusOpenIdData = $issueSettingsRepository->getByName($clientId, 'status', 'Open');
         $statusOpenId = $statusOpenIdData['id'];
-        $openStepId = $workflowRepository->createDefaultStep($workflowId, $statusOpenId, 'Open', 0);
+        $openStepId = $workflowRepository->createDefaultStep($workflowId, $statusOpenId, 'Open', 0, $currentDate);
 
         $statusInProgressIdData = $issueSettingsRepository->getByName($clientId, 'status', 'In Progress');
         $statusInProgressId = $statusInProgressIdData['id'];
 
-        $inProgressStepId = $workflowRepository->createDefaultStep($workflowId, $statusInProgressId, 'In Progress', 0);
+        $inProgressStepId = $workflowRepository->createDefaultStep($workflowId, $statusInProgressId, 'In Progress', 0, $currentDate);
 
         $statusClosedIdData = $issueSettingsRepository->getByName($clientId, 'status', 'Closed');
         $statusClosedId = $statusClosedIdData['id'];
-        $closedStepId = $workflowRepository->createDefaultStep($workflowId, $statusClosedId, 'Closed', 0);
+        $closedStepId = $workflowRepository->createDefaultStep($workflowId, $statusClosedId, 'Closed', 0, $currentDate);
 
         $statusResolvedIdData = $issueSettingsRepository->getByName($clientId, 'status', 'Resolved');
         $statusResolvedId = $statusResolvedIdData['id'];
-        $resolvedStepId = $workflowRepository->createDefaultStep($workflowId, $statusResolvedId, 'Resolved', 0);
+        $resolvedStepId = $workflowRepository->createDefaultStep($workflowId, $statusResolvedId, 'Resolved', 0, $currentDate);
 
         $statusReopenedIdData = $issueSettingsRepository->getByName($clientId, 'status', 'Reopened');
         $statusReopenedId = $statusReopenedIdData['id'];
-        $reopenedStepId = $workflowRepository->createDefaultStep($workflowId, $statusReopenedId, 'Reopened', 0);
+        $reopenedStepId = $workflowRepository->createDefaultStep($workflowId, $statusReopenedId, 'Reopened', 0, $currentDate);
 
         $eventIssueWorkStoppedId = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getByClientIdAndCode($clientId, IssueEvent::EVENT_ISSUE_WORK_STOPPED_CODE, 'id');
         $eventIssueCreatedId = UbirimiContainer::get()['repository']->get(IssueEvent::class)->getByClientIdAndCode($clientId, IssueEvent::EVENT_ISSUE_CREATED_CODE, 'id');
@@ -1372,30 +1373,30 @@ class UbirimiClient
         $stmt->execute();
     }
 
-    public function addYongoGlobalPermissionData($clientId, $groupAdministrators, $groupUsers) {
-        $query = "INSERT INTO yongo_permission_global_data(client_id, sys_permission_global_id, group_id) VALUES (?, ?, ?)";
+    public function addYongoGlobalPermissionData($clientId, $groupAdministrators, $groupUsers, $date) {
+        $query = "INSERT INTO yongo_permission_global_data(client_id, sys_permission_global_id, group_id, date_created) VALUES (?, ?, ?, ?)";
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $Id = GlobalPermission::GLOBAL_PERMISSION_YONGO_SYSTEM_ADMINISTRATORS;
-        $stmt->bind_param("iii", $clientId, $Id, $groupAdministrators['id']);
+        $stmt->bind_param("iiis", $clientId, $Id, $groupAdministrators['id'], $date);
 
         $stmt->execute();
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $Id = GlobalPermission::GLOBAL_PERMISSION_YONGO_ADMINISTRATORS;
-        $stmt->bind_param("iii", $clientId, $Id, $groupAdministrators['id']);
+        $stmt->bind_param("iiis", $clientId, $Id, $groupAdministrators['id'], $date);
 
         $stmt->execute();
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $Id = GlobalPermission::GLOBAL_PERMISSION_YONGO_USERS;
-        $stmt->bind_param("iii", $clientId, $Id, $groupUsers['id']);
+        $stmt->bind_param("iiis", $clientId, $Id, $groupUsers['id'], $date);
 
         $stmt->execute();
 
         $stmt = UbirimiContainer::get()['db.connection']->prepare($query);
         $Id = GlobalPermission::GLOBAL_PERMISSION_YONGO_BULK_CHANGE;
-        $stmt->bind_param("iii", $clientId, $Id, $groupUsers['id']);
+        $stmt->bind_param("iiis", $clientId, $Id, $groupUsers['id'], $date);
 
         $stmt->execute();
     }
@@ -1506,6 +1507,7 @@ class UbirimiClient
 
         // create default workflow
         $workflowId = $clientRepository->createDefaultWorkflow($clientId, $workflowIssueTypeSchemeId, $clientCreatedDate);
+
         $clientRepository->createDefaultWorkflowData($clientId, $workflowId, $clientCreatedDate);
 
         // create default workflow scheme
@@ -1560,10 +1562,10 @@ class UbirimiClient
 
         // create default notification scheme
         $notificationSchemeId = $clientRepository->createDefaultNotificationScheme($clientId, $clientCreatedDate);
-        UbirimiContainer::get()['repository']->get(NotificationScheme::class)->addDefaultNotifications($clientId, $notificationSchemeId);
+        UbirimiContainer::get()['repository']->get(NotificationScheme::class)->addDefaultNotifications($clientId, $notificationSchemeId, $clientCreatedDate);
 
         // add global permission
-        $clientRepository->addYongoGlobalPermissionData($clientId, $groupAdministrators, $groupUsers);
+        $clientRepository->addYongoGlobalPermissionData($clientId, $groupAdministrators, $groupUsers, $clientCreatedDate);
     }
 
     public function toggleIssueLinkingFeature($clientId) {
@@ -1656,12 +1658,14 @@ class UbirimiClient
         $clientRepository->addProduct($clientId, SystemProduct::SYS_PRODUCT_YONGO, $clientCreatedDate);
         $clientRepository->addProduct($clientId, SystemProduct::SYS_PRODUCT_AGILE, $clientCreatedDate);
         $clientRepository->addProduct($clientId, SystemProduct::SYS_PRODUCT_SVN_HOSTING, $clientCreatedDate);
+
         $clientRepository->addProduct($clientId, SystemProduct::SYS_PRODUCT_DOCUMENTADOR, $clientCreatedDate);
         $clientRepository->addProduct($clientId, SystemProduct::SYS_PRODUCT_CALENDAR, $clientCreatedDate);
         $clientRepository->addProduct($clientId, SystemProduct::SYS_PRODUCT_HELP_DESK, $clientCreatedDate);
         $clientRepository->addProduct($clientId, SystemProduct::SYS_PRODUCT_QUICK_NOTES, $clientCreatedDate);
 
         $clientRepository->installYongoProduct($clientId, $userId, $clientCreatedDate);
+die('jj');
         $clientRepository->installDocumentadorProduct($clientId, $userId, $clientCreatedDate);
         $clientRepository->installCalendarProduct($clientId, $userId, $clientCreatedDate);
         $clientRepository->installQuickNotesProduct($clientId, $userId, $clientCreatedDate);
