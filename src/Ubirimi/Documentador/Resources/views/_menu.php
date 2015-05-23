@@ -42,10 +42,9 @@ $spacesInMenu = UbirimiContainer::get()['repository']->get(Space::class)->getByC
                         </td>
                         <?php if ($hasAdministrationPermission || $spacesWithAdministrationPermission): ?>
                             <td style="height:44px; vertical-align: middle; border-left: 1px #9c9c9c solid;" width="170px" class="product-menu" align="center" valign="middle">
-                                <a href="/documentador/administration" title="Documentador Administration">
-
-                                    <div style="margin-top: 0px;">Administration</div>
-                                </a>
+                                <div>
+                                    <a href="/documentador/administration" title="Documentador Administration">Administration</a>
+                                </div>
                             </td>
                         <?php endif ?>
                     <?php else: ?>
@@ -66,7 +65,7 @@ $spacesInMenu = UbirimiContainer::get()['repository']->get(Space::class)->getByC
         <td>
             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
-                    <td width="104px"
+                    <td width="116px"
                         class="menuItemBasic <?php if ($menuSelectedCategory == 'documentador') echo 'menuItemSelected'; else echo 'menuItem' ?>"
                         id="menuDocumentador"
                         style="cursor: pointer;">
