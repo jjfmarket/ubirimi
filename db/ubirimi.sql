@@ -870,7 +870,7 @@ CREATE TABLE IF NOT EXISTS `help_sla` (
   `start_condition` text NOT NULL,
   `stop_condition` text NOT NULL,
   `date_created` datetime NOT NULL,
-  `date_updated` datetime NOT NULL,
+  `date_updated` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
