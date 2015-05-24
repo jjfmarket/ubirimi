@@ -56,9 +56,8 @@ class FiltersController extends UbirimiController
         return $this->render(__DIR__ . '/../../Resources/views/menu/Filters.php',
             [
                 'projectsForBrowsing' => $projectsForBrowsing,
-                'loggedInUserId' => $loggedInUserId,
+                //'loggedInUserId' => $loggedInUserId, // This is set in index.php so we only include it here for reference.
                 'customFilters' => $customFilters
-
             ]);
     }
 }
