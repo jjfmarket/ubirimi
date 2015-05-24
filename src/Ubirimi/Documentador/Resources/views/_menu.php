@@ -71,7 +71,6 @@ $spacesInMenu = UbirimiContainer::get()['repository']->get(Space::class)->getByC
                         style="cursor: pointer;">
                         <span>Documentador</span>
                         <span class="<?php if ($menuSelectedCategory == 'documentador') echo 'arrowSelected'; else echo 'arrow' ?>"></span>
-                        &nbsp;
                     </td>
                     <td>&nbsp;</td>
                     <td align="right">
