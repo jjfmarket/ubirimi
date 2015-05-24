@@ -43,7 +43,7 @@ class HelpDeskController extends UbirimiController
 
         return $this->render(__DIR__ . '/../../Resources/views/menu/HelpDesk.php',
             [
-                '$clientAdministratorFlag' => $clientAdministratorFlag
+                'clientAdministratorFlag' => $clientAdministratorFlag
             ]);
     }
 }
