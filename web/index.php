@@ -38,8 +38,8 @@ require_once __DIR__ . '/bootstrap.php';
 $session = UbirimiContainer::get()['session'];
 $session->start();
 
-$clientId = $session->has('client/id') ? $session->get('client/id') : null;
-$loggedInUserId = $session->has('user/id') ? $session->get('user/id'): null;
+//$clientId = $session->has('client/id') ? $session->get('client/id') : null;
+//$loggedInUserId = $session->has('user/id') ? $session->get('user/id'): null;
 
 if ($session->get('client/settings/timezone')) {
     date_default_timezone_set($session->get('client/settings/timezone'));
