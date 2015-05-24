@@ -559,8 +559,7 @@ class Entity {
     }
 
     public function getOtherActiveSnapshots($entityId, $userId, $currentTime, $resultType = null) {
-        $query = "select user_id, TIMESTAMPDIFF(MINUTE, documentator_entity_snapshot.date_created, " .
-            "'" . $currentTime . "') as last_edit_offset, general_user.first_name, general_user.last_name " .
+        $query = "select user_id, TIMESTAMPDIFF(MINUTE, documentator_entity_snapshot.date_created, ?') as last_edit_offset, general_user.first_name, general_user.last_name " .
             "FROM documentator_entity_snapshot " .
             "left join general_user on general_user.id = documentator_entity_snapshot.user_id " .
             "where documentator_entity_id = ? and " .
@@ -569,7 +568,7 @@ class Entity {
 
         if ($stmt = UbirimiContainer::get()['db.connection']->prepare($query)) {
 
-            $stmt->bind_param("ii", $entityId, $userId);
+            $stmt->bind_param("sii", $currentTime, $entityId, $userId);
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -644,10 +643,11 @@ class Entity {
             $query .= " order by documentator_entity.id";
         }
         else {
-            $query .= " order by " . $filters['sort_by'] . " " . $filters['sort_order'];
+            $query .= " order by ? ?";
         }
 
         if ($stmt = UbirimiContainer::get()['db.connection']->prepare($query)) {
+            $stmt->bind_param("ss", $filters['sort_by'], $filters['sort_order']);
             $stmt->execute();
             $result = $stmt->get_result();
             if ($result->num_rows)
