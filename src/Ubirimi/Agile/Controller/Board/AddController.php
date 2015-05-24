@@ -86,13 +86,13 @@ class AddController extends UbirimiController
             [
                 'sectionPageTitle' => $sectionPageTitle,
                 'session' => $session,
-                'clientId' => $clientId,
-                'loggedInUserId' => $loggedInUserId,
-                'projectsForBrowsing' => $projectsForBrowsing,
+                //'clientId' => $clientId, // This is set in index.php so we only include it here for reference.
+                //'loggedInUserId' => $loggedInUserId, // This is set in index.php so we only include it here for reference.
+                //'projectsForBrowsing' => $projectsForBrowsing, // This is set in index.php so we only include it here for reference.
                 'menuSelectedCategory' => $menuSelectedCategory,
-                'name' => $name,
+                //'name' => $name, // This is set in index.php so we only include it here for reference.
                 'emptyName' => $emptyName,
-                'description' => $description,
+                //'description' => $description, // This is set in index.php so we only include it here for reference.
                 'projects' => $projects,
                 'noProjectSelected' => $noProjectSelected
             ]);
