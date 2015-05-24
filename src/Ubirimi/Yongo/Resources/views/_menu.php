@@ -16,19 +16,14 @@ if (!strstr($_SERVER['REQUEST_URI'], '/yongo/issue')) {
     $session->remove('last_search_parameters');
 }
 
-$projectsMenu = UbirimiContainer::get()['repository']->get(UbirimiClient::class)->getProjectsByPermission($clientId, $loggedInUserId, Permission::PERM_BROWSE_PROJECTS, 'array');
+$projectsForBrowsing = UbirimiContainer::get()['repository']->get(UbirimiClient::class)->getProjectsByPermission($clientId, $loggedInUserId, Permission::PERM_BROWSE_PROJECTS, 'array', 'id');
 
-if ($projectsMenu) {
-    $projectsForBrowsing = array();
-    for ($i = 0; $i < count($projectsMenu); $i++)
-        $projectsForBrowsing[$i] = $projectsMenu[$i]['id'];
+if ($projectsForBrowsing) {
 
     $filters = UbirimiContainer::get()['repository']->get(IssueFilter::class)->getByUserId($loggedInUserId);
 
     if (null == $session->get('selected_project_id')) {
-        if ($projectsMenu) {
-            $session->set('selected_project_id', $projectsMenu[0]['id']);
-        }
+        $session->set('selected_project_id', $projectsForBrowsing[0]);
     }
 
     $selectedProjectId = $session->get('selected_project_id');
@@ -41,13 +36,7 @@ if (isset($projectsForBrowsing) && count($projectsForBrowsing)) {
     $hasCreateIssuePermission = UbirimiContainer::get()['repository']->get(YongoProject::class)->userHasPermission($projectsForBrowsing, Permission::PERM_CREATE_ISSUE, $loggedInUserId);
 }
 
-$styleSelectedMenu = 'style="background-color: #EEEEEE;';
-
 $projectsWithCreatePermission = UbirimiContainer::get()['repository']->get(UbirimiClient::class)->getProjectsByPermission($clientId, $loggedInUserId, Permission::PERM_CREATE_ISSUE);
-
-if (!isset($menuSelectedCategory))
-    $menuSelectedCategory = null;
-
 $hasAdministrationPermission = $hasAdministerProjectsPermission || UbirimiContainer::get()['repository']->get(UbirimiUser::class)->hasGlobalPermission($clientId, $loggedInUserId, GlobalPermission::GLOBAL_PERMISSION_YONGO_ADMINISTRATORS) || UbirimiContainer::get()['repository']->get(UbirimiUser::class)->hasGlobalPermission($clientId, $loggedInUserId, GlobalPermission::GLOBAL_PERMISSION_YONGO_SYSTEM_ADMINISTRATORS);
 
 Util::renderMaintenanceMessage();
@@ -57,6 +46,7 @@ if ($session->has('client/products')) {
 } else {
     $clientProducts = UbirimiContainer::get()['repository']->get(UbirimiClient::class)->getProducts(UbirimiContainer::get()['repository']->get(UbirimiClient::class)->getClientIdAnonymous(), 'array');
 }
+
 ?>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#003466">
@@ -124,12 +114,14 @@ if ($session->has('client/products')) {
                         <span class="<?php if ($menuSelectedCategory == 'issue') echo 'arrowSelected'; else echo 'arrow' ?>"></span>
                         &nbsp;
                     </td>
-                    <td width="8px"></td>
-                    <td align="center" class="menuItemBasic <?php if ($menuSelectedCategory == 'filters') echo 'menuItemSelected'; else echo 'menuItem' ?>" id="menuFilters">
-                        <span>Filters</span>
-                        <span class="<?php if ($menuSelectedCategory == 'filters') echo 'arrowSelected'; else echo 'arrow' ?>"></span>
-                        &nbsp;
-                    </td>
+                    <?php if (isset($loggedInUserId)): ?>
+                        <td width="8px"></td>
+                        <td align="center" class="menuItemBasic <?php if ($menuSelectedCategory == 'filters') echo 'menuItemSelected'; else echo 'menuItem' ?>" id="menuFilters">
+                            <span>Filters</span>
+                            <span class="<?php if ($menuSelectedCategory == 'filters') echo 'arrowSelected'; else echo 'arrow' ?>"></span>
+                            &nbsp;
+                        </td>
+                    <?php endif ?>
                     <?php if (Util::checkKeyAndValueInArray('sys_product_id', SystemProduct::SYS_PRODUCT_AGILE, $clientProducts)): ?>
                         <td width="8px"></td>
                         <td align="center" class="menuItemBasic <?php if ($menuSelectedCategory == 'agile') echo 'menuItemSelected'; else echo 'menuItem' ?>" id="menuAgile">

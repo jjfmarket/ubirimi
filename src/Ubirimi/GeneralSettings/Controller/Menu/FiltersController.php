@@ -31,32 +31,19 @@ class FiltersController extends UbirimiController
 {
     public function indexAction(Request $request, SessionInterface $session)
     {
-        if (Util::checkUserIsLoggedIn()) {
-
-        } else {
-            $httpHOST = Util::getHttpHost();
-            $clientId = $this->getRepository(UbirimiClient::class)->getByBaseURL($httpHOST, 'array', 'id');
-            $loggedInUserId = null;
-        }
-
-        $projectsMenu = $this->getRepository(UbirimiClient::class)->getProjectsByPermission(
+        $projectsForBrowsing = $this->getRepository(UbirimiClient::class)->getProjectsByPermission(
             $session->get('client/id'),
             $session->get('user/id'),
             Permission::PERM_BROWSE_PROJECTS,
-            'array'
+            'array',
+            'id'
         );
-
-        $projectsForBrowsing = array();
-        for ($i = 0; $i < count($projectsMenu); $i++) {
-            $projectsForBrowsing[$i] = $projectsMenu[$i]['id'];
-        }
 
         $customFilters = $this->getRepository(IssueFilter::class)->getByUserId($session->get('user/id'));
 
         return $this->render(__DIR__ . '/../../Resources/views/menu/Filters.php',
             [
                 'projectsForBrowsing' => $projectsForBrowsing,
-                //'loggedInUserId' => $loggedInUserId, // This is set in index.php so we only include it here for reference.
                 'customFilters' => $customFilters
             ]);
     }

@@ -1088,7 +1088,7 @@ class UbirimiClient
         $result = $stmt->get_result();
     }
 
-    public function getProjectsByPermission($clientId, $userId, $permissionId, $resultType = null) {
+    public function getProjectsByPermission($clientId, $userId, $permissionId, $resultType = null, $resultColumn = null) {
 
         // 1. user in permission scheme
 
@@ -1262,11 +1262,19 @@ class UbirimiClient
         if ($result->num_rows) {
             if ($resultType == 'array') {
                 $resultArray = array();
+
                 while ($user = $result->fetch_array(MYSQLI_ASSOC)) {
-                    $resultArray[] = $user;
+                    if ($resultColumn) {
+                        $resultArray[] = $user[$resultColumn];
+                    } else {
+                        $resultArray[] = $user;
+                    }
                 }
+
                 return $resultArray;
-            } else return $result;
+            } else {
+                return $result;
+            }
         } else {
             return null;
         }
