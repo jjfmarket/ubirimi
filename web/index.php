@@ -25,7 +25,6 @@ use Ubirimi\Container\UbirimiContainer;
 use Ubirimi\EventListener\UbirimiKernelViewListener;
 use Ubirimi\UbirimiControllerResolver;
 
-
 require_once __DIR__ . '/bootstrap.php';
 
 /**
