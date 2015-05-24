@@ -33,7 +33,7 @@ class UbirimiController
         return UbirimiContainer::get()['repository']->get($name);
     }
 
-    public function render($path, $variables)
+    public function render($path, $variables = [])
     {
         return array($path, $variables);
     }
