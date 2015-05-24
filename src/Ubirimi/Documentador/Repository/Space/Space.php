@@ -96,11 +96,11 @@ class Space {
         if (empty($filters['sort_by'])) {
             $query .= " order by documentator_space.id";
         } else {
-            $query .= " order by " . $filters['sort_by'] . " " . $filters['sort_order'];
+            $query .= " order by ? ?";
         }
 
         if ($stmt = UbirimiContainer::get()['db.connection']->prepare($query)) {
-            $stmt->bind_param("i", $clientId);
+            $stmt->bind_param("iss", $clientId, $filters['sort_by'], $filters['sort_order']);
             $stmt->execute();
             $result = $stmt->get_result();
             if ($result->num_rows) {
