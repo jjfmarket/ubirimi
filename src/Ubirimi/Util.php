@@ -52,7 +52,7 @@ class Util {
     }
 
     public static function checkUserIsLoggedIn() {
-        return null !== UbirimiContainer::get()['session']->get('user/id');
+        return UbirimiContainer::get()['session']->has('user/id');
     }
 
     public static function signOutAndRedirect($context = null) {
