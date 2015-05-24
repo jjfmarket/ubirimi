@@ -4,6 +4,7 @@
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ubirimi/ubirimi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
 
 Or find us on Skype:
+
 skype:?chat&blob=XxjQ8jJYk5w5AaojePXPgQq9wglQLbbn1wWnTduvA_12PD87qc9XBBiC6ffiDj-5K7BNCLGb1A
 
 What is Ubirimi?
